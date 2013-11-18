@@ -10,17 +10,15 @@
 		88A3052E18289E72006A69D8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88A3052D18289E72006A69D8 /* Foundation.framework */; };
 		88A3053018289E72006A69D8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88A3052F18289E72006A69D8 /* CoreGraphics.framework */; };
 		88A3053218289E72006A69D8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88A3053118289E72006A69D8 /* UIKit.framework */; };
-		88A3053818289E72006A69D8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 88A3053618289E72006A69D8 /* InfoPlist.strings */; };
 		88A3053A18289E72006A69D8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 88A3053918289E72006A69D8 /* main.m */; };
-		88A3053E18289E72006A69D8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 88A3053D18289E72006A69D8 /* AppDelegate.m */; };
-		88A3054118289E73006A69D8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 88A3053F18289E73006A69D8 /* Main.storyboard */; };
-		88A3054418289E73006A69D8 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88A3054318289E73006A69D8 /* ViewController.m */; };
-		88A3054618289E73006A69D8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 88A3054518289E73006A69D8 /* Images.xcassets */; };
-		88A3054D18289E73006A69D8 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88A3054C18289E73006A69D8 /* XCTest.framework */; };
+		88A3053E18289E72006A69D8 /* SMSNinjaApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 88A3053D18289E72006A69D8 /* SMSNinjaApplication.m */; };
 		88A3054E18289E73006A69D8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88A3052D18289E72006A69D8 /* Foundation.framework */; };
 		88A3054F18289E73006A69D8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88A3053118289E72006A69D8 /* UIKit.framework */; };
-		88A3055718289E73006A69D8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 88A3055518289E73006A69D8 /* InfoPlist.strings */; };
-		88A3055918289E73006A69D8 /* SMSNinjaUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 88A3055818289E73006A69D8 /* SMSNinjaUITests.m */; };
+		88C0E1D01839957300E0A343 /* SNMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88C0E1CA1839957300E0A343 /* SNMainViewController.m */; };
+		88C0E1D11839957300E0A343 /* SNSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88C0E1CB1839957300E0A343 /* SNSettingsViewController.m */; };
+		88C0E1D21839957300E0A343 /* SNReadMeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88C0E1CE1839957300E0A343 /* SNReadMeViewController.m */; };
+		88C0E1D81839B42B00E0A343 /* SNTextTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 88C0E1D71839B42B00E0A343 /* SNTextTableViewCell.m */; };
+		88C0E1DB1839BC6200E0A343 /* SNBlockedMessageHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88C0E1DA1839BC6200E0A343 /* SNBlockedMessageHistoryViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -39,20 +37,21 @@
 		88A3052F18289E72006A69D8 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		88A3053118289E72006A69D8 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		88A3053518289E72006A69D8 /* SMSNinjaUI-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SMSNinjaUI-Info.plist"; sourceTree = "<group>"; };
-		88A3053718289E72006A69D8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		88A3053918289E72006A69D8 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		88A3053B18289E72006A69D8 /* SMSNinjaUI-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SMSNinjaUI-Prefix.pch"; sourceTree = "<group>"; };
-		88A3053C18289E72006A69D8 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		88A3053D18289E72006A69D8 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		88A3054018289E73006A69D8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		88A3054218289E73006A69D8 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		88A3054318289E73006A69D8 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		88A3054518289E73006A69D8 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		88A3053C18289E72006A69D8 /* SMSNinjaApplication.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SMSNinjaApplication.h; sourceTree = "<group>"; };
+		88A3053D18289E72006A69D8 /* SMSNinjaApplication.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SMSNinjaApplication.m; sourceTree = "<group>"; };
 		88A3054B18289E73006A69D8 /* SMSNinjaUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SMSNinjaUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		88A3054C18289E73006A69D8 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		88A3055418289E73006A69D8 /* SMSNinjaUITests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SMSNinjaUITests-Info.plist"; sourceTree = "<group>"; };
-		88A3055618289E73006A69D8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		88A3055818289E73006A69D8 /* SMSNinjaUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SMSNinjaUITests.m; sourceTree = "<group>"; };
+		88C0E1CA1839957300E0A343 /* SNMainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNMainViewController.m; sourceTree = "<group>"; };
+		88C0E1CB1839957300E0A343 /* SNSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNSettingsViewController.m; sourceTree = "<group>"; };
+		88C0E1CC1839957300E0A343 /* SNSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNSettingsViewController.h; sourceTree = "<group>"; };
+		88C0E1CD1839957300E0A343 /* SNReadMeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNReadMeViewController.h; sourceTree = "<group>"; };
+		88C0E1CE1839957300E0A343 /* SNReadMeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNReadMeViewController.m; sourceTree = "<group>"; };
+		88C0E1CF1839957300E0A343 /* SNMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNMainViewController.h; sourceTree = "<group>"; };
+		88C0E1D318399F3600E0A343 /* SMSNinja-private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SMSNinja-private.h"; sourceTree = "<group>"; };
+		88C0E1D61839B42B00E0A343 /* SNTextTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNTextTableViewCell.h; sourceTree = "<group>"; };
+		88C0E1D71839B42B00E0A343 /* SNTextTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNTextTableViewCell.m; sourceTree = "<group>"; };
+		88C0E1D91839BC6200E0A343 /* SNBlockedMessageHistoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNBlockedMessageHistoryViewController.h; sourceTree = "<group>"; };
+		88C0E1DA1839BC6200E0A343 /* SNBlockedMessageHistoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNBlockedMessageHistoryViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,7 +69,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				88A3054D18289E73006A69D8 /* XCTest.framework in Frameworks */,
 				88A3054F18289E73006A69D8 /* UIKit.framework in Frameworks */,
 				88A3054E18289E73006A69D8 /* Foundation.framework in Frameworks */,
 			);
@@ -83,7 +81,6 @@
 			isa = PBXGroup;
 			children = (
 				88A3053318289E72006A69D8 /* SMSNinjaUI */,
-				88A3055218289E73006A69D8 /* SMSNinjaUITests */,
 				88A3052C18289E72006A69D8 /* Frameworks */,
 				88A3052B18289E72006A69D8 /* Products */,
 			);
@@ -104,7 +101,6 @@
 				88A3052D18289E72006A69D8 /* Foundation.framework */,
 				88A3052F18289E72006A69D8 /* CoreGraphics.framework */,
 				88A3053118289E72006A69D8 /* UIKit.framework */,
-				88A3054C18289E73006A69D8 /* XCTest.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -112,12 +108,19 @@
 		88A3053318289E72006A69D8 /* SMSNinjaUI */ = {
 			isa = PBXGroup;
 			children = (
-				88A3053C18289E72006A69D8 /* AppDelegate.h */,
-				88A3053D18289E72006A69D8 /* AppDelegate.m */,
-				88A3053F18289E73006A69D8 /* Main.storyboard */,
-				88A3054218289E73006A69D8 /* ViewController.h */,
-				88A3054318289E73006A69D8 /* ViewController.m */,
-				88A3054518289E73006A69D8 /* Images.xcassets */,
+				88C0E1D91839BC6200E0A343 /* SNBlockedMessageHistoryViewController.h */,
+				88C0E1DA1839BC6200E0A343 /* SNBlockedMessageHistoryViewController.m */,
+				88C0E1D61839B42B00E0A343 /* SNTextTableViewCell.h */,
+				88C0E1D71839B42B00E0A343 /* SNTextTableViewCell.m */,
+				88C0E1D318399F3600E0A343 /* SMSNinja-private.h */,
+				88C0E1CF1839957300E0A343 /* SNMainViewController.h */,
+				88C0E1CA1839957300E0A343 /* SNMainViewController.m */,
+				88C0E1CC1839957300E0A343 /* SNSettingsViewController.h */,
+				88C0E1CB1839957300E0A343 /* SNSettingsViewController.m */,
+				88C0E1CD1839957300E0A343 /* SNReadMeViewController.h */,
+				88C0E1CE1839957300E0A343 /* SNReadMeViewController.m */,
+				88A3053C18289E72006A69D8 /* SMSNinjaApplication.h */,
+				88A3053D18289E72006A69D8 /* SMSNinjaApplication.m */,
 				88A3053418289E72006A69D8 /* Supporting Files */,
 			);
 			path = SMSNinjaUI;
@@ -127,27 +130,7 @@
 			isa = PBXGroup;
 			children = (
 				88A3053518289E72006A69D8 /* SMSNinjaUI-Info.plist */,
-				88A3053618289E72006A69D8 /* InfoPlist.strings */,
 				88A3053918289E72006A69D8 /* main.m */,
-				88A3053B18289E72006A69D8 /* SMSNinjaUI-Prefix.pch */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		88A3055218289E73006A69D8 /* SMSNinjaUITests */ = {
-			isa = PBXGroup;
-			children = (
-				88A3055818289E73006A69D8 /* SMSNinjaUITests.m */,
-				88A3055318289E73006A69D8 /* Supporting Files */,
-			);
-			path = SMSNinjaUITests;
-			sourceTree = "<group>";
-		};
-		88A3055318289E73006A69D8 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				88A3055418289E73006A69D8 /* SMSNinjaUITests-Info.plist */,
-				88A3055518289E73006A69D8 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -228,9 +211,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				88A3054618289E73006A69D8 /* Images.xcassets in Resources */,
-				88A3053818289E72006A69D8 /* InfoPlist.strings in Resources */,
-				88A3054118289E73006A69D8 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -238,7 +218,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				88A3055718289E73006A69D8 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -249,9 +228,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				88A3054418289E73006A69D8 /* ViewController.m in Sources */,
-				88A3053E18289E72006A69D8 /* AppDelegate.m in Sources */,
+				88C0E1D21839957300E0A343 /* SNReadMeViewController.m in Sources */,
+				88A3053E18289E72006A69D8 /* SMSNinjaApplication.m in Sources */,
+				88C0E1D11839957300E0A343 /* SNSettingsViewController.m in Sources */,
+				88C0E1DB1839BC6200E0A343 /* SNBlockedMessageHistoryViewController.m in Sources */,
+				88C0E1D01839957300E0A343 /* SNMainViewController.m in Sources */,
 				88A3053A18289E72006A69D8 /* main.m in Sources */,
+				88C0E1D81839B42B00E0A343 /* SNTextTableViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -259,7 +242,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				88A3055918289E73006A69D8 /* SMSNinjaUITests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -272,33 +254,6 @@
 			targetProxy = 88A3055018289E73006A69D8 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		88A3053618289E72006A69D8 /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				88A3053718289E72006A69D8 /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		88A3053F18289E73006A69D8 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				88A3054018289E73006A69D8 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		88A3055518289E73006A69D8 /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				88A3055618289E73006A69D8 /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		88A3055A18289E73006A69D8 /* Debug */ = {
@@ -376,12 +331,15 @@
 		88A3055D18289E73006A69D8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_OBJC_ARC = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "SMSNinjaUI/SMSNinjaUI-Prefix.pch";
 				INFOPLIST_FILE = "SMSNinjaUI/SMSNinjaUI-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -389,12 +347,15 @@
 		88A3055E18289E73006A69D8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_OBJC_ARC = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "SMSNinjaUI/SMSNinjaUI-Prefix.pch";
 				INFOPLIST_FILE = "SMSNinjaUI/SMSNinjaUI-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -460,6 +421,7 @@
 				88A3055E18289E73006A69D8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		88A3055F18289E73006A69D8 /* Build configuration list for PBXNativeTarget "SMSNinjaUITests" */ = {
 			isa = XCConfigurationList;
@@ -468,6 +430,7 @@
 				88A3056118289E73006A69D8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
