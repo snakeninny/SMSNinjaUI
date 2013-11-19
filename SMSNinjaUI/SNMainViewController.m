@@ -32,8 +32,8 @@
 	if ((self = [super initWithStyle:UITableViewStyleGrouped]))
 	{
 		self.title = NSLocalizedString(@"SMSNinja", @"SMSNinja");
-		self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Settings", @"Settings") style:UIBarButtonItemStylePlain target:self action:@selector(gotoSettings)] autorelease];
-		self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Readme", @"Readme") style:UIBarButtonItemStylePlain target:self action:@selector(gotoReadMe)] autorelease];
+		self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Settings", @"Settings") style:UIBarButtonItemStylePlain target:self action:@selector(gotoSettingsView)] autorelease];
+		self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Readme", @"Readme") style:UIBarButtonItemStylePlain target:self action:@selector(gotoReadMeView)] autorelease];
 
         appSwitch = [[UISwitch alloc] initWithFrame:CGRectZero];
     }
@@ -265,7 +265,7 @@ void (^CreateDatabase)(void) = ^(void)
     }
 }
 
-- (void)gotoSettings
+- (void)gotoSettingsView
 {
 	SNSettingsViewController *settingsViewControllerClass = [[SNSettingsViewController alloc] init];
 	[self.navigationController pushViewController:settingsViewControllerClass animated:YES];
@@ -368,7 +368,7 @@ void (^CreateDatabase)(void) = ^(void)
 	[dictionary writeToFile:SETTINGS atomically:YES];
 }
 
-- (void)gotoReadMe
+- (void)gotoReadMeView
 {
 	SNReadMeViewController *readMeViewController = [[SNReadMeViewController alloc] init];
 	readMeViewController.fake = self.fake;

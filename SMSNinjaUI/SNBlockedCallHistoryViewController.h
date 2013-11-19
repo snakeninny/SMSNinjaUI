@@ -1,7 +1,6 @@
-#import <UIKit/UIKit.h>
-#import "SNBlockedCallHistoryViewController.h"
+#import "SNBlockedMessageHistoryViewController.h"
 
-@interface SNBlockedMessageHistoryViewController : UITableViewController <UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
+@interface SNBlockedCallHistoryViewController : UITableViewController <UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate, UIActionSheetDelegate>
 {
 	NSMutableArray *idArray;
 	NSMutableArray *nameArray;
@@ -9,7 +8,6 @@
 	NSMutableArray *contentArray;
 	NSMutableArray *timeArray;
 	NSMutableArray *readArray;
-	NSMutableArray *picturesArray;
 	NSMutableSet *bulkSet;
 	int chosenRow;
 }

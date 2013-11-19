@@ -8,7 +8,7 @@
 @property (nonatomic, retain) NSNumber *fake;
 - (void)saveSettings;
 - (void)modifyDatabase;
-- (void)gotoSettings;
-- (void)gotoReadMe;
+- (void)gotoSettingsView;
+- (void)gotoReadMeView;
 - (void)updateDatabase;
 @end
