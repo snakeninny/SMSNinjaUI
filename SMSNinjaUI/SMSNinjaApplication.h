@@ -8,9 +8,7 @@
 	SNMainViewController *_viewController;
 	UINavigationController *navigationController;
 }
-
 @property (nonatomic, retain) UIWindow *window;
-
 - (void)showPasswordAlert;
 - (void)updateBadge;
 @end

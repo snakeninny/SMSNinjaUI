@@ -127,10 +127,10 @@
 		phoneArray = [[NSMutableArray alloc] initWithCapacity:600];
 		smsArray = [[NSMutableArray alloc] initWithCapacity:600];
 		replyArray = [[NSMutableArray alloc] initWithCapacity:600];
-		messageArray = [[NSMutableSet alloc] initWithCapacity:600];
-		forwardArray = [[NSMutableSet alloc] initWithCapacity:600];
-		numberArray = [[NSMutableSet alloc] initWithCapacity:600];
-		soundArray = [[NSMutableSet alloc] initWithCapacity:600];
+		messageArray = [[NSMutableArray alloc] initWithCapacity:600];
+		forwardArray = [[NSMutableArray alloc] initWithCapacity:600];
+		numberArray = [[NSMutableArray alloc] initWithCapacity:600];
+		soundArray = [[NSMutableArray alloc] initWithCapacity:600];
 		chosenName = [[NSString alloc] initWithString:@""];
 		chosenKeyword = [[NSString alloc] initWithString:@""];
         
@@ -139,9 +139,9 @@
 	return self;
 }
 
-- (void)segmentAction:(id)sender
+- (void)segmentAction:(UISegmentedControl *)sender
 {
-	if (sender selectedSegmentIndex == 0)
+	if (sender.selectedSegmentIndex == 0)
 	{
         SNWhitelistViewController *whitelistViewController = [[SNWhitelistViewController alloc] init];
         [self.navigationController pushViewController:whitelistViewController animated:NO];
@@ -371,7 +371,7 @@
 	else
 	{
 		UIButton* backButton = [UIButton buttonWithType:(UIButtonType)101];
-		[backButton addTarget:self action:@selector(gotoRootViewController) forControlEvents:UIControlEventTouchUpInside];
+		[backButton addTarget:self action:@selector(gotoMainView) forControlEvents:UIControlEventTouchUpInside];
 		[backButton setTitle:NSLocalizedString(@"SMSNinja", @"SMSNinja") forState:UIControlStateNormal];
 		self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithCustomView:backButton] autorelease];
 	}

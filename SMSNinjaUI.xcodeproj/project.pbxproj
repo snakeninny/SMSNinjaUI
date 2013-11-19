@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		888C8F5C183B278F00698D52 /* SNWhitelistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 888C8F5B183B278F00698D52 /* SNWhitelistViewController.m */; };
+		888C8F5F183B2DFA00698D52 /* SNSystemCallHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 888C8F5E183B2DFA00698D52 /* SNSystemCallHistoryViewController.m */; };
 		88A3052E18289E72006A69D8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88A3052D18289E72006A69D8 /* Foundation.framework */; };
 		88A3053018289E72006A69D8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88A3052F18289E72006A69D8 /* CoreGraphics.framework */; };
 		88A3053218289E72006A69D8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88A3053118289E72006A69D8 /* UIKit.framework */; };
@@ -34,6 +36,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		888C8F5A183B278F00698D52 /* SNWhitelistViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNWhitelistViewController.h; sourceTree = "<group>"; };
+		888C8F5B183B278F00698D52 /* SNWhitelistViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNWhitelistViewController.m; sourceTree = "<group>"; };
+		888C8F5D183B2DFA00698D52 /* SNSystemCallHistoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNSystemCallHistoryViewController.h; sourceTree = "<group>"; };
+		888C8F5E183B2DFA00698D52 /* SNSystemCallHistoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNSystemCallHistoryViewController.m; sourceTree = "<group>"; };
 		88A3052A18289E72006A69D8 /* SMSNinjaUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SMSNinjaUI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		88A3052D18289E72006A69D8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		88A3052F18289E72006A69D8 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -114,6 +120,10 @@
 		88A3053318289E72006A69D8 /* SMSNinjaUI */ = {
 			isa = PBXGroup;
 			children = (
+				888C8F5D183B2DFA00698D52 /* SNSystemCallHistoryViewController.h */,
+				888C8F5E183B2DFA00698D52 /* SNSystemCallHistoryViewController.m */,
+				888C8F5A183B278F00698D52 /* SNWhitelistViewController.h */,
+				888C8F5B183B278F00698D52 /* SNWhitelistViewController.m */,
 				88C0E1E2183B092F00E0A343 /* SNBlacklistViewController.h */,
 				88C0E1E3183B092F00E0A343 /* SNBlacklistViewController.m */,
 				88C0E1DF183AF55200E0A343 /* SNBlockedCallHistoryViewController.h */,
@@ -239,10 +249,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				88C0E1D21839957300E0A343 /* SNReadMeViewController.m in Sources */,
+				888C8F5F183B2DFA00698D52 /* SNSystemCallHistoryViewController.m in Sources */,
 				88C0E1E1183AF55200E0A343 /* SNBlockedCallHistoryViewController.m in Sources */,
 				88A3053E18289E72006A69D8 /* SMSNinjaApplication.m in Sources */,
 				88C0E1D11839957300E0A343 /* SNSettingsViewController.m in Sources */,
 				88C0E1DB1839BC6200E0A343 /* SNBlockedMessageHistoryViewController.m in Sources */,
+				888C8F5C183B278F00698D52 /* SNWhitelistViewController.m in Sources */,
 				88C0E1E4183B092F00E0A343 /* SNBlacklistViewController.m in Sources */,
 				88C0E1D01839957300E0A343 /* SNMainViewController.m in Sources */,
 				88A3053A18289E72006A69D8 /* main.m in Sources */,
