@@ -23,6 +23,8 @@
 		88C0E1DB1839BC6200E0A343 /* SNBlockedMessageHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88C0E1DA1839BC6200E0A343 /* SNBlockedMessageHistoryViewController.m */; };
 		88C0E1E1183AF55200E0A343 /* SNBlockedCallHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88C0E1E0183AF55200E0A343 /* SNBlockedCallHistoryViewController.m */; };
 		88C0E1E4183B092F00E0A343 /* SNBlacklistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88C0E1E3183B092F00E0A343 /* SNBlacklistViewController.m */; };
+		88C0E1EA183C9BBE00E0A343 /* SNSystemMessageHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88C0E1E8183C9BBE00E0A343 /* SNSystemMessageHistoryViewController.m */; };
+		88C0E1ED183CAE4A00E0A343 /* SNTimeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88C0E1EB183CAE4A00E0A343 /* SNTimeViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,6 +66,10 @@
 		88C0E1E0183AF55200E0A343 /* SNBlockedCallHistoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNBlockedCallHistoryViewController.m; sourceTree = "<group>"; };
 		88C0E1E2183B092F00E0A343 /* SNBlacklistViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNBlacklistViewController.h; sourceTree = "<group>"; };
 		88C0E1E3183B092F00E0A343 /* SNBlacklistViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNBlacklistViewController.m; sourceTree = "<group>"; };
+		88C0E1E8183C9BBE00E0A343 /* SNSystemMessageHistoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNSystemMessageHistoryViewController.m; sourceTree = "<group>"; };
+		88C0E1E9183C9BBE00E0A343 /* SNSystemMessageHistoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNSystemMessageHistoryViewController.h; sourceTree = "<group>"; };
+		88C0E1EB183CAE4A00E0A343 /* SNTimeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNTimeViewController.m; sourceTree = "<group>"; };
+		88C0E1EC183CAE4A00E0A343 /* SNTimeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNTimeViewController.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -120,6 +126,10 @@
 		88A3053318289E72006A69D8 /* SMSNinjaUI */ = {
 			isa = PBXGroup;
 			children = (
+				88C0E1EC183CAE4A00E0A343 /* SNTimeViewController.h */,
+				88C0E1EB183CAE4A00E0A343 /* SNTimeViewController.m */,
+				88C0E1E9183C9BBE00E0A343 /* SNSystemMessageHistoryViewController.h */,
+				88C0E1E8183C9BBE00E0A343 /* SNSystemMessageHistoryViewController.m */,
 				888C8F5D183B2DFA00698D52 /* SNSystemCallHistoryViewController.h */,
 				888C8F5E183B2DFA00698D52 /* SNSystemCallHistoryViewController.m */,
 				888C8F5A183B278F00698D52 /* SNWhitelistViewController.h */,
@@ -249,6 +259,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				88C0E1D21839957300E0A343 /* SNReadMeViewController.m in Sources */,
+				88C0E1ED183CAE4A00E0A343 /* SNTimeViewController.m in Sources */,
 				888C8F5F183B2DFA00698D52 /* SNSystemCallHistoryViewController.m in Sources */,
 				88C0E1E1183AF55200E0A343 /* SNBlockedCallHistoryViewController.m in Sources */,
 				88A3053E18289E72006A69D8 /* SMSNinjaApplication.m in Sources */,
@@ -257,6 +268,7 @@
 				888C8F5C183B278F00698D52 /* SNWhitelistViewController.m in Sources */,
 				88C0E1E4183B092F00E0A343 /* SNBlacklistViewController.m in Sources */,
 				88C0E1D01839957300E0A343 /* SNMainViewController.m in Sources */,
+				88C0E1EA183C9BBE00E0A343 /* SNSystemMessageHistoryViewController.m in Sources */,
 				88A3053A18289E72006A69D8 /* main.m in Sources */,
 				88C0E1D81839B42B00E0A343 /* SNTextTableViewCell.m in Sources */,
 			);

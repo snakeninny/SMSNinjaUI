@@ -1,4 +1,4 @@
-#import "SNSystemCallHistoryViewController.h"
+#import "SNSystemMessageHistoryViewController.h"
 #import "SNNumberViewController.h"
 #import "SMSNinja-private.h"
 #import <objc/runtime.h>
@@ -8,7 +8,7 @@
 #define DATABASE @"/var/mobile/Library/SMSNinja/smsninja.db"
 #define CALLHISTORY @"/var/wireless/Library/CallHistory/call_history.db"
 
-@implementation SNSystemCallHistoryViewController
+@implementation SNSystemMessageHistoryViewController
 
 @synthesize flag;
 
@@ -23,8 +23,8 @@
     [timeArray release];
     timeArray = nil;
     
-    [typeArray release];
-    typeArray = nil;
+    [contentArray release];
+    contentArray = nil;
     
     [keywordSet release];
     keywordSet = nil;
@@ -46,11 +46,11 @@
 - (void)initializeAllArrays
 {
     CPDistributedMessagingCenter *messagingCenter = [objc_getClass("CPDistributedMessagingCenter") centerNamed:@"com.naken.smsninjaspringboard"];
-    NSDictionary *reply = [messagingCenter sendMessageAndReceiveReplyName:@"GetSystemCallHistory" userInfo:nil];
+    NSDictionary *reply = [messagingCenter sendMessageAndReceiveReplyName:@"GetSystemMessageHistory" userInfo:nil];
     numberArray = [[NSMutableArray alloc] initWithArray:[reply objectForKey:@"numberArray"]];
     nameArray = [[NSMutableArray alloc] initWithArray:[reply objectForKey:@"nameArray"]];
     timeArray = [[NSMutableArray alloc] initWithArray:[reply objectForKey:@"timeArray"]];
-    typeArray = [[NSMutableArray alloc] initWithArray:[reply objectForKey:@"typeArray"]];
+    contentArray = [[NSMutableArray alloc] initWithArray:[reply objectForKey:@"contentArray"]];
     keywordSet = [[NSMutableSet alloc] initWithCapacity:600];
     
     sqlite3 *database;
@@ -75,11 +75,11 @@
     else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
 }
 
-- (SNSystemCallHistoryViewController *)init
+- (SNSystemMessageHistoryViewController *)init
 {
     if ((self = [super initWithStyle:UITableViewStylePlain]))
     {
-        self.title = NSLocalizedString(@"Call History", @"Call History");
+        self.title = NSLocalizedString(@"Message History", @"Message History");
         UIButton* backButton = [UIButton buttonWithType:(UIButtonType)101];
         [backButton addTarget:self action:@selector(gotoList) forControlEvents:UIControlEventTouchUpInside];
         [backButton setTitle:NSLocalizedString(@"List", @"List") forState:UIControlStateNormal];
@@ -107,6 +107,7 @@
     if (cell == nil) cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"any-cell"] autorelease];
     
     UILabel *nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 2.0f, (cell.contentView.bounds.size.width - 20.0f) / 2.0f, (cell.contentView.bounds.size.height - 4.0f) / 2.0f)];
+    nameLabel.tag = 1;
     nameLabel.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
     if (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_5_0 && kCFCoreFoundationVersionNumber <= kCFCoreFoundationVersionNumber_iOS_5_1) nameLabel.minimumFontSize = 8.0f;
     else if (kCFCoreFoundationVersionNumber > kCFCoreFoundationVersionNumber_iOS_5_1) nameLabel.minimumScaleFactor = 8.0f;
@@ -116,6 +117,7 @@
     [nameLabel release];
     
     UILabel *timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(nameLabel.frame.origin.x + nameLabel.bounds.size.width, nameLabel.frame.origin.y, nameLabel.bounds.size.width, nameLabel.bounds.size.height)];
+    timeLabel.tag = 2;
     timeLabel.font = nameLabel.font;
     if (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_5_0 && kCFCoreFoundationVersionNumber <= kCFCoreFoundationVersionNumber_iOS_5_1) timeLabel.minimumFontSize = nameLabel.minimumFontSize;
     else if (kCFCoreFoundationVersionNumber > kCFCoreFoundationVersionNumber_iOS_5_1) timeLabel.minimumScaleFactor = nameLabel.minimumScaleFactor;
@@ -125,30 +127,29 @@
     [cell.contentView addSubview:timeLabel];
     [timeLabel release];
     
-    UILabel *numberLabel = [[UILabel alloc] initWithFrame:CGRectMake(nameLabel.frame.origin.x, nameLabel.frame.origin.y + nameLabel.bounds.size.height, nameLabel.bounds.size.width, nameLabel.bounds.size.height)];
-    numberLabel.font = nameLabel.font;
-    if (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_5_0 && kCFCoreFoundationVersionNumber <= kCFCoreFoundationVersionNumber_iOS_5_1) numberLabel.minimumFontSize = nameLabel.minimumFontSize;
-    else if (kCFCoreFoundationVersionNumber > kCFCoreFoundationVersionNumber_iOS_5_1) numberLabel.minimumScaleFactor = nameLabel.minimumScaleFactor;
-    numberLabel.adjustsFontSizeToFitWidth = nameLabel.adjustsFontSizeToFitWidth;
-    numberLabel.text = [numberArray objectAtIndex:indexPath.row];
-    numberLabel.textColor = nameLabel.textColor;
-    [cell.contentView addSubview:numberLabel];
-    [numberLabel release];
+	UILabel *contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(nameLabel.frame.origin.x, nameLabel.frame.origin.y + nameLabel.bounds.size.height, nameLabel.bounds.size.width + timeLabel.bounds.size.width, nameLabel.bounds.size.height)];
+	contentLabel.tag = 3;
+	contentLabel.lineBreakMode = NSLineBreakByWordWrapping;
+	contentLabel.numberOfLines = 0;
+	contentLabel.font = nameLabel.font;
+	contentLabel.text = [contentArray objectAtIndex:indexPath.row];
+	CGSize expectedLabelSize = [contentLabel.text sizeWithFont:contentLabel.font constrainedToSize:CGSizeMake(contentLabel.bounds.size.width, contentLabel.bounds.size.height * 60.0f) lineBreakMode:contentLabel.lineBreakMode];
+	CGRect newFrame = contentLabel.frame;
+	newFrame.size.height = expectedLabelSize.height;
+	contentLabel.frame = newFrame;
+	contentLabel.textColor = nameLabel.textColor;
+	[cell.contentView addSubview:contentLabel];
+	[contentLabel release];
     
-    UILabel *typeLabel = [[UILabel alloc] initWithFrame:CGRectMake(timeLabel.frame.origin.x, numberLabel.frame.origin.y, nameLabel.bounds.size.width, nameLabel.bounds.size.height)];
-    typeLabel.font = nameLabel.font;
-    if (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_5_0 && kCFCoreFoundationVersionNumber <= kCFCoreFoundationVersionNumber_iOS_5_1) typeLabel.minimumFontSize = nameLabel.minimumFontSize;
-    else if (kCFCoreFoundationVersionNumber > kCFCoreFoundationVersionNumber_iOS_5_1) typeLabel.minimumScaleFactor = nameLabel.minimumScaleFactor;
-    typeLabel.adjustsFontSizeToFitWidth = nameLabel.adjustsFontSizeToFitWidth;
-    typeLabel.text = [typeArray objectAtIndex:indexPath.row];
-    typeLabel.textColor = nameLabel.textColor;
-    [cell.contentView addSubview:typeLabel];
-    [typeLabel release];
-    
-    if ([keywordSet containsObject:numberLabel.text]) cell.accessoryType = UITableViewCellAccessoryCheckmark;
+    if ([keywordSet containsObject:[numberArray objectAtIndex:indexPath.row]]) cell.accessoryType = UITableViewCellAccessoryCheckmark;
     else cell.accessoryType = UITableViewCellAccessoryNone;
     
     return cell;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	return [[tableView cellForRowAtIndexPath:indexPath].contentView viewWithTag:2].bounds.size.height + [[tableView cellForRowAtIndexPath:indexPath].contentView viewWithTag:3].bounds.size.height + 4.0f;
 }
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -158,7 +159,7 @@
         if (buttonIndex == 2) [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:buttonIndex inSection:0]].selected = NO;
         
         __block NSInteger index = buttonIndex;
-        __block SNSystemCallHistoryViewController *weakSelf = self;
+        __block SNSystemMessageHistoryViewController *weakSelf = self;
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
                        {
                            sqlite3 *database;
@@ -182,7 +183,7 @@
         }
         
         __block NSInteger index = buttonIndex;
-        __block SNSystemCallHistoryViewController *weakSelf = self;
+        __block SNSystemMessageHistoryViewController *weakSelf = self;
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
                        {
                            sqlite3 *database;
@@ -233,7 +234,7 @@
         }
         else
         {
-            __block SNSystemCallHistoryViewController *weakSelf = self;
+            __block SNSystemMessageHistoryViewController *weakSelf = self;
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
                            {
                                sqlite3 *database;
@@ -254,7 +255,7 @@
 - (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     __block int index = indexPath.row;
-    __block SNSystemCallHistoryViewController *weakSelf = self;
+    __block SNSystemMessageHistoryViewController *weakSelf = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
                    {
                        sqlite3 *database;
@@ -297,7 +298,7 @@
         }
         else
         {
-            __block SNSystemCallHistoryViewController *weakSelf = self;
+            __block SNSystemMessageHistoryViewController *weakSelf = self;
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
                            {
                                sqlite3 *database;
@@ -321,7 +322,7 @@
         buttonItem.title = NSLocalizedString(@"All", @"All");
         for (int i = 0; i < [numberArray count]; i++)
             [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]].selected = NO;
-        __block SNSystemCallHistoryViewController *weakSelf = self;
+        __block SNSystemMessageHistoryViewController *weakSelf = self;
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
                        {
                            sqlite3 *database;

@@ -1,11 +1,11 @@
 #import <UIKit/UIKit.h>
 
-@interface SNSystemCallHistoryViewController : UITableViewController <UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate, UIActionSheetDelegate>
+@interface SNSystemMessageHistoryViewController : UITableViewController <UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate, UIActionSheetDelegate>
 {
 	NSMutableArray *numberArray;
 	NSMutableArray *nameArray;
 	NSMutableArray *timeArray;
-	NSMutableArray *typeArray;
+	NSMutableArray *contentArray;
     NSMutableSet *keywordSet;
 	int chosenRow;
 }

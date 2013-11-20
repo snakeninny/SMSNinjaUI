@@ -408,8 +408,8 @@
 	if ([buttonItem.title isEqualToString:NSLocalizedString(@"All", @"All")])
 	{
 		buttonItem.title = NSLocalizedString(@"None", @"None");
-		for (UITableViewCell *cell in [self.tableView visibleCells])
-			cell.selected = YES;
+        for (int i = 0; i < [idArray count]; i++)
+            [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]].selected = YES;
         [bulkSet removeAllObjects];
         for (int i = 0; i < [idArray count]; i++)
             [bulkSet addObject:[NSIndexPath indexPathForRow:i inSection:0]];
@@ -417,8 +417,8 @@
 	else if ([buttonItem.title isEqualToString:NSLocalizedString(@"None", @"None")])
 	{
 		buttonItem.title = NSLocalizedString(@"All", @"All");
-		for (UITableViewCell *cell in [self.tableView visibleCells])
-			cell.selected = NO;
+        for (int i = 0; i < [idArray count]; i++)
+            [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]].selected = YES;
         [bulkSet removeAllObjects];
 	}
 }

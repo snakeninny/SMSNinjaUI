@@ -113,6 +113,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	SNTextTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"any-cell"];
+    if (cell == nil) cell = [[[SNTextTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"any-cell"] autorelease];
 
 	NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithContentsOfFile:SETTINGS];
 	switch (indexPath.section)
@@ -121,8 +122,6 @@
 			switch (indexPath.row)
 			{
 				case 0:
-					if (cell == nil) cell = [[[SNTextTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"any-cell"] autorelease];
-
 					cell.selectionStyle = UITableViewCellSelectionStyleNone;
 					cell.accessoryType = UITableViewCellAccessoryNone;
 					cell.textLabel.text = NSLocalizedString(@"Password", @"Password");
@@ -136,8 +135,6 @@
 
 					break;
 				case 1:
-					if (cell == nil) cell = [[[SNTextTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"any-cell"] autorelease];
-
 					cell.selectionStyle = UITableViewCellSelectionStyleNone;
 					cell.accessoryType = UITableViewCellAccessoryNone;
 					cell.textLabel.text = NSLocalizedString(@"Launch code", @"Launch code");
@@ -151,8 +148,6 @@
 
 					break;
 				case 2:
-					if (cell == nil) cell = [[[SNTextTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"any-cell"] autorelease];
-
 					cell.selectionStyle = UITableViewCellSelectionStyleNone;
 					cell.accessoryType = UITableViewCellAccessoryNone;
 					cell.textLabel.text = NSLocalizedString(@"Hide icon", @"Hide icon");
@@ -162,8 +157,6 @@
 
 					break;
 				case 3:
-					if (cell == nil) cell = [[[SNTextTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"any-cell"] autorelease];
-
 					cell.selectionStyle = UITableViewCellSelectionStyleNone;
 					cell.accessoryType = UITableViewCellAccessoryNone;
 					cell.textLabel.text = NSLocalizedString(@"Icon badge", @"Icon badge");
@@ -173,8 +166,6 @@
 
 					break;
 				case 4:
-					if (cell == nil) cell = [[[SNTextTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"any-cell"] autorelease];
-
 					cell.selectionStyle = UITableViewCellSelectionStyleNone;
 					cell.accessoryType = UITableViewCellAccessoryNone;
 					cell.textLabel.text = NSLocalizedString(@"Statusbar badge", @"Statusbar badge");
@@ -184,8 +175,6 @@
 
 					break;
 				case 5:
-					if (cell == nil) cell = [[[SNTextTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"any-cell"] autorelease];
-
 					cell.selectionStyle = UITableViewCellSelectionStyleNone;
 					cell.accessoryType = UITableViewCellAccessoryNone;
 					cell.textLabel.text = NSLocalizedString(@"Contacts ⊆ Whitelist", @"Contacts ⊆ Whitelist");
@@ -200,32 +189,24 @@
 			switch (indexPath.row)
 			{
 				case 0:
-					if (cell == nil) cell = [[[SNTextTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"any-cell"] autorelease];
-
 					cell.textLabel.text = NSLocalizedString(@"Whitelist calls only w/ beep", @"Whitelist calls only w/ beep");
 					cell.accessoryType = [[dictionary objectForKey:@"whitelistCallsOnlyWithBeep"] boolValue] ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
 					cell.accessoryView = nil;
 
 					break;
 				case 1:
-					if (cell == nil) cell = [[[SNTextTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"any-cell"] autorelease];
-
 					cell.textLabel.text = NSLocalizedString(@"Whitelist calls only w/o beep", @"Whitelist calls only w/o beep");
 					cell.accessoryType = [[dictionary objectForKey:@"whitelistCallsOnlyWithoutBeep"] boolValue] ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
 					cell.accessoryView = nil;
 
 					break;
 				case 2:
-					if (cell == nil) cell = [[[SNTextTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"any-cell"] autorelease];
-
 					cell.textLabel.text = NSLocalizedString(@"Whitelist msgs only w/ beep", @"Whitelist msgs only w/ beep");
 					cell.accessoryType = [[dictionary objectForKey:@"whitelistMessagesOnlyWithBeep"] boolValue] ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
 					cell.accessoryView = nil;
 
 					break;
 				case 3:
-					if (cell == nil) cell = [[[SNTextTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"any-cell"] autorelease];
-
 					cell.textLabel.text = NSLocalizedString(@"Whitelist msgs only w/o beep", @"Whitelist msgs only w/o beep");
 					cell.accessoryType = [[dictionary objectForKey:@"whitelistMessagesOnlyWithoutBeep"] boolValue] ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
 					cell.accessoryView = nil;
@@ -234,8 +215,6 @@
 			}
 			break;
 		case 2: // NoBlockedCallLog
-			if (cell == nil) cell = [[[SNTextTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"any-cell"] autorelease];
-
 			cell.selectionStyle = UITableViewCellSelectionStyleNone;
 			cell.textLabel.text = NSLocalizedString(@"NoBlockedCallLog", @"NoBlockedCallLog");
 			cell.accessoryType = UITableViewCellAccessoryNone;
@@ -248,8 +227,6 @@
 			switch (indexPath.row)
 			{
 				case 0:
-					if (cell == nil) cell = [[[SNTextTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"any-cell"] autorelease];
-
 					cell.selectionStyle = UITableViewCellSelectionStyleNone;
 					cell.textLabel.text = NSLocalizedString(@"Questions & Suggestions", @"Questions & Suggestions");
 					cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -257,8 +234,6 @@
 
 					break;
 				case 1:
-					if (cell == nil) cell = [[[SNTextTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"any-cell"] autorelease];
-
 					cell.selectionStyle = UITableViewCellSelectionStyleNone;
 					cell.textLabel.text = NSLocalizedString(@"Donate via PayPal. Thank you!", @"Donate via PayPal. Thank you!");
 					cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
