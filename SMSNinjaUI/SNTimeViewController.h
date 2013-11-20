@@ -18,8 +18,8 @@
 @property (nonatomic, retain) UISwitch *soundSwitch;
 @property (nonatomic, retain) NSString *forwardString; // in another view
 @property (nonatomic, retain) NSString *numberString; // in another view
-- (void)saveSettings;
 - (void)gotoList;
 - (void)saveControlStates;
-- (void)animateTextField:(UITextField *)textField up:(BOOL)up;
+- (void)keyboardWillShow:(NSNotification *)notification;
+- (void)keyboardWillHide:(NSNotification *)notification;
 @end

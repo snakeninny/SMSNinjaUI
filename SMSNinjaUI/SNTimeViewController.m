@@ -23,6 +23,55 @@
 @synthesize forwardString;
 @synthesize numberString;
 
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
+	[timePickerView release];
+	timePickerView = nil;
+    
+	[settingsTableView release];
+	settingsTableView = nil;
+    
+	[nameString release];
+	nameString = nil;
+    
+	[keywordString release];
+	keywordString = nil;
+    
+	[phoneAction release];
+	phoneAction = nil;
+    
+	[messageAction release];
+	messageAction = nil;
+    
+	[replyString release];
+	replyString = nil;
+    
+	[messageString release];
+	messageString = nil;
+    
+	[forwardString release];
+	forwardString = nil;
+    
+	[soundString release];
+	soundString = nil;
+    
+	[nameField release];
+	nameField = nil;
+    
+	[replySwitch release];
+	replySwitch = nil;
+    
+	[messageField release];
+	messageField = nil;
+    
+	[soundSwitch release];
+	soundSwitch = nil;
+    
+	[super dealloc];
+}
+
 - (SNTimeViewController *)init
 {
 	if ((self = [super init]))
@@ -38,6 +87,9 @@
         replySwitch = [[UISwitch alloc] initWithFrame:CGRectZero];
         messageField = [[UITextField alloc] initWithFrame:CGRectZero];
         soundSwitch = [[UISwitch alloc] initWithFrame:CGRectZero];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 	}
 	return self;
 }
@@ -120,10 +172,10 @@
             cell.textLabel.text = NSLocalizedString(@"Name", @"Name");
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             
+            nameField.delegate = self;
             nameField.placeholder = NSLocalizedString(@"Input here", @"Input here");
             nameField.text = self.nameString;
             nameField.clearButtonMode = UITextFieldViewModeWhileEditing;
-            nameField.delegate = self;
             [cell.contentView addSubview:nameField];
             
             break;
@@ -147,43 +199,35 @@
             }
             
             break;
-        case 2: // 到此
+        case 2:
             if (indexPath.row == 0)
             {
                 cell.textLabel.text = NSLocalizedString(@"Auto reply", @"Auto reply");
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
-                
-                [replySwitch release];
-                replySwitch = [[UISwitch alloc] initWithFrame:CGRectZero];
                 cell.accessoryView = replySwitch;
+                
                 replySwitch.on = [self.replyString isEqualToString:@"0"] ? NO : YES;
-                [replySwitch addTarget:self action:@selector(stayUnchanged) forControlEvents:UIControlEventValueChanged];
             }
             else if (indexPath.row == 1)
             {
                 cell.textLabel.text = NSLocalizedString(@"With", @"With");
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 
-                replyField.delegate = nil;
-                [replyField release];
-                replyField = [[UITextField alloc] initWithFrame:CGRectMake(120.0f, 11.0f, 180.0f, 25.0f)];
-                replyField.text = self.messageString;
-                replyField.delegate = self;
-                [replyField addTarget:self action:@selector(stayUnchanged) forControlEvents:UIControlEventEditingDidEnd];
-                replyField.clearButtonMode = UITextFieldViewModeWhileEditing;
-                replyField.placeholder = NSLocalizedString(@"Message here", @"Message here");
-                [cell.contentView addSubview:replyField];
+                messageField.delegate = self;
+                messageField.text = self.messageString;
+                messageField.clearButtonMode = UITextFieldViewModeWhileEditing;
+                messageField.placeholder = NSLocalizedString(@"Message here", @"Message here");
+                [cell.contentView addSubview:messageField];
             }
+            
             break;
         case 3:
             cell.textLabel.text = NSLocalizedString(@"Beep", @"Beep");
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            
-            [soundSwitch release];
-            soundSwitch = [[UISwitch alloc] initWithFrame:CGRectZero];
             cell.accessoryView = soundSwitch;
+            
             soundSwitch.on = [self.soundString isEqualToString:@"0"] ? NO : YES;
-            [soundSwitch addTarget:self action:@selector(stayUnchanged) forControlEvents:UIControlEventValueChanged];
+            
             break;
     }
 	return cell;
@@ -191,35 +235,36 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
 	if (indexPath.section == 1)
 	{
 		switch (indexPath.row)
 		{
 			case 0:
             {
-                CallDetailSettingsViewController *callDetailSettingsViewController = [[CallDetailSettingsViewController alloc] init];
-                callDetailSettingsViewController.phoneString = self.phoneString;
-                callDetailSettingsViewController.flag = @"black";
-                [self.navigationController pushViewController:callDetailSettingsViewController animated:YES];
-                [callDetailSettingsViewController release];
+                SNCallActionViewController *callActionViewController = [[SNCallActionViewController alloc] init];
+                callActionViewController.phoneAction = self.phoneAction;
+                callActionViewController.flag = @"black";
+                [self.navigationController pushViewController:callActionViewController animated:YES];
+                [callActionViewController release];
                 break;
             }
 			case 1:
             {
-                SMSDetailSettingsViewController *smsDetailSettingsViewController = [[SMSDetailSettingsViewController alloc] init];
-                smsDetailSettingsViewController.smsString = self.smsString;
-                smsDetailSettingsViewController.forwardString = self.forwardString;
-                smsDetailSettingsViewController.numberString = self.numberString;
-                [self.navigationController pushViewController:smsDetailSettingsViewController animated:YES];
-                [smsDetailSettingsViewController release];
+                SNMessageActionViewController *messageActionViewController = [[SNMessageActionViewController alloc] init];
+                messageActionViewController.messageAction = self.messageAction;
+                messageActionViewController.forwardString = self.forwardString;
+                messageActionViewController.numberString = self.numberString;
+                [self.navigationController pushViewController:messageActionViewController animated:YES];
+                [messageActionViewController release];
                 break;
             }
 		}
-        [tableView deselectRowAtIndexPath:indexPath animated:YES];
 	}
 }
 
-- (void)saveControlStates
+- (void)viewWillDisappear:(BOOL)animated
 {
 	self.nameString = nil;
 	self.replyString = nil;
@@ -228,11 +273,11 @@
     
 	self.nameString = nameField.text;
 	self.replyString = replySwitch.on ? @"1" : @"0";
-	self.messageString = replyField.text;
+	self.messageString = messageField.text;
 	self.soundString = soundSwitch.on ? @"1" : @"0";
 }
 
-- (void)saveSettings
+- (void)gotoList
 {
 	NSString *one = [NSString stringWithFormat:([timePickerView selectedRowInComponent:0] % 24 < 10 ? @"0%d" : @"%d"), [timePickerView selectedRowInComponent:0] % 24];
 	NSString *two = [NSString stringWithFormat:([timePickerView selectedRowInComponent:1] % 60 < 10 ? @"0%d" : @"%d"), [timePickerView selectedRowInComponent:1] % 60];
@@ -241,25 +286,20 @@
 	NSString *keyword = [[[[[[one stringByAppendingString:@":"] stringByAppendingString:two] stringByAppendingString:@"~"] stringByAppendingString:three] stringByAppendingString:@":"] stringByAppendingString:four];
     
 	sqlite3 *database;
-	if (sqlite3_open([DATABASE UTF8String], &database) == SQLITE_OK)
+    int openResult = sqlite3_open([DATABASE UTF8String], &database);
+    if (openResult == SQLITE_OK)
 	{
-		NSString *sql = [NSString stringWithFormat:@"insert or replace into blacklist (keyword, type, name, phone, sms, reply, message, forward, number, sound) values ('%@', '2', '%@', '%@', '%@', '%@', '%@', '%@', '%@', '%@')", keyword, [nameField.text length] == 0 ? @"" : [nameField.text stringByReplacingOccurrencesOfString:@"'" withString:@"''"], self.phoneString, self.smsString, replySwitch ? (replySwitch.on == YES ? @"1" : @"0") : self.replyString, replyField ? ([replyField.text length] == 0 ? @"" : [replyField.text stringByReplacingOccurrencesOfString:@"'" withString:@"''"]) : self.messageString, self.forwardString, self.numberString, soundSwitch ? (soundSwitch.on == YES ? @"1" : @"0") : self.soundString];
+		NSString *sql = [NSString stringWithFormat:@"insert or replace into blacklist (keyword, type, name, phone, sms, reply, message, forward, number, sound) values ('%@', '2', '%@', '%@', '%@', '%@', '%@', '%@', '%@', '%@')", keyword, [nameField.text length] == 0 ? @"" : [nameField.text stringByReplacingOccurrencesOfString:@"'" withString:@"''"], self.phoneAction, self.messageAction, replySwitch ? (replySwitch.on == YES ? @"1" : @"0") : self.replyString, messageField ? ([messageField.text length] == 0 ? @"" : [messageField.text stringByReplacingOccurrencesOfString:@"'" withString:@"''"]) : self.messageString, self.forwardString, self.numberString, soundSwitch ? (soundSwitch.on == YES ? @"1" : @"0") : self.soundString];
         
-		if (sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL) != SQLITE_OK)
-			NSLog(@"SNERROR: %s", [sql UTF8String]);
-		sqlite3_close(database);
+        int execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
+        if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
+        sqlite3_close(database);
 	}
     
-	for (UIViewController *viewController in self.navigationController.viewControllers)
-	{
-		if ([viewController isKindOfClass:[BlacklistViewController class]])
-		{
-			BlacklistViewController *blacklistViewControllerClass = (BlacklistViewController *)viewController;
-			[blacklistViewControllerClass initDB];
-			[blacklistViewControllerClass.tableView reloadData];
-			[self.navigationController popToViewController:blacklistViewControllerClass animated:YES];
-		}
-	}
+    id viewController = [self.navigationController.viewControllers objectAtIndex:([self.navigationController.viewControllers count] - 2)];
+    if ([viewController respondsToSelector:@selector(loadDatabaseSegment)]) [viewController loadDatabaseSegment];
+    [((UITableViewController *)viewController).tableView reloadData];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
@@ -268,73 +308,29 @@
 	return YES;
 }
 
-- (void)textFieldDidBeginEditing:(UITextField *)textField
+- (void)keyboardWillShow:(NSNotification *)notification
 {
-	[self animateTextField:textField up:YES];
-}
-
-- (void)textFieldDidEndEditing:(UITextField *)textField
-{
-    [self saveControlStates];
-	[self animateTextField:textField up:NO];
-}
-
-- (void)animateTextField:(UITextField *)textField up:(BOOL)up
-{
-	const int movementDistance = 200;
-	const float movementDuration = 0.3f;
-	int movement = up ? -movementDistance : movementDistance;
+    NSDictionary *userInfo = [notification userInfo];
+    float movementDuration = [(NSNumber *)[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
+    const int movementDistance = [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size.height;
+    
 	[UIView beginAnimations:@"animation" context:nil];
 	[UIView setAnimationBeginsFromCurrentState:YES];
 	[UIView setAnimationDuration: movementDuration];
-	self.view.frame = CGRectOffset(self.view.frame, 0, movement);
+	self.view.center = CGPointMake(self.view.center.x, self.view.center.y - movementDistance);
 	[UIView commitAnimations];
 }
 
-- (void)dealloc
+- (void)keyboardWillHide:(NSNotification *)notification
 {
-	[timePickerView release];
-	timePickerView = nil;
+    NSDictionary *userInfo = [notification userInfo];
+    float movementDuration = [(NSNumber *)[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
+    int movementDistance = [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size.height;
     
-	[settingsTableView release];
-	settingsTableView = nil;
-    
-	[nameString release];
-	nameString = nil;
-    
-	[keywordString release];
-	keywordString = nil;
-    
-	[phoneString release];
-	phoneString = nil;
-    
-	[smsString release];
-	smsString = nil;
-    
-	[replyString release];
-	replyString = nil;
-    
-	[messageString release];
-	messageString = nil;
-    
-	[forwardString release];
-	forwardString = nil;
-    
-	[soundString release];
-	soundString = nil;
-    
-	[nameField release];
-	nameField = nil;
-    
-	[replySwitch release];
-	replySwitch = nil;
-    
-	[replyField release];
-	replyField = nil;
-    
-	[soundSwitch release];
-	soundSwitch = nil;
-    
-	[super dealloc];
+	[UIView beginAnimations:@"animation" context:nil];
+	[UIView setAnimationBeginsFromCurrentState:YES];
+	[UIView setAnimationDuration:movementDuration];
+	self.view.center = CGPointMake(self.view.center.x, self.view.center.y + movementDistance);
+	[UIView commitAnimations];
 }
 @end
