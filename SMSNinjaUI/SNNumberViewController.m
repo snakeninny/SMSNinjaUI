@@ -1,41 +1,97 @@
 #import "SNNumberViewController.h"
+#import "SNCallActionViewController.h"
+#import "SNMessageActionViewController.h"
+#import "SNTextTableViewCell.h"
 #import <sqlite3.h>
-#import "BlacklistViewController.h"
-#import "WhitelistViewController.h"
-#import "PrivatelistViewController.h"
-#import "CallDetailSettingsViewController.h"
-#import "SMSDetailSettingsViewController.h"
 
-#define DOCUMENT @"/var/mobile/Library/SMSNinja"
-#define SETTINGS [DOCUMENT stringByAppendingString:@"/smsninja.plist"]
-#define DATABASE [DOCUMENT stringByAppendingString:@"/smsninja.db"]
+#define SETTINGS @"/var/mobile/Library/SMSNinja/smsninja.plist"
+#define DATABASE @"/var/mobile/Library/SMSNinja/smsninja.db"
 
 @implementation SNNumberViewController
 
+@synthesize nameField;
 @synthesize nameString;
+@synthesize keywordField;
 @synthesize keywordString;
-@synthesize phoneString;
-@synthesize smsString;
+@synthesize phoneAction;
+@synthesize messageAction;
+@synthesize replySwitch;
 @synthesize replyString;
+@synthesize messageField;
 @synthesize messageString;
-@synthesize forwardString;
-@synthesize numberString;
+@synthesize soundSwitch;
 @synthesize soundString;
 @synthesize flag;
+@synthesize forwardString;
+@synthesize numberString;
 
-- (NumberViewController *)init
+- (void)dealloc
+{
+    [nameField release];
+	nameField = nil;
+    
+	[nameString release];
+	nameString = nil;
+    
+    [keywordField release];
+	keywordField = nil;
+    
+	[keywordString release];
+	keywordString = nil;
+    
+	[phoneAction release];
+	phoneAction = nil;
+    
+	[messageAction release];
+	messageAction = nil;
+    
+	[replySwitch release];
+	replySwitch = nil;
+    
+	[replyString release];
+	replyString = nil;
+    
+	[messageField release];
+	messageField = nil;
+    
+	[messageString release];
+	messageString = nil;
+    
+    [soundSwitch release];
+	soundSwitch = nil;
+    
+	[soundString release];
+	soundString = nil;
+    
+	[forwardString release];
+	forwardString = nil;
+    
+	[numberString release];
+	numberString = nil;
+    
+	[flag release];
+	flag = nil;
+    
+	[super dealloc];
+}
+
+- (SNNumberViewController *)init
 {
 	if ((self = [super initWithStyle:UITableViewStyleGrouped]))
 	{
 		self.title = NSLocalizedString(@"Details", @"Details");
-
-		UIButton* backButton = [UIButton buttonWithType:(UIButtonType)101];
-		[backButton addTarget:self action:@selector(saveConfig) forControlEvents:UIControlEventTouchUpInside];
-		[backButton setTitle:NSLocalizedString(@"List", @"List") forState:UIControlStateNormal];
-		UIBarButtonItem* backItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
-		self.navigationItem.leftBarButtonItem = [backItem autorelease];
-
-		[keywordArray release];
+        
+        UIButton* backButton = [UIButton buttonWithType:(UIButtonType)101];
+        [backButton addTarget:self action:@selector(gotoList) forControlEvents:UIControlEventTouchUpInside];
+        [backButton setTitle:NSLocalizedString(@"List", @"List") forState:UIControlStateNormal];
+        self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithCustomView:backButton] autorelease];
+        
+        nameField = [[UITextField alloc] initWithFrame:CGRectZero];
+        keywordField = [[UITextField alloc] initWithFrame:CGRectZero];
+        replySwitch = [[UISwitch alloc] initWithFrame:CGRectZero];
+        messageField = [[UITextField alloc] initWithFrame:CGRectZero];
+        soundSwitch = [[UISwitch alloc] initWithFrame:CGRectZero];
+        
 		keywordArray = [[NSMutableArray alloc] init];
 	}
 	return self;
@@ -57,208 +113,152 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"any-cell"];
-
-	if (cell == nil)
-	{
-		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"any-fucking-cell"] autorelease];
-
-		switch (indexPath.section)
-		{
-			case 0:
-				{
-					if (indexPath.row == 0)
-					{
-						cell.textLabel.text = NSLocalizedString(@"Name", @"Name");
-						cell.selectionStyle = UITableViewCellSelectionStyleNone;
-
-						nameField.delegate = nil;
-						[nameField release];
-						nameField = [[UITextField alloc] initWithFrame:CGRectMake(100.0f, 11.0f, 200.0f, 25.0f)];
-						nameField.placeholder = NSLocalizedString(@"Name here", @"Name here");
-						nameField.text = self.nameString;
-						nameField.delegate = self;
-						nameField.clearButtonMode = UITextFieldViewModeWhileEditing;
-						[cell.contentView addSubview:nameField];
-					}
-					else if (indexPath.row == 1)
-					{
-						cell.textLabel.text = NSLocalizedString(@"Number", @"Number");
-						cell.selectionStyle = UITableViewCellSelectionStyleNone;
-
-						numberField.delegate = nil;
-						[numberField release];
-						numberField = [[UITextField alloc] initWithFrame:CGRectMake(100.0f, 11.0f, 200.0f, 25.0f)];
-						numberField.placeholder = NSLocalizedString(@"Number here", @"Number here");
-						numberField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
-
-						NSString *tempString = self.keywordString;
-						tempString = [tempString stringByReplacingOccurrencesOfString:@" " withString:@""];
-						tempString = [tempString stringByReplacingOccurrencesOfString:@"-" withString:@""];
-						tempString = [tempString stringByReplacingOccurrencesOfString:@"(" withString:@""];
-						tempString = [tempString stringByReplacingOccurrencesOfString:@")" withString:@""];
-
-						self.keywordString = nil;
-						self.keywordString = tempString;
-
-						numberField.text = self.keywordString;
-						numberField.delegate = self;
-						numberField.clearButtonMode = UITextFieldViewModeWhileEditing;
-						[cell.contentView addSubview:numberField];
-					}
-					break;
-				}
-			case 1:
-				{
-					if (indexPath.row == 0)
-					{
-						cell.textLabel.text = NSLocalizedString(@"Call", @"Call");
-						if ([self.phoneString isEqualToString:@"1"])
-							cell.detailTextLabel.text = NSLocalizedString(@"Disconnect", @"Disconnect");
-						else if ([self.phoneString isEqualToString:@"2"])
-							cell.detailTextLabel.text = NSLocalizedString(@"Ignore", @"Ignore");
-						else if ([self.phoneString isEqualToString:@"3"])
-							cell.detailTextLabel.text = NSLocalizedString(@"Let go", @"Let go");
-						cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-					}
-					else if (indexPath.row == 1)
-					{
-						cell.textLabel.text = NSLocalizedString(@"SMS", @"SMS");
-						if ([self.smsString isEqualToString:@"1"])
-							cell.detailTextLabel.text = NSLocalizedString(@"Block", @"Block");
-						cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-					}
-					break;
-				}
-			case 2:
-				{
-					if (indexPath.row == 0)
-					{
-						cell.textLabel.text = NSLocalizedString(@"Auto reply", @"Auto reply");
-						cell.selectionStyle = UITableViewCellSelectionStyleNone;
-
-						[replySwitch release];
-						replySwitch = [[UISwitch alloc] initWithFrame:CGRectZero];
-						cell.accessoryView = replySwitch;
-						replySwitch.on = [self.replyString isEqualToString:@"0"] ? NO : YES;
-					}
-					else if (indexPath.row == 1)
-					{
-						cell.textLabel.text = NSLocalizedString(@"With", @"With");
-						cell.selectionStyle = UITableViewCellSelectionStyleNone;
-
-						replyField.delegate = nil;
-						[replyField release];
-						replyField = [[UITextField alloc] initWithFrame:CGRectMake(120.0f, 11.0f, 180.0f, 25.0f)];
-						replyField.text = self.messageString;
-						replyField.delegate = self;
-						replyField.clearButtonMode = UITextFieldViewModeWhileEditing;
-						replyField.placeholder = NSLocalizedString(@"Message here", @"Message here");
-						[cell.contentView addSubview:replyField];
-					}
-					break;
-				}
-			case 3:
-				{
-					cell.textLabel.text = NSLocalizedString(@"Beep", @"Beep");
-					cell.selectionStyle = UITableViewCellSelectionStyleNone;
-
-					[soundSwitch release];
-					soundSwitch = [[UISwitch alloc] initWithFrame:CGRectZero];
-					cell.accessoryView = soundSwitch;
-					soundSwitch.on = [self.soundString isEqualToString:@"0"] ? NO : YES;
-					[cell.contentView addSubview:soundSwitch];
-					break;
-				}
-		}
-	}
+	SNTextTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"any-cell"];
+	if (cell == nil) cell = [[[SNTextTableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"any-cell"] autorelease];
+    
+    switch (indexPath.section)
+    {
+        case 0:
+        {
+            if (indexPath.row == 0)
+            {
+                cell.textLabel.text = NSLocalizedString(@"Name", @"Name");
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
+                
+                nameField.delegate = self;
+                nameField.placeholder = NSLocalizedString(@"Input here", @"Input here");
+                nameField.text = self.nameString;
+                nameField.clearButtonMode = UITextFieldViewModeWhileEditing;
+                [cell.contentView addSubview:nameField];
+            }
+            else if (indexPath.row == 1)
+            {
+                cell.textLabel.text = NSLocalizedString(@"Number", @"Number");
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
+                
+                keywordField.delegate = self;
+                keywordField.placeholder = NSLocalizedString(@"Input here", @"Input here");
+                keywordField.text = self.keywordString;
+                keywordField.clearButtonMode = UITextFieldViewModeWhileEditing;
+                keywordField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
+                [cell.contentView addSubview:keywordField];
+            }
+            
+            break;
+        }
+        case 1:
+        {
+            if (indexPath.row == 0)
+            {
+                cell.textLabel.text = NSLocalizedString(@"Call", @"Call");
+                if ([self.phoneAction isEqualToString:@"1"]) cell.detailTextLabel.text = NSLocalizedString(@"Disconnect", @"Disconnect");
+                else if ([self.phoneAction isEqualToString:@"2"]) cell.detailTextLabel.text = NSLocalizedString(@"Ignore", @"Ignore");
+                else if ([self.phoneAction isEqualToString:@"3"]) cell.detailTextLabel.text = NSLocalizedString(@"Let go", @"Let go");
+                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            }
+            else if (indexPath.row == 1)
+            {
+                cell.textLabel.text = NSLocalizedString(@"SMS", @"SMS");
+                NSString *detailText = @"";
+                if ([self.messageAction isEqualToString:@"1"]) detailText = [detailText stringByAppendingString:NSLocalizedString(@"Block", @"Block")];
+                if ([self.forwardString isEqualToString:@"1"]) detailText = [detailText stringByAppendingString:NSLocalizedString(@", Forward", @", Forward")];
+                if ([detailText hasPrefix:@", "]) detailText = [detailText substringFromIndex:2];
+                cell.detailTextLabel.text = detailText;
+                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            }
+            
+            break;
+        }
+        case 2:
+        {
+            if (indexPath.row == 0)
+            {
+                cell.textLabel.text = NSLocalizedString(@"Auto reply", @"Auto reply");
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
+                
+                cell.accessoryView = replySwitch;
+                replySwitch.on = [self.replyString isEqualToString:@"0"] ? NO : YES;
+            }
+            else if (indexPath.row == 1)
+            {
+                cell.textLabel.text = NSLocalizedString(@"With", @"With");
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
+                
+                messageField.delegate = self;
+                messageField.text = self.messageString;
+                messageField.clearButtonMode = UITextFieldViewModeWhileEditing;
+                messageField.placeholder = NSLocalizedString(@"Message here", @"Message here");
+                [cell.contentView addSubview:messageField];
+            }
+            
+            break;
+        }
+        case 3:
+        {
+            cell.textLabel.text = NSLocalizedString(@"Beep", @"Beep");
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            
+            cell.accessoryView = soundSwitch;
+            soundSwitch.on = [self.soundString isEqualToString:@"0"] ? NO : YES;
+            [cell.contentView addSubview:soundSwitch];
+            
+            break;
+        }
+    }
 	return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
 	if (indexPath.section == 1)
 	{
 		switch (indexPath.row)
 		{
 			case 0:
-				{
-					CallDetailSettingsViewController *callDetailSettingsViewController = [[CallDetailSettingsViewController alloc] init];
-					callDetailSettingsViewController.phoneString = self.phoneString;
-					callDetailSettingsViewController.flag = self.flag;
-					[self.navigationController pushViewController:callDetailSettingsViewController animated:YES];
-					[callDetailSettingsViewController release];
-					break;
-				}
+            {
+                SNCallActionViewController *callActionViewController = [[SNCallActionViewController alloc] init];
+                callActionViewController.phoneAction = self.phoneAction;
+                callActionViewController.flag = self.flag;
+                [self.navigationController pushViewController:callActionViewController animated:YES];
+                [callActionViewController release];
+                break;
+            }
 			case 1:
-				{
-					SMSDetailSettingsViewController *smsDetailSettingsViewController = [[SMSDetailSettingsViewController alloc] init];
-					smsDetailSettingsViewController.smsString = self.smsString;
-					smsDetailSettingsViewController.forwardString = self.forwardString;
-					smsDetailSettingsViewController.numberString = self.numberString;
-					[self.navigationController pushViewController:smsDetailSettingsViewController animated:YES];
-					[smsDetailSettingsViewController release];
-					break;
-				}
+            {
+                SNMessageActionViewController *messageActionViewController = [[SNMessageActionViewController alloc] init];
+                messageActionViewController.messageAction = self.messageAction;
+                messageActionViewController.forwardString = self.forwardString;
+                messageActionViewController.numberString = self.numberString;
+                [self.navigationController pushViewController:messageActionViewController animated:YES];
+                [messageActionViewController release];
+                break;
+            }
 		}
 	}
-}
-
-- (void)saveConfig
-{
-	[self viewWillDisappear:YES];
-
-	for (UIViewController *viewController in self.navigationController.viewControllers)
-	{
-		if ([viewController isKindOfClass:[WhitelistViewController class]] && [self.flag isEqualToString:@"white"])
-		{
-			WhitelistViewController *whitelistViewControllerClass = (WhitelistViewController *)viewController;
-			[whitelistViewControllerClass initDB];
-			[whitelistViewControllerClass.tableView reloadData];
-			[self.navigationController popToViewController:whitelistViewControllerClass animated:YES];
-		}
-		if ([viewController isKindOfClass:[BlacklistViewController class]] && [self.flag isEqualToString:@"black"])
-		{
-			BlacklistViewController *blacklistViewControllerClass = (BlacklistViewController *)viewController;
-			[blacklistViewControllerClass initDB];
-			[blacklistViewControllerClass.tableView reloadData];
-			[self.navigationController popToViewController:blacklistViewControllerClass animated:YES];
-		}
-		if ([viewController isKindOfClass:[PrivatelistViewController class]] && [self.flag isEqualToString:@"private"])
-		{
-			PrivatelistViewController *privatelistClass = (PrivatelistViewController *)viewController;
-			[privatelistClass initDB];
-			[privatelistClass.tableView reloadData];
-			[self.navigationController popToViewController:privatelistClass animated:YES];  
-		}
-	}
-}	
-
-- (BOOL)textFieldShouldReturn:(UITextField *)textField
-{
-	[textField resignFirstResponder];
-	return YES;
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-	self.replyString = nil;
-	self.replyString = replySwitch.on ? @"1" : @"0";
-
-	self.soundString = nil;
-	self.soundString = soundSwitch.on ? @"1" : @"0";
-
 	self.nameString = nil;
-	self.nameString = [nameField.text length] == 0 ? @"" : nameField.text;
-
 	self.keywordString = nil;
-	self.keywordString = [numberField.text length] == 0 ? @"" : numberField.text;
-
+	self.replyString = nil;
 	self.messageString = nil;
-	self.messageString = [replyField.text length] == 0 ? @"" : replyField.text;
-	
-	NSString *tempString = [numberField.text length] == 0 ? @"" : numberField.text;
+	self.soundString = nil;
+    
+	self.nameString = nameField.text ? nameField.text : @"";
+	self.keywordString = keywordField.text ? keywordField.text : @"";
+	self.replyString = replySwitch.on ? @"1" : @"0";
+	self.messageString = messageField.text ? messageField.text : @"";
+	self.soundString = soundSwitch.on ? @"1" : @"0";
+}
+
+- (void)gotoList
+{
+	NSString *tempString = keywordField.text ? keywordField.text : @"";
 	NSRange range = [tempString rangeOfString:@" "];
+    [keywordArray removeAllObjects];
 	while (range.location != NSNotFound )
 	{
 		if ([[tempString substringToIndex:range.location] length] != 0)
@@ -268,71 +268,30 @@
 	}
 	if ([tempString length] != 0)
 		[keywordArray addObject:tempString];
-
+    
 	sqlite3 *database;
 	for (NSString *keyword in keywordArray)
 	{
-		if (sqlite3_open([DATABASE UTF8String], &database) == SQLITE_OK)
+        int openResult = sqlite3_open([DATABASE UTF8String], &database);
+        if (openResult == SQLITE_OK)
 		{
-			NSString *sql = [NSString stringWithFormat:@"insert or replace into %@list (keyword, type, name, phone, sms, reply, message, forward, number, sound) values ('%@', '0', '%@', '%@', '%@', '%@', '%@', '%@', '%@', '%@')", self.flag, keyword, [nameField.text length] == 0 ? @"" : [nameField.text stringByReplacingOccurrencesOfString:@"'" withString:@"''"], self.phoneString, self.smsString, replySwitch.on == YES ? @"1" : @"0", [replyField.text length] == 0 ? @"" : [replyField.text stringByReplacingOccurrencesOfString:@"'" withString:@"''"], self.forwardString, self.numberString, soundSwitch.on == YES ? @"1" : @"0"];
-
-			if (sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL) != SQLITE_OK)
-				NSLog(@"SNERROR: %s", [sql UTF8String]);
-			sqlite3_close(database);
+			NSString *sql = [NSString stringWithFormat:@"insert or replace into %@list (keyword, type, name, phone, sms, reply, message, forward, number, sound) values ('%@', '0', '%@', '%@', '%@', '%@', '%@', '%@', '%@', '%@')", self.flag, keyword, nameField.text ?  [nameField.text stringByReplacingOccurrencesOfString:@"'" withString:@"''"] : @"", self.phoneAction, self.messageAction, replySwitch.on == YES ? @"1" : @"0", messageField.text ? [messageField.text stringByReplacingOccurrencesOfString:@"'" withString:@"''"] : @"", self.forwardString, self.numberString, soundSwitch.on == YES ? @"1" : @"0"];
+            
+            int execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
+            if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
+            sqlite3_close(database);
 		}
 	}
+    
+    id viewController = [self.navigationController.viewControllers objectAtIndex:([self.navigationController.viewControllers count] - 2)];
+    if ([viewController respondsToSelector:@selector(loadDatabaseSegment)]) [viewController loadDatabaseSegment];
+    [((UITableViewController *)viewController).tableView reloadData];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
-- (void)dealloc
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-	[nameString release];
-	nameString = nil;
-
-	[keywordString release];
-	keywordString = nil;
-
-	[phoneString release];
-	phoneString = nil;
-
-	[smsString release];
-	smsString = nil;
-
-	[replyString release];
-	replyString = nil;
-
-	[messageString release];
-	messageString = nil;
-
-	[forwardString release];
-	forwardString = nil;
-
-	[numberString release];
-	numberString = nil;
-
-	[soundString release];
-	soundString = nil;
-
-	[flag release];
-	flag = nil;
-
-	[nameField release];
-	nameField = nil;
-
-	[numberField release];
-	numberField = nil;
-
-	[replySwitch release];
-	replySwitch = nil;
-
-	[replyField release];
-	replyField = nil;
-
-	[soundSwitch release];
-	soundSwitch = nil;
-
-	[keywordArray release];
-	keywordArray = nil;
-
-	[super dealloc];
+	[textField resignFirstResponder];
+	return YES;
 }
 @end

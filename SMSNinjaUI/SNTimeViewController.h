@@ -19,7 +19,6 @@
 @property (nonatomic, retain) NSString *forwardString; // in another view
 @property (nonatomic, retain) NSString *numberString; // in another view
 - (void)gotoList;
-- (void)saveControlStates;
 - (void)keyboardWillShow:(NSNotification *)notification;
 - (void)keyboardWillHide:(NSNotification *)notification;
 @end

@@ -1,6 +1,6 @@
 #import <UIKit/UIKit.h>
 
-@interface SNNumberViewController : UITableViewController <UITextFieldDelegate>
+@interface SNContentViewController : UITableViewController <UITextFieldDelegate>
 {
 	NSMutableArray *keywordArray;
 }
@@ -8,8 +8,10 @@
 @property (nonatomic, retain) NSString *nameString;
 @property (nonatomic, retain) UITextField *keywordField;
 @property (nonatomic, retain) NSString *keywordString;
-@property (nonatomic, retain) NSString *phoneAction;
-@property (nonatomic, retain) NSString *messageAction;
+@property (nonatomic, retain) UISwitch *forwardSwitch;
+@property (nonatomic, retain) NSString *forwardString;
+@property (nonatomic, retain) UITextField *numberField;
+@property (nonatomic, retain) NSString *numberString;
 @property (nonatomic, retain) UISwitch *replySwitch;
 @property (nonatomic, retain) NSString *replyString;
 @property (nonatomic, retain) UITextField *messageField;
@@ -17,7 +19,5 @@
 @property (nonatomic, retain) UISwitch *soundSwitch;
 @property (nonatomic, retain) NSString *soundString;
 @property (nonatomic, retain) NSString *flag;
-@property (nonatomic, retain) NSString *forwardString; // in another view
-@property (nonatomic, retain) NSString *numberString; // in another view
 - (void)gotoList;
 @end

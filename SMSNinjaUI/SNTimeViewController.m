@@ -271,9 +271,9 @@
 	self.messageString = nil;
 	self.soundString = nil;
     
-	self.nameString = nameField.text;
+	self.nameString = nameField.text ? nameField.text : @"";
 	self.replyString = replySwitch.on ? @"1" : @"0";
-	self.messageString = messageField.text;
+	self.messageString = messageField.text ? messageField.text : @"";
 	self.soundString = soundSwitch.on ? @"1" : @"0";
 }
 

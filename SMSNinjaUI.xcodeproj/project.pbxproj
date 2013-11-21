@@ -25,6 +25,7 @@
 		88C0E1E4183B092F00E0A343 /* SNBlacklistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88C0E1E3183B092F00E0A343 /* SNBlacklistViewController.m */; };
 		88C0E1EA183C9BBE00E0A343 /* SNSystemMessageHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88C0E1E8183C9BBE00E0A343 /* SNSystemMessageHistoryViewController.m */; };
 		88C0E1ED183CAE4A00E0A343 /* SNTimeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88C0E1EB183CAE4A00E0A343 /* SNTimeViewController.m */; };
+		88C0E1F0183DB94100E0A343 /* SNContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88C0E1EE183DB94100E0A343 /* SNContentViewController.m */; };
 		88D1DADB183D13F6003CE84F /* SNNumberViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88D1DADA183D13F6003CE84F /* SNNumberViewController.m */; };
 /* End PBXBuildFile section */
 
@@ -71,6 +72,8 @@
 		88C0E1E9183C9BBE00E0A343 /* SNSystemMessageHistoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNSystemMessageHistoryViewController.h; sourceTree = "<group>"; };
 		88C0E1EB183CAE4A00E0A343 /* SNTimeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNTimeViewController.m; sourceTree = "<group>"; };
 		88C0E1EC183CAE4A00E0A343 /* SNTimeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNTimeViewController.h; sourceTree = "<group>"; };
+		88C0E1EE183DB94100E0A343 /* SNContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNContentViewController.m; sourceTree = "<group>"; };
+		88C0E1EF183DB94100E0A343 /* SNContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNContentViewController.h; sourceTree = "<group>"; };
 		88D1DAD9183D13F6003CE84F /* SNNumberViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNNumberViewController.h; sourceTree = "<group>"; };
 		88D1DADA183D13F6003CE84F /* SNNumberViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNNumberViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -129,6 +132,8 @@
 		88A3053318289E72006A69D8 /* SMSNinjaUI */ = {
 			isa = PBXGroup;
 			children = (
+				88C0E1EF183DB94100E0A343 /* SNContentViewController.h */,
+				88C0E1EE183DB94100E0A343 /* SNContentViewController.m */,
 				88D1DAD9183D13F6003CE84F /* SNNumberViewController.h */,
 				88D1DADA183D13F6003CE84F /* SNNumberViewController.m */,
 				88C0E1EC183CAE4A00E0A343 /* SNTimeViewController.h */,
@@ -274,6 +279,7 @@
 				88D1DADB183D13F6003CE84F /* SNNumberViewController.m in Sources */,
 				88C0E1E4183B092F00E0A343 /* SNBlacklistViewController.m in Sources */,
 				88C0E1D01839957300E0A343 /* SNMainViewController.m in Sources */,
+				88C0E1F0183DB94100E0A343 /* SNContentViewController.m in Sources */,
 				88C0E1EA183C9BBE00E0A343 /* SNSystemMessageHistoryViewController.m in Sources */,
 				88A3053A18289E72006A69D8 /* main.m in Sources */,
 				88C0E1D81839B42B00E0A343 /* SNTextTableViewCell.m in Sources */,
