@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>E9779D0F-0000-4DB1-ACF7-A87B697ED31F</string>
+	<key>IDESourceControlProjectName</key>
+	<string>SMSNinjaUI</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>2EA2D504-EFB0-4133-9F88-F0302B866DDE</key>
+		<string>https://github.com/snakeninny/SMSNinjaUI.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>SMSNinjaUI.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>2EA2D504-EFB0-4133-9F88-F0302B866DDE</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/snakeninny/SMSNinjaUI.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>2EA2D504-EFB0-4133-9F88-F0302B866DDE</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>2EA2D504-EFB0-4133-9F88-F0302B866DDE</string>
+			<key>IDESourceControlWCCName</key>
+			<string>SMSNinjaUI</string>
+		</dict>
+	</array>
+</dict>
+</plist>

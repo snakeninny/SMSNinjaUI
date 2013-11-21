@@ -171,7 +171,6 @@
         case 0:
             cell.textLabel.text = NSLocalizedString(@"Name", @"Name");
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            
             nameField.delegate = self;
             nameField.placeholder = NSLocalizedString(@"Input here", @"Input here");
             nameField.text = self.nameString;
@@ -202,17 +201,15 @@
         case 2:
             if (indexPath.row == 0)
             {
-                cell.textLabel.text = NSLocalizedString(@"Auto reply", @"Auto reply");
+                cell.textLabel.text = NSLocalizedString(@"Reply", @"Reply");
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 cell.accessoryView = replySwitch;
-                
                 replySwitch.on = [self.replyString isEqualToString:@"0"] ? NO : YES;
             }
             else if (indexPath.row == 1)
             {
                 cell.textLabel.text = NSLocalizedString(@"With", @"With");
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
-                
                 messageField.delegate = self;
                 messageField.text = self.messageString;
                 messageField.clearButtonMode = UITextFieldViewModeWhileEditing;
@@ -225,7 +222,6 @@
             cell.textLabel.text = NSLocalizedString(@"Beep", @"Beep");
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             cell.accessoryView = soundSwitch;
-            
             soundSwitch.on = [self.soundString isEqualToString:@"0"] ? NO : YES;
             
             break;

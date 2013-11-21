@@ -72,6 +72,9 @@
 	[flag release];
 	flag = nil;
     
+    [keywordArray release];
+	keywordArray = nil;
+    
 	[super dealloc];
 }
 
@@ -124,7 +127,6 @@
             {
                 cell.textLabel.text = NSLocalizedString(@"Name", @"Name");
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
-                
                 nameField.delegate = self;
                 nameField.placeholder = NSLocalizedString(@"Input here", @"Input here");
                 nameField.text = self.nameString;
@@ -135,7 +137,6 @@
             {
                 cell.textLabel.text = NSLocalizedString(@"Number", @"Number");
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
-                
                 keywordField.delegate = self;
                 keywordField.placeholder = NSLocalizedString(@"Input here", @"Input here");
                 keywordField.text = self.keywordString;
@@ -173,9 +174,8 @@
         {
             if (indexPath.row == 0)
             {
-                cell.textLabel.text = NSLocalizedString(@"Auto reply", @"Auto reply");
+                cell.textLabel.text = NSLocalizedString(@"Reply", @"Reply");
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
-                
                 cell.accessoryView = replySwitch;
                 replySwitch.on = [self.replyString isEqualToString:@"0"] ? NO : YES;
             }
@@ -183,7 +183,6 @@
             {
                 cell.textLabel.text = NSLocalizedString(@"With", @"With");
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
-                
                 messageField.delegate = self;
                 messageField.text = self.messageString;
                 messageField.clearButtonMode = UITextFieldViewModeWhileEditing;
@@ -197,10 +196,8 @@
         {
             cell.textLabel.text = NSLocalizedString(@"Beep", @"Beep");
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            
             cell.accessoryView = soundSwitch;
             soundSwitch.on = [self.soundString isEqualToString:@"0"] ? NO : YES;
-            [cell.contentView addSubview:soundSwitch];
             
             break;
         }
@@ -259,7 +256,7 @@
 	NSString *tempString = keywordField.text ? keywordField.text : @"";
 	NSRange range = [tempString rangeOfString:@" "];
     [keywordArray removeAllObjects];
-	while (range.location != NSNotFound )
+	while (range.location != NSNotFound)
 	{
 		if ([[tempString substringToIndex:range.location] length] != 0)
 			[keywordArray addObject:[tempString substringToIndex:range.location]];

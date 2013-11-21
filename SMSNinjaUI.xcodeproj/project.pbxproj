@@ -27,6 +27,9 @@
 		88C0E1ED183CAE4A00E0A343 /* SNTimeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88C0E1EB183CAE4A00E0A343 /* SNTimeViewController.m */; };
 		88C0E1F0183DB94100E0A343 /* SNContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88C0E1EE183DB94100E0A343 /* SNContentViewController.m */; };
 		88D1DADB183D13F6003CE84F /* SNNumberViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88D1DADA183D13F6003CE84F /* SNNumberViewController.m */; };
+		88DBD951183E5B3B00DE60DD /* SNPrivateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88DBD950183E5B3B00DE60DD /* SNPrivateViewController.m */; };
+		88DBD956183E5E7D00DE60DD /* TODO in Resources */ = {isa = PBXBuildFile; fileRef = 88DBD955183E5E7D00DE60DD /* TODO */; };
+		88DBD959183E650400DE60DD /* SNPrivateMessageHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88DBD958183E650400DE60DD /* SNPrivateMessageHistoryViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -76,6 +79,11 @@
 		88C0E1EF183DB94100E0A343 /* SNContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNContentViewController.h; sourceTree = "<group>"; };
 		88D1DAD9183D13F6003CE84F /* SNNumberViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNNumberViewController.h; sourceTree = "<group>"; };
 		88D1DADA183D13F6003CE84F /* SNNumberViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNNumberViewController.m; sourceTree = "<group>"; };
+		88DBD94F183E5B3B00DE60DD /* SNPrivateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNPrivateViewController.h; sourceTree = "<group>"; };
+		88DBD950183E5B3B00DE60DD /* SNPrivateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNPrivateViewController.m; sourceTree = "<group>"; };
+		88DBD955183E5E7D00DE60DD /* TODO */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TODO; sourceTree = "<group>"; };
+		88DBD957183E650400DE60DD /* SNPrivateMessageHistoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNPrivateMessageHistoryViewController.h; sourceTree = "<group>"; };
+		88DBD958183E650400DE60DD /* SNPrivateMessageHistoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNPrivateMessageHistoryViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -132,6 +140,10 @@
 		88A3053318289E72006A69D8 /* SMSNinjaUI */ = {
 			isa = PBXGroup;
 			children = (
+				88DBD957183E650400DE60DD /* SNPrivateMessageHistoryViewController.h */,
+				88DBD958183E650400DE60DD /* SNPrivateMessageHistoryViewController.m */,
+				88DBD94F183E5B3B00DE60DD /* SNPrivateViewController.h */,
+				88DBD950183E5B3B00DE60DD /* SNPrivateViewController.m */,
 				88C0E1EF183DB94100E0A343 /* SNContentViewController.h */,
 				88C0E1EE183DB94100E0A343 /* SNContentViewController.m */,
 				88D1DAD9183D13F6003CE84F /* SNNumberViewController.h */,
@@ -161,6 +173,7 @@
 				88C0E1CE1839957300E0A343 /* SNReadMeViewController.m */,
 				88A3053C18289E72006A69D8 /* SMSNinjaApplication.h */,
 				88A3053D18289E72006A69D8 /* SMSNinjaApplication.m */,
+				88DBD955183E5E7D00DE60DD /* TODO */,
 				88A3053418289E72006A69D8 /* Supporting Files */,
 			);
 			path = SMSNinjaUI;
@@ -251,6 +264,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				88DBD956183E5E7D00DE60DD /* TODO in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -281,8 +295,10 @@
 				88C0E1D01839957300E0A343 /* SNMainViewController.m in Sources */,
 				88C0E1F0183DB94100E0A343 /* SNContentViewController.m in Sources */,
 				88C0E1EA183C9BBE00E0A343 /* SNSystemMessageHistoryViewController.m in Sources */,
+				88DBD959183E650400DE60DD /* SNPrivateMessageHistoryViewController.m in Sources */,
 				88A3053A18289E72006A69D8 /* main.m in Sources */,
 				88C0E1D81839B42B00E0A343 /* SNTextTableViewCell.m in Sources */,
+				88DBD951183E5B3B00DE60DD /* SNPrivateViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
