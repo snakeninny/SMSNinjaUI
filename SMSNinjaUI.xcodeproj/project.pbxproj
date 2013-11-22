@@ -26,6 +26,10 @@
 		88C0E1EA183C9BBE00E0A343 /* SNSystemMessageHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88C0E1E8183C9BBE00E0A343 /* SNSystemMessageHistoryViewController.m */; };
 		88C0E1ED183CAE4A00E0A343 /* SNTimeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88C0E1EB183CAE4A00E0A343 /* SNTimeViewController.m */; };
 		88C0E1F0183DB94100E0A343 /* SNContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88C0E1EE183DB94100E0A343 /* SNContentViewController.m */; };
+		88C0E1F3183EEEB100E0A343 /* SNPrivateCallHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88C0E1F1183EEEB100E0A343 /* SNPrivateCallHistoryViewController.m */; };
+		88C0E1F6183EF77B00E0A343 /* SNCallActionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88C0E1F4183EF77B00E0A343 /* SNCallActionViewController.m */; };
+		88C0E1F9183EFA8700E0A343 /* SNMessageActionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88C0E1F8183EFA8700E0A343 /* SNMessageActionViewController.m */; };
+		88C0E1FC183F077100E0A343 /* SNPictureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88C0E1FA183F077100E0A343 /* SNPictureViewController.m */; };
 		88D1DADB183D13F6003CE84F /* SNNumberViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88D1DADA183D13F6003CE84F /* SNNumberViewController.m */; };
 		88DBD951183E5B3B00DE60DD /* SNPrivateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88DBD950183E5B3B00DE60DD /* SNPrivateViewController.m */; };
 		88DBD956183E5E7D00DE60DD /* TODO in Resources */ = {isa = PBXBuildFile; fileRef = 88DBD955183E5E7D00DE60DD /* TODO */; };
@@ -77,6 +81,14 @@
 		88C0E1EC183CAE4A00E0A343 /* SNTimeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNTimeViewController.h; sourceTree = "<group>"; };
 		88C0E1EE183DB94100E0A343 /* SNContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNContentViewController.m; sourceTree = "<group>"; };
 		88C0E1EF183DB94100E0A343 /* SNContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNContentViewController.h; sourceTree = "<group>"; };
+		88C0E1F1183EEEB100E0A343 /* SNPrivateCallHistoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNPrivateCallHistoryViewController.m; sourceTree = "<group>"; };
+		88C0E1F2183EEEB100E0A343 /* SNPrivateCallHistoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNPrivateCallHistoryViewController.h; sourceTree = "<group>"; };
+		88C0E1F4183EF77B00E0A343 /* SNCallActionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNCallActionViewController.m; sourceTree = "<group>"; };
+		88C0E1F5183EF77B00E0A343 /* SNCallActionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNCallActionViewController.h; sourceTree = "<group>"; };
+		88C0E1F7183EFA8700E0A343 /* SNMessageActionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNMessageActionViewController.h; sourceTree = "<group>"; };
+		88C0E1F8183EFA8700E0A343 /* SNMessageActionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNMessageActionViewController.m; sourceTree = "<group>"; };
+		88C0E1FA183F077100E0A343 /* SNPictureViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNPictureViewController.m; sourceTree = "<group>"; };
+		88C0E1FB183F077100E0A343 /* SNPictureViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNPictureViewController.h; sourceTree = "<group>"; };
 		88D1DAD9183D13F6003CE84F /* SNNumberViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNNumberViewController.h; sourceTree = "<group>"; };
 		88D1DADA183D13F6003CE84F /* SNNumberViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNNumberViewController.m; sourceTree = "<group>"; };
 		88DBD94F183E5B3B00DE60DD /* SNPrivateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNPrivateViewController.h; sourceTree = "<group>"; };
@@ -140,6 +152,14 @@
 		88A3053318289E72006A69D8 /* SMSNinjaUI */ = {
 			isa = PBXGroup;
 			children = (
+				88C0E1FB183F077100E0A343 /* SNPictureViewController.h */,
+				88C0E1FA183F077100E0A343 /* SNPictureViewController.m */,
+				88C0E1F7183EFA8700E0A343 /* SNMessageActionViewController.h */,
+				88C0E1F8183EFA8700E0A343 /* SNMessageActionViewController.m */,
+				88C0E1F5183EF77B00E0A343 /* SNCallActionViewController.h */,
+				88C0E1F4183EF77B00E0A343 /* SNCallActionViewController.m */,
+				88C0E1F2183EEEB100E0A343 /* SNPrivateCallHistoryViewController.h */,
+				88C0E1F1183EEEB100E0A343 /* SNPrivateCallHistoryViewController.m */,
 				88DBD957183E650400DE60DD /* SNPrivateMessageHistoryViewController.h */,
 				88DBD958183E650400DE60DD /* SNPrivateMessageHistoryViewController.m */,
 				88DBD94F183E5B3B00DE60DD /* SNPrivateViewController.h */,
@@ -284,19 +304,23 @@
 			files = (
 				88C0E1D21839957300E0A343 /* SNReadMeViewController.m in Sources */,
 				88C0E1ED183CAE4A00E0A343 /* SNTimeViewController.m in Sources */,
+				88C0E1F6183EF77B00E0A343 /* SNCallActionViewController.m in Sources */,
 				888C8F5F183B2DFA00698D52 /* SNSystemCallHistoryViewController.m in Sources */,
 				88C0E1E1183AF55200E0A343 /* SNBlockedCallHistoryViewController.m in Sources */,
 				88A3053E18289E72006A69D8 /* SMSNinjaApplication.m in Sources */,
 				88C0E1D11839957300E0A343 /* SNSettingsViewController.m in Sources */,
 				88C0E1DB1839BC6200E0A343 /* SNBlockedMessageHistoryViewController.m in Sources */,
 				888C8F5C183B278F00698D52 /* SNWhitelistViewController.m in Sources */,
+				88C0E1F3183EEEB100E0A343 /* SNPrivateCallHistoryViewController.m in Sources */,
 				88D1DADB183D13F6003CE84F /* SNNumberViewController.m in Sources */,
+				88C0E1FC183F077100E0A343 /* SNPictureViewController.m in Sources */,
 				88C0E1E4183B092F00E0A343 /* SNBlacklistViewController.m in Sources */,
 				88C0E1D01839957300E0A343 /* SNMainViewController.m in Sources */,
 				88C0E1F0183DB94100E0A343 /* SNContentViewController.m in Sources */,
 				88C0E1EA183C9BBE00E0A343 /* SNSystemMessageHistoryViewController.m in Sources */,
 				88DBD959183E650400DE60DD /* SNPrivateMessageHistoryViewController.m in Sources */,
 				88A3053A18289E72006A69D8 /* main.m in Sources */,
+				88C0E1F9183EFA8700E0A343 /* SNMessageActionViewController.m in Sources */,
 				88C0E1D81839B42B00E0A343 /* SNTextTableViewCell.m in Sources */,
 				88DBD951183E5B3B00DE60DD /* SNPrivateViewController.m in Sources */,
 			);

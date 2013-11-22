@@ -1,4 +1,5 @@
 #import "SNBlockedMessageHistoryViewController.h"
+#import "SNBlockedCallHistoryViewController.h"
 #import "SNMainViewController.h"
 #import "SNPictureViewController.h"
 #import <UIKit/UIPasteboard.h>

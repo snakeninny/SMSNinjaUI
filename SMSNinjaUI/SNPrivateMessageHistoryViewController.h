@@ -1,6 +1,6 @@
 #import <UIKit/UIKit.h>
 
-@interface SNPrivateMessageHistoryViewController : UITableViewController <UIAlertViewDelegate>
+@interface SNPrivateMessageHistoryViewController : UITableViewController <UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
 {
 	NSMutableArray *idArray;
 	NSMutableArray *nameArray;
@@ -8,11 +8,12 @@
 	NSMutableArray *contentArray;
 	NSMutableArray *timeArray;
 	NSMutableArray *picturesArray;
-
+	NSMutableSet *bulkSet;
 	int chosenRow;
 }
-- (void)initDB;
-- (void)deleteAll;
-- (void)gotoPrivateViewController;
+- (void)loadDatabaseSegment;
+- (void)selectAll:(UIBarButtonItem *)buttonItem;
+- (void)bulkDelete;
+- (void)gotoPrivateView;
 - (void)segmentAction:(id)sender;
 @end

@@ -1,22 +1,18 @@
 #import <UIKit/UIKit.h>
 
-@interface SNBlockedMessageHistoryViewController : UITableViewController <UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
+@interface SNPrivateCallHistoryViewController : UITableViewController <UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate, UIActionSheetDelegate>
 {
 	NSMutableArray *idArray;
 	NSMutableArray *nameArray;
 	NSMutableArray *numberArray;
 	NSMutableArray *contentArray;
 	NSMutableArray *timeArray;
-	NSMutableArray *readArray;
-	NSMutableArray *picturesArray;
 	NSMutableSet *bulkSet;
 	int chosenRow;
 }
 - (void)loadDatabaseSegment;
 - (void)selectAll:(UIBarButtonItem *)buttonItem;
 - (void)bulkDelete;
-- (void)bulkUnread;
-- (void)bulkRead;
-- (void)gotoMainView;
+- (void)gotoPrivateView;
 - (void)segmentAction:(id)sender;
 @end

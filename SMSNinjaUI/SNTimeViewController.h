@@ -2,7 +2,9 @@
 
 @interface SNTimeViewController : UIViewController <UIPickerViewDelegate, UIPickerViewDataSource, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate>
 {
+@public
 	UITableView *settingsTableView;
+@private
     UIPickerView *timePickerView;
 }
 @property (nonatomic, retain) NSString *keywordString;

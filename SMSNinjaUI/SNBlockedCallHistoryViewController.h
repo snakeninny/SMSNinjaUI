@@ -1,4 +1,4 @@
-#import "SNBlockedMessageHistoryViewController.h"
+#import <UIKit/UIKit.h>
 
 @interface SNBlockedCallHistoryViewController : UITableViewController <UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate, UIActionSheetDelegate>
 {

@@ -1,12 +1,12 @@
-#import "SNBlockedCallHistoryViewController.h"
-#import "SNBlockedMessageHistoryViewController.h"
-#import "SNMainViewController.h"
+#import "SNPrivateCallHistoryViewController.h"
+#import "SNPrivateMessageHistoryViewController.h"
+#import "SNPrivateViewController.h"
 #import <sqlite3.h>
 
 #define SETTINGS @"/var/mobile/Library/SMSNinja/smsninja.plist"
 #define DATABASE @"/var/mobile/Library/SMSNinja/smsninja.db"
 
-@implementation SNBlockedCallHistoryViewController
+@implementation SNPrivateCallHistoryViewController
 - (void)dealloc
 {
 	[idArray release];
@@ -24,18 +24,15 @@
 	[numberArray release];
 	numberArray = nil;
     
-	[readArray release];
-	readArray = nil;
-    
-	[bulkSet release];
-	bulkSet = nil;
+    [bulkSet release];
+    bulkSet = nil;
     
 	[super dealloc];
 }
 
 - (void)bulkDelete
 {
-    __block SNBlockedCallHistoryViewController *weakSelf = self;
+    __block SNPrivateCallHistoryViewController *weakSelf = self;
 	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
                    {
                        sqlite3 *database;
@@ -44,7 +41,7 @@
                        {
                            for (NSIndexPath *chosenRowIndexPath in weakSelf->bulkSet)
                            {
-                               NSString *sql = [NSString stringWithFormat:@"delete from blockedcall where number = '%@' and name = '%@' and time = '%@' and content = '%@' and read = '%@' and id = '%@'", [weakSelf->numberArray objectAtIndex:chosenRowIndexPath.row], [[weakSelf->nameArray objectAtIndex:chosenRowIndexPath.row] stringByReplacingOccurrencesOfString:@"'" withString:@"''"], [weakSelf->timeArray objectAtIndex:chosenRowIndexPath.row], [[weakSelf->contentArray objectAtIndex:chosenRowIndexPath.row] stringByReplacingOccurrencesOfString:@"'" withString:@"''"], [weakSelf->readArray objectAtIndex:chosenRowIndexPath.row], [weakSelf->idArray objectAtIndex:chosenRowIndexPath.row]];
+                               NSString *sql = [NSString stringWithFormat:@"delete from privatecall where number = '%@' and name = '%@' and time = '%@' and content = '%@' and id = '%@'", [weakSelf->numberArray objectAtIndex:chosenRowIndexPath.row], [[weakSelf->nameArray objectAtIndex:chosenRowIndexPath.row] stringByReplacingOccurrencesOfString:@"'" withString:@"''"], [weakSelf->timeArray objectAtIndex:chosenRowIndexPath.row], [[weakSelf->contentArray objectAtIndex:chosenRowIndexPath.row] stringByReplacingOccurrencesOfString:@"'" withString:@"''"], [weakSelf->idArray objectAtIndex:chosenRowIndexPath.row]];
                                int execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
                                if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
                                
@@ -53,7 +50,6 @@
                                [weakSelf->contentArray removeObjectAtIndex:chosenRowIndexPath.row];
                                [weakSelf->timeArray removeObjectAtIndex:chosenRowIndexPath.row];
                                [weakSelf->numberArray removeObjectAtIndex:chosenRowIndexPath.row];
-                               [weakSelf->readArray removeObjectAtIndex:chosenRowIndexPath.row];
                            }
                            sqlite3_close(database);
                        }
@@ -64,58 +60,6 @@
     [self.tableView endUpdates];
 }
 
-- (void)bulkUnread
-{
-    __block SNBlockedCallHistoryViewController *weakSelf = self;
-	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
-                   {
-                       sqlite3 *database;
-                       int openResult = sqlite3_open([DATABASE UTF8String], &database);
-                       if (openResult == SQLITE_OK)
-                       {
-                           for (NSIndexPath *chosenRowIndexPath in weakSelf->bulkSet)
-                           {
-                               NSString *sql = [NSString stringWithFormat:@"update blockedcall set read = '0' where id = '%@'", [weakSelf->idArray objectAtIndex:chosenRowIndexPath.row]];
-                               int execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
-                               if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
-                               
-                               [weakSelf->readArray replaceObjectAtIndex:chosenRowIndexPath.row withObject:@"0"];
-                           }
-                           sqlite3_close(database);
-                       }
-                       else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
-                   });
-	for (NSIndexPath *indexPath in bulkSet)
-		for (UIView *view in [self.tableView cellForRowAtIndexPath:indexPath].contentView.subviews)
-            if ([view isKindOfClass:[UILabel class]]) ((UILabel *)view).textColor = [UIColor blueColor];
-}
-
-- (void)bulkRead
-{
-    __block SNBlockedCallHistoryViewController *weakSelf = self;
-	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
-                   {
-                       sqlite3 *database;
-                       int openResult = sqlite3_open([DATABASE UTF8String], &database);
-                       if (openResult == SQLITE_OK)
-                       {
-                           for (NSIndexPath *chosenRowIndexPath in weakSelf->bulkSet)
-                           {
-                               NSString *sql = [NSString stringWithFormat:@"update blockedcall set read = '1' where id = '%@'", [weakSelf->idArray objectAtIndex:chosenRowIndexPath.row]];
-                               int execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
-                               if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
-                               
-                               [weakSelf->readArray replaceObjectAtIndex:chosenRowIndexPath.row withObject:@"1"];
-                           }
-                           sqlite3_close(database);
-                       }
-                       else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
-                   });
-  	for (NSIndexPath *indexPath in bulkSet)
-		for (UIView *view in [self.tableView cellForRowAtIndexPath:indexPath].contentView.subviews)
-            if ([view isKindOfClass:[UILabel class]]) ((UILabel *)view).textColor = [UIColor blackColor];
-}
-
 - (void)loadDatabaseSegment
 {
 	sqlite3 *database;
@@ -123,7 +67,7 @@
 	int openResult = sqlite3_open([DATABASE UTF8String], &database);
 	if (openResult == SQLITE_OK)
 	{
-		NSString *sql = [NSString stringWithFormat:@"select name, content, time, number, read, id from blockedcall order by (cast(id as integer)) desc limit %d, 50", [idArray count]];
+		NSString *sql = [NSString stringWithFormat:@"select name, content, time, number, id from blockedcall order by (cast(id as integer)) desc limit %d, 50", [idArray count]];
 		int prepareResult = sqlite3_prepare_v2(database, [sql UTF8String], -1, &statement, NULL);
 		if (prepareResult == SQLITE_OK)
 		{
@@ -141,10 +85,7 @@
 				char *number = (char *)sqlite3_column_text(statement, 3);
 				[numberArray addObject:number ? [NSString stringWithUTF8String:number] : @""];
                 
-				char *read = (char *)sqlite3_column_text(statement, 4);
-				[readArray addObject:read ? [NSString stringWithUTF8String:read] : @""];
-                
-				char *identifier = (char *)sqlite3_column_text(statement, 5);
+				char *identifier = (char *)sqlite3_column_text(statement, 4);
 				[idArray addObject:identifier ? [NSString stringWithUTF8String:identifier] : @""];
 			}
 			sqlite3_finalize(statement);
@@ -155,30 +96,25 @@
 	else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
 }
 
-- (SNBlockedCallHistoryViewController *)init
+- (SNPrivateCallHistoryViewController *)init
 {
 	if ((self = [super initWithStyle:UITableViewStylePlain]))
 	{
 		UIButton* backButton = [UIButton buttonWithType:(UIButtonType)101];
-		[backButton addTarget:self action:@selector(gotoMainView) forControlEvents:UIControlEventTouchUpInside];
-		[backButton setTitle:NSLocalizedString(@"SMSNinja", @"SMSNinja") forState:UIControlStateNormal];
+		[backButton addTarget:self action:@selector(gotoPrivateView) forControlEvents:UIControlEventTouchUpInside];
+		[backButton setTitle:NSLocalizedString(@"Private Zone", @"Private Zone") forState:UIControlStateNormal];
 		self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithCustomView:backButton] autorelease];
 		self.navigationItem.rightBarButtonItem = self.editButtonItem;
         
-		UIBarButtonItem *deleteButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Delete", @"Delete") style: UIBarButtonItemStyleBordered target: self action:@selector(bulkDelete)];
+        UIBarButtonItem *deleteButton = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Delete", @"Delete") style: UIBarButtonItemStyleBordered target: self action:@selector(bulkDelete)] autorelease];
 		deleteButton.tintColor = [UIColor redColor];
-		UIBarButtonItem *unreadButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Mark as unread", @"Mark as unread") style:UIBarButtonItemStyleBordered target:self action:@selector(bulkUnread)];
-		UIBarButtonItem *readButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Mark as read", @"Mark as read") style:UIBarButtonItemStyleBordered target:self action:@selector(bulkRead)];
-		UIBarButtonItem *flexibleSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-		self.toolbarItems = [NSArray arrayWithObjects:flexibleSpace, deleteButton, flexibleSpace, unreadButton, flexibleSpace, readButton, flexibleSpace, nil];
-		[flexibleSpace release];
+		self.toolbarItems = [NSArray arrayWithObjects:deleteButton, nil];
         
 		idArray = [[NSMutableArray alloc] initWithCapacity:600];
 		nameArray = [[NSMutableArray alloc] initWithCapacity:600];
 		contentArray = [[NSMutableArray alloc] initWithCapacity:600];
 		timeArray = [[NSMutableArray alloc] initWithCapacity:600];
 		numberArray = [[NSMutableArray alloc] initWithCapacity:600];
-		readArray = [[NSMutableArray alloc] initWithCapacity:600];
 		bulkSet = [[NSMutableSet alloc] initWithCapacity:600];
         
 		[self loadDatabaseSegment];
@@ -190,9 +126,9 @@
 {
     if ([sender selectedSegmentIndex] == 0)
     {
-        SNBlockedMessageHistoryViewController *blockedMessageHistoryController = [[SNBlockedMessageHistoryViewController alloc] init];
-        [self.navigationController pushViewController:blockedMessageHistoryController animated:NO];
-        [blockedMessageHistoryController release];
+        SNPrivateMessageHistoryViewController *privateMessageHistoryController = [[SNPrivateMessageHistoryViewController alloc] init];
+        [self.navigationController pushViewController:privateMessageHistoryController animated:NO];
+        [privateMessageHistoryController release];
     }
 }
 
@@ -230,7 +166,6 @@
 	else if (kCFCoreFoundationVersionNumber > kCFCoreFoundationVersionNumber_iOS_5_1) nameLabel.minimumScaleFactor = 8.0f;
 	nameLabel.adjustsFontSizeToFitWidth = YES;
 	nameLabel.text = [[nameArray objectAtIndex:indexPath.row] length] != 0 ? [nameArray objectAtIndex:indexPath.row] : [numberArray objectAtIndex:indexPath.row];
-	if ([[readArray objectAtIndex:indexPath.row] isEqualToString:@"0"]) nameLabel.textColor = [UIColor blueColor];
 	[cell.contentView addSubview:nameLabel];
 	[nameLabel release];
     
@@ -264,7 +199,7 @@
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    __block SNBlockedCallHistoryViewController *weakSelf = self;
+    __block SNPrivateCallHistoryViewController *weakSelf = self;
 	switch (buttonIndex)
 	{
 		case 0:
@@ -278,7 +213,7 @@
                                {
                                    for (NSIndexPath *chosenRowIndexPath in weakSelf->bulkSet)
                                    {
-                                       NSString *sql = [NSString stringWithFormat:@"delete from blockedcall where number = '%@' and name = '%@' and time = '%@' and content = '%@' and read = '%@' and id = '%@'", [weakSelf->numberArray objectAtIndex:chosenRowIndexPath.row], [[weakSelf->nameArray objectAtIndex:chosenRowIndexPath.row] stringByReplacingOccurrencesOfString:@"'" withString:@"''"], [weakSelf->timeArray objectAtIndex:chosenRowIndexPath.row], [[weakSelf->contentArray objectAtIndex:chosenRowIndexPath.row] stringByReplacingOccurrencesOfString:@"'" withString:@"''"], [weakSelf->readArray objectAtIndex:chosenRowIndexPath.row], [weakSelf->idArray objectAtIndex:chosenRowIndexPath.row]];
+                                       NSString *sql = [NSString stringWithFormat:@"delete from blockedcall where number = '%@' and name = '%@' and time = '%@' and content = '%@' and id = '%@'", [weakSelf->numberArray objectAtIndex:chosenRowIndexPath.row], [[weakSelf->nameArray objectAtIndex:chosenRowIndexPath.row] stringByReplacingOccurrencesOfString:@"'" withString:@"''"], [weakSelf->timeArray objectAtIndex:chosenRowIndexPath.row], [[weakSelf->contentArray objectAtIndex:chosenRowIndexPath.row] stringByReplacingOccurrencesOfString:@"'" withString:@"''"], [weakSelf->idArray objectAtIndex:chosenRowIndexPath.row]];
                                        int execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
                                        if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
                                        
@@ -287,7 +222,6 @@
                                        [weakSelf->contentArray removeObjectAtIndex:chosenRowIndexPath.row];
                                        [weakSelf->timeArray removeObjectAtIndex:chosenRowIndexPath.row];
                                        [weakSelf->numberArray removeObjectAtIndex:chosenRowIndexPath.row];
-                                       [weakSelf->readArray removeObjectAtIndex:chosenRowIndexPath.row];
                                    }
                                    sqlite3_close(database);
                                }
@@ -298,62 +232,12 @@
 			[self.tableView endUpdates];
 			break;
 		case 1:
-            [bulkSet removeAllObjects];
-            [bulkSet addObject:[NSIndexPath indexPathForRow:chosenRow inSection:0]];
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
-                           {
-                               sqlite3 *database;
-                               int openResult = sqlite3_open([DATABASE UTF8String], &database);
-                               if (openResult == SQLITE_OK)
-                               {
-                                   for (NSIndexPath *chosenRowIndexPath in weakSelf->bulkSet)
-                                   {
-                                       NSString *sql = [NSString stringWithFormat:@"update blockedcall set read = '0' where id = '%@'", [weakSelf->idArray objectAtIndex:chosenRowIndexPath.row]];
-                                       int execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
-                                       if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
-                                       
-                                       [weakSelf->readArray replaceObjectAtIndex:chosenRowIndexPath.row withObject:@"0"];
-                                   }
-                                   sqlite3_close(database);
-                               }
-                               else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
-                           });
-            for (NSIndexPath *indexPath in bulkSet)
-                for (UIView *view in [self.tableView cellForRowAtIndexPath:indexPath].contentView.subviews)
-                    if ([view isKindOfClass:[UILabel class]]) ((UILabel *)view).textColor = [UIColor blueColor];
-			break;
-		case 2:
-            [bulkSet removeAllObjects];
-            [bulkSet addObject:[NSIndexPath indexPathForRow:chosenRow inSection:0]];
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
-                           {
-                               sqlite3 *database;
-                               int openResult = sqlite3_open([DATABASE UTF8String], &database);
-                               if (openResult == SQLITE_OK)
-                               {
-                                   for (NSIndexPath *chosenRowIndexPath in weakSelf->bulkSet)
-                                   {
-                                       NSString *sql = [NSString stringWithFormat:@"update blockedcall set read = '1' where id = '%@'", [weakSelf->idArray objectAtIndex:chosenRowIndexPath.row]];
-                                       int execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
-                                       if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
-                                       
-                                       [weakSelf->readArray replaceObjectAtIndex:chosenRowIndexPath.row withObject:@"1"];
-                                   }
-                                   sqlite3_close(database);
-                               }
-                               else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
-                           });
-            for (NSIndexPath *indexPath in bulkSet)
-                for (UIView *view in [self.tableView cellForRowAtIndexPath:indexPath].contentView.subviews)
-                    if ([view isKindOfClass:[UILabel class]]) ((UILabel *)view).textColor = [UIColor blackColor];
-			break;
-		case 3:
 			[[UIPasteboard generalPasteboard] setValue:[numberArray objectAtIndex:chosenRow] forPasteboardType:@"public.utf8-plain-text"];
 			break;
-		case 4: // 改直接发
+		case 2: // 改直接发
 			[[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"sms:%@", [numberArray objectAtIndex:chosenRow]]]];
 			break;
-		case 5:
+		case 3:
 			[[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"tel:%@", [numberArray objectAtIndex:chosenRow]]]];
 			break;
 	}
@@ -366,7 +250,7 @@
 	{
 		[tableView deselectRowAtIndexPath:indexPath animated:YES];
 		chosenRow = indexPath.row;
-		UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel") destructiveButtonTitle:NSLocalizedString(@"Delete", @"Delete") otherButtonTitles:NSLocalizedString(@"Mark as read", @"Mark as read"), NSLocalizedString(@"Mark as unread", @"Mark as unread"), NSLocalizedString(@"Copy number", @"Copy number"), NSLocalizedString(@"SMS", @"SMS"), NSLocalizedString(@"Call", @"Call"), nil];
+		UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel") destructiveButtonTitle:NSLocalizedString(@"Delete", @"Delete") otherButtonTitles:NSLocalizedString(@"Copy number", @"Copy number"), NSLocalizedString(@"SMS", @"SMS"), NSLocalizedString(@"Call", @"Call"), nil];
 		[actionSheet showFromToolbar:self.navigationController.toolbar];
 		[actionSheet release];
 	}
@@ -382,15 +266,10 @@
 	return NSLocalizedString(@"Call", @"Call");
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-	return [[tableView cellForRowAtIndexPath:indexPath].contentView viewWithTag:2].bounds.size.height + [[tableView cellForRowAtIndexPath:indexPath].contentView viewWithTag:3].bounds.size.height + 4.0f;
-}
-
-- (void)gotoMainView
+- (void)gotoPrivateView
 {
 	for (UIViewController *viewController in self.navigationController.viewControllers)
-		if ([viewController isKindOfClass:[SNMainViewController class]])
+		if ([viewController isKindOfClass:[SNPrivateViewController class]])
 			[self.navigationController popToViewController:viewController animated:YES];
 }
 
@@ -439,8 +318,8 @@
 		for (UITableViewCell *cell in [self.tableView visibleCells])
 			cell.selectionStyle = UITableViewCellSelectionStyleBlue;
 		UIButton* backButton = [UIButton buttonWithType:(UIButtonType)101];
-		[backButton addTarget:self action:@selector(gotoMainView) forControlEvents:UIControlEventTouchUpInside];
-		[backButton setTitle:NSLocalizedString(@"SMSNinja", @"SMSNinja") forState:UIControlStateNormal];
+		[backButton addTarget:self action:@selector(gotoPrivateView) forControlEvents:UIControlEventTouchUpInside];
+		[backButton setTitle:NSLocalizedString(@"Private Zone", @"Private Zone") forState:UIControlStateNormal];
 		self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithCustomView:backButton] autorelease];
 	}
 	[super setEditing:editing animated:animate];
