@@ -47,8 +47,8 @@
 	CGRect appFrame = [[UIScreen mainScreen] applicationFrame];
 	UIView *view = self.tableView;
 	UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
-	[label setText:NSLocalizedString(@"by Yinglu Zou (snakeninny)", @"by Yinglu Zou (snakeninny)")];
-	[label setTextColor:[UIColor colorWithRed:0.3f green:0.34f blue:0.42f alpha:1.0f]];
+	[label setText:NSLocalizedString(@"by snakeninny", @"by snakeninny")];
+	[label setTextColor:[UIColor colorWithRed:0.3f green:0.34f blue:0.42f alpha:0.6f]];
 	[label setShadowColor:[UIColor whiteColor]];
 	[label setShadowOffset:CGSizeMake(1.0f, 1.0f)];
 	[label setBackgroundColor:[UIColor clearColor]];
@@ -59,7 +59,7 @@
 	[label release];
 }
 
-void (^CreateDatabase)(void) = ^(void)
+static void (^CreateDatabase)(void) = ^(void)
 {
     NSFileManager *fileManager = [NSFileManager defaultManager];
 	BOOL isDir;
@@ -299,10 +299,10 @@ void (^CreateDatabase)(void) = ^(void)
                 cell.textLabel.text = NSLocalizedString(@"SMSNinja", @"SMSNinja");
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 
-                [appSwitch setAlternateColors:YES];
                 cell.accessoryView = appSwitch;
                 NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithContentsOfFile:SETTINGS];
                 appSwitch.on = [[dictionary objectForKey:@"appIsOn"] boolValue];
+                [appSwitch setAlternateColors:YES];
                 [appSwitch addTarget:self action:@selector(saveSettings) forControlEvents:UIControlEventValueChanged];
                 break;
             }

@@ -19,5 +19,4 @@
 @property (nonatomic, retain) UISwitch *soundSwitch;
 @property (nonatomic, retain) NSString *soundString;
 @property (nonatomic, retain) NSString *flag;
-- (void)gotoList;
 @end

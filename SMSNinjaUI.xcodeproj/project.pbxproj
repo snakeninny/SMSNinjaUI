@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		880485761842F12300746698 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 880485751842F12300746698 /* libsqlite3.0.dylib */; };
+		8804857A1843339100746698 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 880485781843339100746698 /* Localizable.strings */; };
+		8804857E1843347C00746698 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8804857C1843347C00746698 /* Localizable.strings */; };
 		888C8F5C183B278F00698D52 /* SNWhitelistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 888C8F5B183B278F00698D52 /* SNWhitelistViewController.m */; };
 		888C8F5F183B2DFA00698D52 /* SNSystemCallHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 888C8F5E183B2DFA00698D52 /* SNSystemCallHistoryViewController.m */; };
 		88A3052E18289E72006A69D8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88A3052D18289E72006A69D8 /* Foundation.framework */; };
@@ -47,6 +50,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		880485751842F12300746698 /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
+		880485791843339100746698 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Localizable.strings; sourceTree = "<group>"; };
+		8804857D1843347C00746698 /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_CN; path = Localizable.strings; sourceTree = "<group>"; };
 		888C8F5A183B278F00698D52 /* SNWhitelistViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNWhitelistViewController.h; sourceTree = "<group>"; };
 		888C8F5B183B278F00698D52 /* SNWhitelistViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNWhitelistViewController.m; sourceTree = "<group>"; };
 		888C8F5D183B2DFA00698D52 /* SNSystemCallHistoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNSystemCallHistoryViewController.h; sourceTree = "<group>"; };
@@ -103,6 +109,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				880485761842F12300746698 /* libsqlite3.0.dylib in Frameworks */,
 				88A3053018289E72006A69D8 /* CoreGraphics.framework in Frameworks */,
 				88A3053218289E72006A69D8 /* UIKit.framework in Frameworks */,
 				88A3052E18289E72006A69D8 /* Foundation.framework in Frameworks */,
@@ -121,9 +128,29 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		880485771843339100746698 /* en.lproj */ = {
+			isa = PBXGroup;
+			children = (
+				880485781843339100746698 /* Localizable.strings */,
+			);
+			name = en.lproj;
+			path = SMSNinjaUI/en.lproj;
+			sourceTree = "<group>";
+		};
+		8804857B1843347C00746698 /* zh_CN.lproj */ = {
+			isa = PBXGroup;
+			children = (
+				8804857C1843347C00746698 /* Localizable.strings */,
+			);
+			name = zh_CN.lproj;
+			path = SMSNinjaUI/zh_CN.lproj;
+			sourceTree = "<group>";
+		};
 		88A3052118289E72006A69D8 = {
 			isa = PBXGroup;
 			children = (
+				8804857B1843347C00746698 /* zh_CN.lproj */,
+				880485771843339100746698 /* en.lproj */,
 				88A3053318289E72006A69D8 /* SMSNinjaUI */,
 				88A3052C18289E72006A69D8 /* Frameworks */,
 				88A3052B18289E72006A69D8 /* Products */,
@@ -142,6 +169,7 @@
 		88A3052C18289E72006A69D8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				880485751842F12300746698 /* libsqlite3.0.dylib */,
 				88A3052D18289E72006A69D8 /* Foundation.framework */,
 				88A3052F18289E72006A69D8 /* CoreGraphics.framework */,
 				88A3053118289E72006A69D8 /* UIKit.framework */,
@@ -267,6 +295,7 @@
 			knownRegions = (
 				en,
 				Base,
+				zh_CN,
 			);
 			mainGroup = 88A3052118289E72006A69D8;
 			productRefGroup = 88A3052B18289E72006A69D8 /* Products */;
@@ -285,6 +314,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				88DBD956183E5E7D00DE60DD /* TODO in Resources */,
+				8804857E1843347C00746698 /* Localizable.strings in Resources */,
+				8804857A1843339100746698 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -342,6 +373,25 @@
 			targetProxy = 88A3055018289E73006A69D8 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		880485781843339100746698 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				880485791843339100746698 /* en */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		8804857C1843347C00746698 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				8804857D1843347C00746698 /* zh_CN */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		88A3055A18289E73006A69D8 /* Debug */ = {

@@ -1,8 +1,8 @@
 #import "SNPrivateMessageHistoryViewController.h"
 #import "SNPrivateCallHistoryViewController.h"
-#import "SNPrivateViewController.h"
 #import "SNPictureViewController.h"
 #import <UIKit/UIPasteboard.h>
+#import <objc/runtime.h>
 #import <sqlite3.h>
 
 #define SETTINGS @"/var/mobile/Library/SMSNinja/smsninja.plist"
@@ -82,10 +82,6 @@
 {
 	if ((self = [super initWithStyle:UITableViewStylePlain]))
 	{
-        UIButton* backButton = [UIButton buttonWithType:(UIButtonType)101];
-		[backButton addTarget:self action:@selector(gotoPrivateView) forControlEvents:UIControlEventTouchUpInside];
-		[backButton setTitle:NSLocalizedString(@"Private Zone", @"Private Zone") forState:UIControlStateNormal];
-		self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithCustomView:backButton] autorelease];
 		self.navigationItem.rightBarButtonItem = self.editButtonItem;
         
 		UIBarButtonItem *deleteButton = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Delete", @"Delete") style: UIBarButtonItemStyleBordered target: self action:@selector(bulkDelete)] autorelease];
@@ -154,14 +150,17 @@
 	else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
 }
 
-- (void)segmentAction:(id)sender
+- (void)segmentAction:(UISegmentedControl *)sender
 {
     if ([sender selectedSegmentIndex] == 1)
     {
         SNPrivateCallHistoryViewController *privateCallHistoryViewController = [[SNPrivateCallHistoryViewController alloc] init];
-        [self.navigationController pushViewController:privateCallHistoryViewController animated:NO];
+        UINavigationController *navigationController = self.navigationController;
+        [navigationController popViewControllerAnimated:NO];
+        [navigationController pushViewController:privateCallHistoryViewController animated:NO];
         [privateCallHistoryViewController release];
 	}
+    sender.selectedSegmentIndex = -1;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -318,13 +317,6 @@
     return [[tableView cellForRowAtIndexPath:indexPath].contentView viewWithTag:2].bounds.size.height + [[tableView cellForRowAtIndexPath:indexPath].contentView viewWithTag:3].bounds.size.height + 4.0f;
 }
 
-- (void)gotoPrivateView
-{
-    for (UIViewController *viewController in self.navigationController.viewControllers)
-        if ([viewController isKindOfClass:[SNPrivateViewController class]])
-            [self.navigationController popToViewController:viewController animated:YES];
-}
-
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return YES;
@@ -363,16 +355,13 @@
     {
         for (UITableViewCell *cell in [self.tableView visibleCells])
             cell.selectionStyle = UITableViewCellSelectionStyleGray;
-        self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"All", @"All") style:UIBarButtonItemStylePlain target:self action:@selector(selectAll:)] autorelease];
+        [self.navigationItem setLeftBarButtonItem:[[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"All", @"All") style:UIBarButtonItemStylePlain target:self action:@selector(selectAll:)] autorelease] animated:YES];
     }
     else
     {
         for (UITableViewCell *cell in [self.tableView visibleCells])
             cell.selectionStyle = UITableViewCellSelectionStyleBlue;
-        UIButton* backButton = [UIButton buttonWithType:(UIButtonType)101];
-        [backButton addTarget:self action:@selector(gotoPrivateView) forControlEvents:UIControlEventTouchUpInside];
-        [backButton setTitle:NSLocalizedString(@"Private Zone", @"Private Zone") forState:UIControlStateNormal];
-        self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithCustomView:backButton] autorelease];
+        [self.navigationItem setLeftBarButtonItem:nil animated:YES];
     }
     [super setEditing:editing animated:animate];
 }

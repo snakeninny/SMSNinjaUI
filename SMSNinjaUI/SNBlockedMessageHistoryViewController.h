@@ -17,6 +17,5 @@
 - (void)bulkDelete;
 - (void)bulkUnread;
 - (void)bulkRead;
-- (void)gotoMainView;
 - (void)segmentAction:(id)sender;
 @end

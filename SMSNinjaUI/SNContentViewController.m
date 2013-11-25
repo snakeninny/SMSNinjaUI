@@ -87,12 +87,7 @@
 	if ((self = [super initWithStyle:UITableViewStyleGrouped]))
 	{
 		self.title = NSLocalizedString(@"Details", @"Details");
-        
-        UIButton* backButton = [UIButton buttonWithType:(UIButtonType)101];
-        [backButton addTarget:self action:@selector(gotoList) forControlEvents:UIControlEventTouchUpInside];
-        [backButton setTitle:NSLocalizedString(@"List", @"List") forState:UIControlStateNormal];
-        self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithCustomView:backButton] autorelease];
-        
+
         nameField = [[UITextField alloc] initWithFrame:CGRectZero];
         keywordField = [[UITextField alloc] initWithFrame:CGRectZero];
         forwardSwitch = [[UISwitch alloc] initWithFrame:CGRectZero];
@@ -204,7 +199,7 @@
 	return cell;
 }
 
-- (void)gotoList
+- (void)viewWillDisappear:(BOOL)animated
 {
 	NSString *tempString = numberField.text ? numberField.text : @"";
 	NSRange range = [tempString rangeOfString:@" "];
@@ -233,9 +228,9 @@
 	}
     
     id viewController = [self.navigationController.viewControllers objectAtIndex:([self.navigationController.viewControllers count] - 2)];
-    if ([viewController respondsToSelector:@selector(loadDatabaseSegment)]) [viewController loadDatabaseSegment];
+    SEL selector = NSSelectorFromString(@"loadDatabaseSegment");
+    if ([viewController respondsToSelector:selector]) [viewController performSelector:selector];
     [((UITableViewController *)viewController).tableView reloadData];
-    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField

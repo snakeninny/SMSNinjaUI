@@ -11,6 +11,5 @@
 }
 @property (nonatomic, retain) NSString *flag;
 - (void)initializeAllArrays;
-- (void)gotoList;
 - (void)selectAll:(UIBarButtonItem *)buttonItem;
 @end

@@ -78,11 +78,6 @@
 	{
 		self.title= NSLocalizedString(@"Time", @"Time");
         
-        UIButton* backButton = [UIButton buttonWithType:(UIButtonType)101];
-        [backButton addTarget:self action:@selector(gotoList) forControlEvents:UIControlEventTouchUpInside];
-        [backButton setTitle:NSLocalizedString(@"List", @"List") forState:UIControlStateNormal];
-        self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithCustomView:backButton] autorelease];
-        
         nameField = [[UITextField alloc] initWithFrame:CGRectZero];
         replySwitch = [[UISwitch alloc] initWithFrame:CGRectZero];
         messageField = [[UITextField alloc] initWithFrame:CGRectZero];
@@ -99,6 +94,7 @@
     timePickerView = [[UIPickerView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.view.bounds.size.width, self.view.bounds.size.height / 2.0f)];
 	timePickerView.delegate = self;
 	timePickerView.showsSelectionIndicator = YES;
+    timePickerView.backgroundColor = [UIColor whiteColor];
 	[self.view addSubview:timePickerView];
     
 	NSString *duration = self.keywordString;
@@ -271,10 +267,7 @@
 	self.replyString = replySwitch.on ? @"1" : @"0";
 	self.messageString = messageField.text ? messageField.text : @"";
 	self.soundString = soundSwitch.on ? @"1" : @"0";
-}
-
-- (void)gotoList
-{
+    
 	NSString *one = [NSString stringWithFormat:([timePickerView selectedRowInComponent:0] % 24 < 10 ? @"0%d" : @"%d"), [timePickerView selectedRowInComponent:0] % 24];
 	NSString *two = [NSString stringWithFormat:([timePickerView selectedRowInComponent:1] % 60 < 10 ? @"0%d" : @"%d"), [timePickerView selectedRowInComponent:1] % 60];
 	NSString *three = [NSString stringWithFormat:([timePickerView selectedRowInComponent:3] % 24 < 10 ? @"0%d" : @"%d"), [timePickerView selectedRowInComponent:3] % 24];
@@ -293,9 +286,9 @@
 	}
     
     id viewController = [self.navigationController.viewControllers objectAtIndex:([self.navigationController.viewControllers count] - 2)];
-    if ([viewController respondsToSelector:@selector(loadDatabaseSegment)]) [viewController loadDatabaseSegment];
+    SEL selector = NSSelectorFromString(@"loadDatabaseSegment");
+    if ([viewController respondsToSelector:selector]) [viewController performSelector:selector];
     [((UITableViewController *)viewController).tableView reloadData];
-    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField

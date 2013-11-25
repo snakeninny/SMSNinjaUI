@@ -12,12 +12,11 @@
 	NSMutableArray *forwardArray;
 	NSMutableArray *numberArray;
 	NSMutableArray *soundArray;
-	NSString *chosenName;
-	NSString *chosenKeyword;
 }
+@property (nonatomic, retain) NSString *chosenName;
+@property (nonatomic, retain) NSString *chosenKeyword;
 - (void)loadDatabaseSegment;
 - (void)addRecord;
-- (void)gotoMainView;
 - (void)gotoNumberView;
 - (void)gotoContentView;
 - (void)gotoTimeView;

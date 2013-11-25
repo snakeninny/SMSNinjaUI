@@ -37,8 +37,8 @@
     
 	if (error)
 	{
-		NSLog(@"SNError on ReadMeViewController: %@", [error localizedDescription]);
-		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(@"An error has occured on this page. Please quit and retry.", @"An error has occured on this page. Please quit and retry.") delegate:self cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil];
+		NSLog(@"SMSNinja: Failed to decode %@ to UTF8, error: %@", filePath, [error localizedDescription]);
+		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(@"Failed to show readme. Please try reinstalling SMSNinja.", @"Failed to show readme. Please try reinstalling SMSNinja.") delegate:self cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil];
 		[alertView show];
 		[alertView release];
 	}

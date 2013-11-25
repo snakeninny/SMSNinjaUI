@@ -13,6 +13,5 @@
 - (void)loadDatabaseSegment;
 - (void)selectAll:(UIBarButtonItem *)buttonItem;
 - (void)bulkDelete;
-- (void)gotoPrivateView;
 - (void)segmentAction:(id)sender;
 @end

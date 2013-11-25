@@ -19,5 +19,4 @@
 @property (nonatomic, retain) NSString *flag;
 @property (nonatomic, retain) NSString *forwardString; // in another view
 @property (nonatomic, retain) NSString *numberString; // in another view
-- (void)gotoList;
 @end

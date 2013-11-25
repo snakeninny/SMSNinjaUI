@@ -1,5 +1,6 @@
 #import "SMSNinjaApplication.h"
 #import <objc/runtime.h>
+
 #define SETTINGS @"/var/mobile/Library/SMSNinja/smsninja.plist"
 
 @implementation SMSNinjaApplication

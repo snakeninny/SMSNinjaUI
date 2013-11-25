@@ -10,6 +10,10 @@
 #define DATABASE @"/var/mobile/Library/SMSNinja/smsninja.db"
 
 @implementation SNWhitelistViewController
+
+@synthesize chosenName;
+@synthesize chosenKeyword;
+
 - (void)dealloc
 {
 	[keywordArray release];
@@ -60,21 +64,10 @@
 	else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
 }
 
-- (void)gotoMainView
-{
-	for (UIViewController *viewController in self.navigationController.viewControllers)
-		if ([viewController isKindOfClass:[SNMainViewController class]])
-			[self.navigationController popToViewController:viewController animated:YES];
-}
-
 - (SNWhitelistViewController *)init
 {
 	if ((self = [super initWithStyle:UITableViewStylePlain]))
 	{
-		UIButton* backButton = [UIButton buttonWithType:(UIButtonType)101];
-		[backButton addTarget:self action:@selector(gotoMainView) forControlEvents:UIControlEventTouchUpInside];
-		[backButton setTitle:NSLocalizedString(@"SMSNinja", @"SMSNinja") forState:UIControlStateNormal];
-		self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithCustomView:backButton] autorelease];
 		self.navigationItem.rightBarButtonItem = self.editButtonItem;
         
 		keywordArray = [[NSMutableArray alloc] initWithCapacity:600];
@@ -93,9 +86,12 @@
     if (sender.selectedSegmentIndex == 1)
     {
         SNBlacklistViewController *blacklistViewController = [[SNBlacklistViewController alloc] init];
-        [self.navigationController pushViewController:blacklistViewController animated:NO];
+        UINavigationController *navigationController = self.navigationController;
+        [navigationController popViewControllerAnimated:NO];
+        [navigationController pushViewController:blacklistViewController animated:NO];
         [blacklistViewController release];
     }
+    sender.selectedSegmentIndex = -1;
 }
 
 - (void)viewDidLoad
@@ -116,8 +112,8 @@
 		numberViewController.flag = @"white";
 		numberViewController.nameString = [nameArray objectAtIndex:indexPath.row];
 		numberViewController.keywordString = [keywordArray objectAtIndex:indexPath.row];
-		numberViewController.phoneString = @"1";
-		numberViewController.smsString = @"1";
+		numberViewController.phoneAction = @"1";
+		numberViewController.messageAction = @"1";
 		numberViewController.replyString = @"0";
 		numberViewController.messageString = @"";
 		numberViewController.forwardString = @"0";
@@ -179,7 +175,7 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     __block NSSet *deleteSet = [NSSet setWithObject:[NSIndexPath indexPathForRow:indexPath.row inSection:0]];
-    __block SNBlacklistViewController *weakSelf = self;
+    __block SNWhitelistViewController *weakSelf = self;
 	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
                    {
                        sqlite3 *database;
@@ -211,8 +207,8 @@
 	numberViewController.flag = @"white";
 	numberViewController.nameString = @"";
 	numberViewController.keywordString = @"";
-	numberViewController.phoneString = @"1";
-	numberViewController.smsString = @"1";
+	numberViewController.phoneAction = @"1";
+	numberViewController.messageAction = @"1";
 	numberViewController.replyString = @"0";
 	numberViewController.messageString = @"";
 	numberViewController.forwardString = @"0";
@@ -284,17 +280,8 @@
 
 - (void)setEditing:(BOOL)editing animated:(BOOL)animated
 {
-	if (editing)
-	{
-		self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Add", @"Add") style:UIBarButtonItemStyleBordered target:self action:@selector(chooseSource)] autorelease];
-	}
-	else
-	{
-		UIButton* backButton = [UIButton buttonWithType:(UIButtonType)101];
-		[backButton addTarget:self action:@selector(gotoMainView) forControlEvents:UIControlEventTouchUpInside];
-		[backButton setTitle:NSLocalizedString(@"SMSNinja", @"SMSNinja") forState:UIControlStateNormal];
-		self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithCustomView:backButton] autorelease];
-	}
+	if (editing) [self.navigationItem setLeftBarButtonItem:[[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Add", @"Add") style:UIBarButtonItemStyleBordered target:self action:@selector(addRecord)] autorelease] animated:YES];
+	else [self.navigationItem setLeftBarButtonItem:nil animated:YES];
 	[super setEditing:editing animated:animated];
 }
 
@@ -330,7 +317,7 @@
 		CFRelease(keyword);
 		CFRelease(keywords);
         
-        __block SNBlacklistViewController *weakSelf = self;
+        __block SNWhitelistViewController *weakSelf = self;
 		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
                        {
                            sqlite3 *database;
@@ -348,13 +335,6 @@
 		[keywordArray addObject:self.chosenKeyword];
 		[typeArray addObject:@"0"];
 		[nameArray addObject:self.chosenName];
-		[phoneArray addObject:@"1"];
-		[smsArray addObject:@"1"];
-		[replyArray addObject:@"0"];
-		[messageArray addObject:@""];
-		[forwardArray addObject:@"0"];
-		[numberArray addObject:@""];
-		[soundArray addObject:@"0"];
         
 		[self.tableView beginUpdates];
 		[self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:YES];

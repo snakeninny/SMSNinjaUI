@@ -127,6 +127,7 @@
 					cell.textLabel.text = NSLocalizedString(@"Password", @"Password");
 					cell.accessoryView = nil;
 
+                    passwordField.delegate = self;
 					passwordField.secureTextEntry = YES;
 					passwordField.placeholder = NSLocalizedString(@"Input here", @"Input here");
 					passwordField.text = [dictionary objectForKey:@"startPassword"];
@@ -140,6 +141,7 @@
 					cell.textLabel.text = NSLocalizedString(@"Launch code", @"Launch code");
 					cell.accessoryView = nil;
 
+                    launchCodeField.delegate = self;
 					launchCodeField.secureTextEntry = YES;
 					launchCodeField.placeholder = NSLocalizedString(@"Numbers only", @"Numbers only");
 					launchCodeField.text = [dictionary objectForKey:@"launchCode"];
@@ -189,24 +191,32 @@
 			switch (indexPath.row)
 			{
 				case 0:
+                    for (UIView *subview in [cell.contentView subviews])
+                        [subview removeFromSuperview];
 					cell.textLabel.text = NSLocalizedString(@"Whitelist calls only w/ beep", @"Whitelist calls only w/ beep");
 					cell.accessoryType = [[dictionary objectForKey:@"whitelistCallsOnlyWithBeep"] boolValue] ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
 					cell.accessoryView = nil;
 
 					break;
 				case 1:
+                    for (UIView *subview in [cell.contentView subviews])
+                        [subview removeFromSuperview];
 					cell.textLabel.text = NSLocalizedString(@"Whitelist calls only w/o beep", @"Whitelist calls only w/o beep");
 					cell.accessoryType = [[dictionary objectForKey:@"whitelistCallsOnlyWithoutBeep"] boolValue] ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
 					cell.accessoryView = nil;
 
 					break;
 				case 2:
+                    for (UIView *subview in [cell.contentView subviews])
+                        [subview removeFromSuperview];
 					cell.textLabel.text = NSLocalizedString(@"Whitelist msgs only w/ beep", @"Whitelist msgs only w/ beep");
 					cell.accessoryType = [[dictionary objectForKey:@"whitelistMessagesOnlyWithBeep"] boolValue] ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
 					cell.accessoryView = nil;
 
 					break;
 				case 3:
+                    for (UIView *subview in [cell.contentView subviews])
+                        [subview removeFromSuperview];
 					cell.textLabel.text = NSLocalizedString(@"Whitelist msgs only w/o beep", @"Whitelist msgs only w/o beep");
 					cell.accessoryType = [[dictionary objectForKey:@"whitelistMessagesOnlyWithoutBeep"] boolValue] ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
 					cell.accessoryView = nil;
@@ -215,6 +225,8 @@
 			}
 			break;
 		case 2: // NoBlockedCallLog
+            for (UIView *subview in [cell.contentView subviews])
+                [subview removeFromSuperview];
 			cell.selectionStyle = UITableViewCellSelectionStyleNone;
 			cell.textLabel.text = NSLocalizedString(@"NoBlockedCallLog", @"NoBlockedCallLog");
 			cell.accessoryType = UITableViewCellAccessoryNone;
@@ -227,6 +239,8 @@
 			switch (indexPath.row)
 			{
 				case 0:
+                    for (UIView *subview in [cell.contentView subviews])
+                        [subview removeFromSuperview];
 					cell.selectionStyle = UITableViewCellSelectionStyleNone;
 					cell.textLabel.text = NSLocalizedString(@"Questions & Suggestions", @"Questions & Suggestions");
 					cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -234,6 +248,8 @@
 
 					break;
 				case 1:
+                    for (UIView *subview in [cell.contentView subviews])
+                        [subview removeFromSuperview];
 					cell.selectionStyle = UITableViewCellSelectionStyleNone;
 					cell.textLabel.text = NSLocalizedString(@"Donate via PayPal. Thank you!", @"Donate via PayPal. Thank you!");
 					cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -324,7 +340,7 @@
 	[alertView release];
 }
 
-void (^CreateDatabase)(void) = ^(void)
+static void (^CreateDatabase)(void) = ^(void)
 {
     NSFileManager *fileManager = [NSFileManager defaultManager];
 	BOOL isDir;
@@ -372,5 +388,11 @@ void (^CreateDatabase)(void) = ^(void)
 	[dictionary setObject:[passwordField.text length] != 0 ? passwordField.text : @"" forKey:[self.fake boolValue] ? @"fakePassword" : @"startPassword"];
 	[dictionary setObject:[[[launchCodeField.text componentsSeparatedByCharactersInSet:[[NSCharacterSet decimalDigitCharacterSet] invertedSet]] componentsJoinedByString:@""] length] != 0 ? [[launchCodeField.text componentsSeparatedByCharactersInSet:[[NSCharacterSet decimalDigitCharacterSet] invertedSet]] componentsJoinedByString:@""] : @"" forKey:@"launchCode"];
 	[dictionary writeToFile:SETTINGS atomically:YES];
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+	[textField resignFirstResponder];
+	return YES;
 }
 @end

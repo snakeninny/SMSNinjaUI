@@ -159,10 +159,6 @@
 {
 	if ((self = [super initWithStyle:UITableViewStylePlain]))
 	{
-		UIButton* backButton = [UIButton buttonWithType:(UIButtonType)101];
-		[backButton addTarget:self action:@selector(gotoMainView) forControlEvents:UIControlEventTouchUpInside];
-		[backButton setTitle:NSLocalizedString(@"SMSNinja", @"SMSNinja") forState:UIControlStateNormal];
-		self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithCustomView:backButton] autorelease];
 		self.navigationItem.rightBarButtonItem = self.editButtonItem;
         
 		UIBarButtonItem *deleteButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Delete", @"Delete") style: UIBarButtonItemStyleBordered target: self action:@selector(bulkDelete)];
@@ -186,14 +182,17 @@
 	return self;
 }
 
-- (void)segmentAction:(id)sender
+- (void)segmentAction:(UISegmentedControl *)sender
 {
     if ([sender selectedSegmentIndex] == 0)
     {
         SNBlockedMessageHistoryViewController *blockedMessageHistoryController = [[SNBlockedMessageHistoryViewController alloc] init];
-        [self.navigationController pushViewController:blockedMessageHistoryController animated:NO];
+        UINavigationController *navigationController = self.navigationController;
+        [navigationController popViewControllerAnimated:NO];
+        [navigationController pushViewController:blockedMessageHistoryController animated:NO];
         [blockedMessageHistoryController release];
     }
+    sender.selectedSegmentIndex = -1;
 }
 
 - (void)viewDidLoad
@@ -387,13 +386,6 @@
 	return [[tableView cellForRowAtIndexPath:indexPath].contentView viewWithTag:2].bounds.size.height + [[tableView cellForRowAtIndexPath:indexPath].contentView viewWithTag:3].bounds.size.height + 4.0f;
 }
 
-- (void)gotoMainView
-{
-	for (UIViewController *viewController in self.navigationController.viewControllers)
-		if ([viewController isKindOfClass:[SNMainViewController class]])
-			[self.navigationController popToViewController:viewController animated:YES];
-}
-
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	return YES;
@@ -432,16 +424,14 @@
 	{
 		for (UITableViewCell *cell in [self.tableView visibleCells])
 			cell.selectionStyle = UITableViewCellSelectionStyleGray;
-		self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"All", @"All") style:UIBarButtonItemStylePlain target:self action:@selector(selectAll:)] autorelease];
+        
+        [self.navigationItem setLeftBarButtonItem:[[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"All", @"All") style:UIBarButtonItemStylePlain target:self action:@selector(selectAll:)] autorelease] animated:YES];
 	}
 	else
 	{
 		for (UITableViewCell *cell in [self.tableView visibleCells])
 			cell.selectionStyle = UITableViewCellSelectionStyleBlue;
-		UIButton* backButton = [UIButton buttonWithType:(UIButtonType)101];
-		[backButton addTarget:self action:@selector(gotoMainView) forControlEvents:UIControlEventTouchUpInside];
-		[backButton setTitle:NSLocalizedString(@"SMSNinja", @"SMSNinja") forState:UIControlStateNormal];
-		self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithCustomView:backButton] autorelease];
+        [self.navigationItem setLeftBarButtonItem:nil animated:YES];
 	}
 	[super setEditing:editing animated:animate];
 }

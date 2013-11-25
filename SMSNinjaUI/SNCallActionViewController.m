@@ -98,7 +98,7 @@
 	}
     
     id viewController = [self.navigationController.viewControllers objectAtIndex:([self.navigationController.viewControllers count] - 2)];
-    viewController.phoneAction = self.phoneAction;
+    [viewController setPhoneAction:self.phoneAction];
     if ([viewController isKindOfClass:[SNTimeViewController class]]) [((SNTimeViewController *)viewController)->settingsTableView reloadData];
     else [((UITableViewController *)viewController).tableView reloadData];
 }

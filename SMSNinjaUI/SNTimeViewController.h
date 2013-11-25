@@ -20,7 +20,6 @@
 @property (nonatomic, retain) UISwitch *soundSwitch;
 @property (nonatomic, retain) NSString *forwardString; // in another view
 @property (nonatomic, retain) NSString *numberString; // in another view
-- (void)gotoList;
 - (void)keyboardWillShow:(NSNotification *)notification;
 - (void)keyboardWillHide:(NSNotification *)notification;
 @end

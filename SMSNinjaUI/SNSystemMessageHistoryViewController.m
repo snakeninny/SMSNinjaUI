@@ -35,12 +35,12 @@
     [super dealloc];
 }
 
-- (void)gotoList
+- (void)viewWillDisappear:(BOOL)animated
 {
     id viewController = [self.navigationController.viewControllers objectAtIndex:([self.navigationController.viewControllers count] - 2)];
-    if ([viewController respondsToSelector:@selector(loadDatabaseSegment)]) [viewController loadDatabaseSegment];
+    SEL selector = NSSelectorFromString(@"loadDatabaseSegment");
+    if ([viewController respondsToSelector:selector]) [viewController performSelector:selector];
     [((UITableViewController *)viewController).tableView reloadData];
-    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)initializeAllArrays
@@ -80,10 +80,6 @@
     if ((self = [super initWithStyle:UITableViewStylePlain]))
     {
         self.title = NSLocalizedString(@"Message History", @"Message History");
-        UIButton* backButton = [UIButton buttonWithType:(UIButtonType)101];
-        [backButton addTarget:self action:@selector(gotoList) forControlEvents:UIControlEventTouchUpInside];
-        [backButton setTitle:NSLocalizedString(@"List", @"List") forState:UIControlStateNormal];
-        self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithCustomView:backButton] autorelease];
         self.navigationItem.rightBarButtonItem = self.editButtonItem;
         
         [self initializeAllArrays];
@@ -212,8 +208,8 @@
         numberViewController.flag = self.flag;
         numberViewController.nameString = [nameArray objectAtIndex:indexPath.row];
         numberViewController.keywordString = [numberArray objectAtIndex:indexPath.row];
-        numberViewController.phoneString = @"1";
-        numberViewController.smsString = @"1";
+        numberViewController.phoneAction = @"1";
+        numberViewController.messageAction = @"1";
         numberViewController.replyString = @"0";
         numberViewController.messageString = @"";
         numberViewController.forwardString = @"0";
@@ -344,22 +340,18 @@
 
 - (void)setEditing:(BOOL)editing animated:(BOOL)animate
 {
-    [bulkSet removeAllObjects];
     self.navigationController.toolbarHidden = !editing;
     if (editing)
     {
         for (UITableViewCell *cell in [self.tableView visibleCells])
             cell.selectionStyle = UITableViewCellSelectionStyleGray;
-        self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"All", @"All") style:UIBarButtonItemStylePlain target:self action:@selector(selectAll:)] autorelease];
+        [self.navigationItem setLeftBarButtonItem:[[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"All", @"All") style:UIBarButtonItemStylePlain target:self action:@selector(selectAll:)] autorelease] animated:YES];
     }
     else
     {
         for (UITableViewCell *cell in [self.tableView visibleCells])
             cell.selectionStyle = UITableViewCellSelectionStyleBlue;
-        UIButton* backButton = [UIButton buttonWithType:(UIButtonType)101];
-        [backButton addTarget:self action:@selector(gotoMainView) forControlEvents:UIControlEventTouchUpInside];
-        [backButton setTitle:NSLocalizedString(@"SMSNinja", @"SMSNinja") forState:UIControlStateNormal];
-        self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithCustomView:backButton] autorelease];
+        [self.navigationItem setLeftBarButtonItem:nil animated:YES];
     }
     [super setEditing:editing animated:animate];
 }

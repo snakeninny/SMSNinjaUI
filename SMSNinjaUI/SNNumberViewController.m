@@ -83,12 +83,7 @@
 	if ((self = [super initWithStyle:UITableViewStyleGrouped]))
 	{
 		self.title = NSLocalizedString(@"Details", @"Details");
-        
-        UIButton* backButton = [UIButton buttonWithType:(UIButtonType)101];
-        [backButton addTarget:self action:@selector(gotoList) forControlEvents:UIControlEventTouchUpInside];
-        [backButton setTitle:NSLocalizedString(@"List", @"List") forState:UIControlStateNormal];
-        self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithCustomView:backButton] autorelease];
-        
+
         nameField = [[UITextField alloc] initWithFrame:CGRectZero];
         keywordField = [[UITextField alloc] initWithFrame:CGRectZero];
         replySwitch = [[UISwitch alloc] initWithFrame:CGRectZero];
@@ -238,7 +233,7 @@
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-	self.nameString = nil;
+    self.nameString = nil;
 	self.keywordString = nil;
 	self.replyString = nil;
 	self.messageString = nil;
@@ -249,10 +244,7 @@
 	self.replyString = replySwitch.on ? @"1" : @"0";
 	self.messageString = messageField.text ? messageField.text : @"";
 	self.soundString = soundSwitch.on ? @"1" : @"0";
-}
-
-- (void)gotoList
-{
+    
 	NSString *tempString = keywordField.text ? keywordField.text : @"";
 	NSRange range = [tempString rangeOfString:@" "];
     [keywordArray removeAllObjects];
@@ -281,9 +273,9 @@
 	}
     
     id viewController = [self.navigationController.viewControllers objectAtIndex:([self.navigationController.viewControllers count] - 2)];
-    if ([viewController respondsToSelector:@selector(loadDatabaseSegment)]) [viewController loadDatabaseSegment];
+    SEL selector = NSSelectorFromString(@"loadDatabaseSegment");
+    if ([viewController respondsToSelector:selector]) [viewController performSelector:selector];
     [((UITableViewController *)viewController).tableView reloadData];
-    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField

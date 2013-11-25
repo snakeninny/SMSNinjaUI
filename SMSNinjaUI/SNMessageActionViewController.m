@@ -34,6 +34,9 @@
 	if ((self = [super initWithStyle:UITableViewStyleGrouped]))
 	{
 		self.title= NSLocalizedString(@"Message", @"Message");
+        
+        forwardSwitch = [[UISwitch alloc] initWithFrame:CGRectZero];
+        numberField = [[UITextField alloc] initWithFrame:CGRectZero];
 	}
 	return self;
 }
@@ -50,8 +53,8 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"any-cell"];
-	if (cell == nil) cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"any-cell"] autorelease];
+	SNTextTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"any-cell"];
+	if (cell == nil) cell = [[[SNTextTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"any-cell"] autorelease];
     
     switch (indexPath.row)
     {
@@ -106,17 +109,21 @@
 	}
     
     id viewController = [self.navigationController.viewControllers objectAtIndex:([self.navigationController.viewControllers count] - 2)];
-    viewController.messageAction = nil;
-    viewController.messageAction = self.messageAction;
+    [viewController setMessageAction:nil];
+    [viewController setMessageAction:self.messageAction];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     id viewController = [self.navigationController.viewControllers objectAtIndex:([self.navigationController.viewControllers count] - 2)];
-    viewController.forwardString = nil;
-    viewController.forwardString = forwardSwitch.on ? @"1" : @"0";
-    viewController.numberString = nil;
-    viewController.numberString = [numberField.text length] == 0 ? @"" : [numberField.text stringByReplacingOccurrencesOfString:@"'" withString:@"''"];
+    SEL selector = NSSelectorFromString(@"setForwardString:");
+    [viewController performSelector:selector withObject:nil];
+    [viewController performSelector:selector withObject:forwardSwitch.on ? @"1" : @"0"];
+
+    selector = NSSelectorFromString(@"setNumberString:");
+    [viewController performSelector:selector withObject:nil];
+    [viewController performSelector:selector withObject:[numberField.text length] == 0 ? @"" : [numberField.text stringByReplacingOccurrencesOfString:@"'" withString:@"''"]];
+
     if ([viewController isKindOfClass:[SNTimeViewController class]]) [((SNTimeViewController *)viewController)->settingsTableView reloadData];
     else [((UITableViewController *)viewController).tableView reloadData];
 }

@@ -1,6 +1,6 @@
 #import "SNPrivateViewController.h"
-#import "SNPrivateMessageHistoryViewController.h"
 #import "SNPrivateCallHistoryViewController.h"
+#import "SNPrivateMessageHistoryViewController.h"
 #import "SNTextTableViewCell.h"
 #import <sqlite3.h>
 
@@ -28,6 +28,10 @@
 	if ((self = [super initWithStyle:UITableViewStyleGrouped]))
 	{
 		self.title = NSLocalizedString(@"Private Zone", @"Private Zone");
+        
+        fakePasswordField = [[UITextField alloc] initWithFrame:CGRectZero];
+        purpleSwitch = [[UISwitch alloc] initWithFrame:CGRectZero];
+        semicolonSwitch = [[UISwitch alloc] initWithFrame:CGRectZero];
 	}
 	return self;
 }
@@ -46,8 +50,8 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"any-cell"];
-	if (cell == nil) cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"any-cell"] autorelease];
+	SNTextTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"any-cell"];
+	if (cell == nil) cell = [[[SNTextTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"any-cell"] autorelease];
     
     NSDictionary *dictionary = [NSMutableDictionary dictionaryWithContentsOfFile:SETTINGS];
     
@@ -110,17 +114,21 @@
 		switch (indexPath.row)
 		{
 			case 0:
+            {
                 SNPrivateMessageHistoryViewController *privateMessageHistoryViewController = [[SNPrivateMessageHistoryViewController alloc] init];
                 [self.navigationController pushViewController:privateMessageHistoryViewController animated:YES];
                 [privateMessageHistoryViewController release];
                 
                 break;
+            }
 			case 1:
+            {
                 SNPrivateCallHistoryViewController *privateCallHistoryViewController = [[SNPrivateCallHistoryViewController alloc] init];
                 [self.navigationController pushViewController:privateCallHistoryViewController animated:YES];
                 [privateCallHistoryViewController release];
                 
                 break;
+            }
 		}
 	}
 }
