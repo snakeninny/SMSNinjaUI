@@ -1,4 +1,4 @@
-#import <UIKit/UIKit.h>
+#import "SMSNinja-private.h"
 
 @interface SNPictureViewController : UIViewController <UIAlertViewDelegate, UIScrollViewDelegate>
 {

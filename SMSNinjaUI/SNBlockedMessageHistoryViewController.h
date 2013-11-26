@@ -1,4 +1,4 @@
-#import <UIKit/UIKit.h>
+#import "SMSNinja-private.h"
 
 @interface SNBlockedMessageHistoryViewController : UITableViewController <UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
 {

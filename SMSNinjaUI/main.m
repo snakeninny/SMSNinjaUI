@@ -1,4 +1,4 @@
-#import <UIKit/UIKit.h>
+#import "SMSNinja-private.h"
 
 int main(int argc, char **argv)
 {

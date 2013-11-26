@@ -1,3 +1,7 @@
+#define SMSNinjaDebug
+
+#import <UIKit/UIKit.h>
+
 @interface UISwitch (private)
 - (void)setAlternateColors:(BOOL)colors;
 @end

@@ -78,6 +78,7 @@
     int currentViewTag = currentViewIndex + 1;
     UIImage *image = [[UIImage alloc] initWithContentsOfFile:[NSString stringWithFormat:@"/Users/snakeninny/Desktop/iOS7-Wallpaper-Pack/%d.png", currentViewTag]];
     UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil);
+    [image release];
     NSString *originalTitle = self.title;
     self.title = NSLocalizedString(@"Done saving", @"Done saving");
     [self performSelector:@selector(restoreTitle:) withObject:originalTitle afterDelay:2.0f];

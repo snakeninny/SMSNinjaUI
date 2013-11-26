@@ -26,6 +26,9 @@
 	[numberField release];
 	numberField = nil;
     
+    [tapRecognizer release];
+    tapRecognizer = nil;
+    
 	[super dealloc];
 }
 
@@ -37,6 +40,9 @@
         
         forwardSwitch = [[UISwitch alloc] initWithFrame:CGRectZero];
         numberField = [[UITextField alloc] initWithFrame:CGRectZero];
+        
+        tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissKeyboardWithTap:)];
+        tapRecognizer.delegate = self;
 	}
 	return self;
 }
@@ -115,7 +121,7 @@
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-    id viewController = [self.navigationController.viewControllers objectAtIndex:([self.navigationController.viewControllers count] - 2)];
+    id viewController = [self.navigationController.viewControllers objectAtIndex:([self.navigationController.viewControllers count] - 1)];
     SEL selector = NSSelectorFromString(@"setForwardString:");
     [viewController performSelector:selector withObject:nil];
     [viewController performSelector:selector withObject:forwardSwitch.on ? @"1" : @"0"];
@@ -132,5 +138,23 @@
 {
 	[textField resignFirstResponder];
 	return YES;
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    [self.view addGestureRecognizer:tapRecognizer];
+}
+
+- (void)dismissKeyboardWithTap:(UITapGestureRecognizer *)tap
+{
+    [numberField resignFirstResponder];
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+    if (gestureRecognizer == tapRecognizer && [touch.view isKindOfClass:NSClassFromString(@"UITableViewCellContentView")]) return NO;
+    return YES;
 }
 @end

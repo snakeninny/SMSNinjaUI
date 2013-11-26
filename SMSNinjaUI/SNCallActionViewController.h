@@ -1,4 +1,4 @@
-#import <UIKit/UIKit.h>
+#import "SMSNinja-private.h"
 
 @interface SNCallActionViewController : UITableViewController
 @property (nonatomic, retain) NSString *phoneAction;

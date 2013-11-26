@@ -6,7 +6,12 @@
 #import "SNPrivateViewController.h"
 #import <sqlite3.h>
 
+#ifndef SMSNinjaDebug
 #define DOCUMENT @"/var/mobile/Library/SMSNinja"
+#else
+#define DOCUMENT @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/Documents/var/mobile/Library/SMSNinja"
+#endif
+
 #define SETTINGS [DOCUMENT stringByAppendingString:@"/smsninja.plist"]
 #define DATABASE [DOCUMENT stringByAppendingString:@"/smsninja.db"]
 #define PICTURES [DOCUMENT stringByAppendingString:@"/Pictures/"]
@@ -34,7 +39,7 @@
 		self.title = NSLocalizedString(@"SMSNinja", @"SMSNinja");
 		self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Settings", @"Settings") style:UIBarButtonItemStylePlain target:self action:@selector(gotoSettingsView)] autorelease];
 		self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Readme", @"Readme") style:UIBarButtonItemStylePlain target:self action:@selector(gotoReadMeView)] autorelease];
-
+        
         appSwitch = [[UISwitch alloc] initWithFrame:CGRectZero];
     }
 	return self;
@@ -48,9 +53,9 @@
 	UIView *view = self.tableView;
 	UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
 	[label setText:NSLocalizedString(@"by snakeninny", @"by snakeninny")];
-	[label setTextColor:[UIColor colorWithRed:0.3f green:0.34f blue:0.42f alpha:0.6f]];
+	[label setTextColor:[UIColor colorWithRed:0.6f green:0.6f blue:0.6f alpha:0.6f]];
 	[label setShadowColor:[UIColor whiteColor]];
-	[label setShadowOffset:CGSizeMake(1.0f, 1.0f)];
+	[label setShadowOffset:CGSizeMake(0.6f, 0.6f)];
 	[label setBackgroundColor:[UIColor clearColor]];
 	[label setFont:[UIFont systemFontOfSize:16.0f]];
 	CGSize size = [label.text sizeWithFont:label.font];
@@ -74,18 +79,27 @@ static void (^CreateDatabase)(void) = ^(void)
 		[fileManager createDirectoryAtPath:PRIVATEPICTURES withIntermediateDirectories:YES attributes:nil error:nil];
     
 	if (![fileManager fileExistsAtPath:SETTINGS])
+#ifndef SMSNinjaDebug
 		[fileManager copyItemAtPath:@"/Applications/SMSNinja.app/smsninja.plist" toPath:SETTINGS error:nil];
-    
+#else
+        [fileManager copyItemAtPath:@"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/SMSNinjaUI.app/smsninja.plist" toPath:SETTINGS error:nil];
+#endif
 	if (![fileManager fileExistsAtPath:DATABASE])
+#ifndef SMSNinjaDebug
 		[fileManager copyItemAtPath:@"/Applications/SMSNinja.app/smsninja.db" toPath:DATABASE error:nil];
-    
+#else
+        [fileManager copyItemAtPath:@"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/SMSNinjaUI.app/smsninja.db" toPath:DATABASE error:nil];
+#endif
 	NSString *filePath = [DOCUMENT stringByAppendingString:@"/blocked.caf"];
+#ifndef SMSNinjaDebug
 	if (![fileManager fileExistsAtPath:filePath])
 		[fileManager copyItemAtPath:@"/System/Library/Audio/UISounds/sms-received5.caf" toPath:filePath error:nil];
-    
+#endif
 	filePath = [DOCUMENT stringByAppendingString:@"/private.caf"];
+#ifndef SMSNinjaDebug
 	if (![fileManager fileExistsAtPath:filePath])
 		[fileManager copyItemAtPath:@"/System/Library/Audio/UISounds/sms-received3.caf" toPath:filePath error:nil];
+#endif
 };
 
 - (void)updateDatabase
@@ -105,7 +119,11 @@ static void (^CreateDatabase)(void) = ^(void)
 	{
 		NSFileManager *fileManager = [NSFileManager defaultManager];
 		[fileManager removeItemAtPath:SETTINGS error:nil];
+#ifndef SMSNinjaDebug
 		[fileManager copyItemAtPath:@"/Applications/SMSNinja.app/smsninja.plist" toPath:SETTINGS error:nil];
+#else
+        [fileManager copyItemAtPath:@"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/SMSNinjaUI.app/smsninja.plist" toPath:SETTINGS error:nil];
+#endif
         __block SNMainViewController *weakSelf = self;
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             sqlite3 *database;
@@ -302,7 +320,6 @@ static void (^CreateDatabase)(void) = ^(void)
                 cell.accessoryView = appSwitch;
                 NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithContentsOfFile:SETTINGS];
                 appSwitch.on = [[dictionary objectForKey:@"appIsOn"] boolValue];
-                [appSwitch setAlternateColors:YES];
                 [appSwitch addTarget:self action:@selector(saveSettings) forControlEvents:UIControlEventValueChanged];
                 break;
             }

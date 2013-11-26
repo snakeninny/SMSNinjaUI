@@ -1,7 +1,11 @@
 #import "SMSNinjaApplication.h"
 #import <objc/runtime.h>
 
+#ifndef SMSNinjaDebug
 #define SETTINGS @"/var/mobile/Library/SMSNinja/smsninja.plist"
+#else
+#define SETTINGS @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/Documents/var/mobile/Library/SMSNinja/smsninja.plist"
+#endif
 
 @implementation SMSNinjaApplication
 

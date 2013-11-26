@@ -10,6 +10,7 @@
 		880485761842F12300746698 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 880485751842F12300746698 /* libsqlite3.0.dylib */; };
 		8804857A1843339100746698 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 880485781843339100746698 /* Localizable.strings */; };
 		8804857E1843347C00746698 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8804857C1843347C00746698 /* Localizable.strings */; };
+		880485811844365500746698 /* SNPrivatelistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8804857F1844365500746698 /* SNPrivatelistViewController.m */; };
 		888C8F5C183B278F00698D52 /* SNWhitelistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 888C8F5B183B278F00698D52 /* SNWhitelistViewController.m */; };
 		888C8F5F183B2DFA00698D52 /* SNSystemCallHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 888C8F5E183B2DFA00698D52 /* SNSystemCallHistoryViewController.m */; };
 		88A3052E18289E72006A69D8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88A3052D18289E72006A69D8 /* Foundation.framework */; };
@@ -53,6 +54,8 @@
 		880485751842F12300746698 /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
 		880485791843339100746698 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Localizable.strings; sourceTree = "<group>"; };
 		8804857D1843347C00746698 /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_CN; path = Localizable.strings; sourceTree = "<group>"; };
+		8804857F1844365500746698 /* SNPrivatelistViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNPrivatelistViewController.m; sourceTree = "<group>"; };
+		880485801844365500746698 /* SNPrivatelistViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNPrivatelistViewController.h; sourceTree = "<group>"; };
 		888C8F5A183B278F00698D52 /* SNWhitelistViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNWhitelistViewController.h; sourceTree = "<group>"; };
 		888C8F5B183B278F00698D52 /* SNWhitelistViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNWhitelistViewController.m; sourceTree = "<group>"; };
 		888C8F5D183B2DFA00698D52 /* SNSystemCallHistoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNSystemCallHistoryViewController.h; sourceTree = "<group>"; };
@@ -180,6 +183,12 @@
 		88A3053318289E72006A69D8 /* SMSNinjaUI */ = {
 			isa = PBXGroup;
 			children = (
+				880485801844365500746698 /* SNPrivatelistViewController.h */,
+				8804857F1844365500746698 /* SNPrivatelistViewController.m */,
+				88C0E1E2183B092F00E0A343 /* SNBlacklistViewController.h */,
+				88C0E1E3183B092F00E0A343 /* SNBlacklistViewController.m */,
+				888C8F5A183B278F00698D52 /* SNWhitelistViewController.h */,
+				888C8F5B183B278F00698D52 /* SNWhitelistViewController.m */,
 				88C0E1FB183F077100E0A343 /* SNPictureViewController.h */,
 				88C0E1FA183F077100E0A343 /* SNPictureViewController.m */,
 				88C0E1F7183EFA8700E0A343 /* SNMessageActionViewController.h */,
@@ -202,10 +211,6 @@
 				88C0E1E8183C9BBE00E0A343 /* SNSystemMessageHistoryViewController.m */,
 				888C8F5D183B2DFA00698D52 /* SNSystemCallHistoryViewController.h */,
 				888C8F5E183B2DFA00698D52 /* SNSystemCallHistoryViewController.m */,
-				888C8F5A183B278F00698D52 /* SNWhitelistViewController.h */,
-				888C8F5B183B278F00698D52 /* SNWhitelistViewController.m */,
-				88C0E1E2183B092F00E0A343 /* SNBlacklistViewController.h */,
-				88C0E1E3183B092F00E0A343 /* SNBlacklistViewController.m */,
 				88C0E1DF183AF55200E0A343 /* SNBlockedCallHistoryViewController.h */,
 				88C0E1E0183AF55200E0A343 /* SNBlockedCallHistoryViewController.m */,
 				88C0E1D91839BC6200E0A343 /* SNBlockedMessageHistoryViewController.h */,
@@ -346,6 +351,7 @@
 				88D1DADB183D13F6003CE84F /* SNNumberViewController.m in Sources */,
 				88C0E1FC183F077100E0A343 /* SNPictureViewController.m in Sources */,
 				88C0E1E4183B092F00E0A343 /* SNBlacklistViewController.m in Sources */,
+				880485811844365500746698 /* SNPrivatelistViewController.m in Sources */,
 				88C0E1D01839957300E0A343 /* SNMainViewController.m in Sources */,
 				88C0E1F0183DB94100E0A343 /* SNContentViewController.m in Sources */,
 				88C0E1EA183C9BBE00E0A343 /* SNSystemMessageHistoryViewController.m in Sources */,

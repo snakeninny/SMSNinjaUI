@@ -1,12 +1,15 @@
 #import "SNSystemCallHistoryViewController.h"
 #import "SNNumberViewController.h"
-#import "SMSNinja-private.h"
 #import <objc/runtime.h>
 #import <sqlite3.h>
 
+#ifndef SMSNinjaDebug
 #define SETTINGS @"/var/mobile/Library/SMSNinja/smsninja.plist"
 #define DATABASE @"/var/mobile/Library/SMSNinja/smsninja.db"
-#define CALLHISTORY @"/var/wireless/Library/CallHistory/call_history.db"
+#else
+#define SETTINGS @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/Documents/var/mobile/Library/SMSNinja/smsninja.plist"
+#define DATABASE @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/Documents/var/mobile/Library/SMSNinja/smsninja.db"
+#endif
 
 @implementation SNSystemCallHistoryViewController
 
@@ -224,7 +227,7 @@
         {
             UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"Turn off the beep", @"Turn off the beep"), NSLocalizedString(@"Turn on the beep", @"Turn on the beep"), nil];
             actionSheet.tag = 1;
-            [actionSheet showFromToolbar:self.navigationController.toolbar];
+            [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
             [actionSheet release];
         }
         else
@@ -288,7 +291,7 @@
         {
             UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"Turn off the beep", @"Turn off the beep"), NSLocalizedString(@"Turn on the beep", @"Turn on the beep"), nil];
             actionSheet.tag = 2;
-            [actionSheet showFromToolbar:self.navigationController.toolbar];
+            [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
             [actionSheet release];
         }
         else
@@ -339,18 +342,18 @@
 
 - (void)setEditing:(BOOL)editing animated:(BOOL)animate
 {
-    self.navigationController.toolbarHidden = !editing;
+    [self.navigationController setToolbarHidden:!editing animated:animate];
     if (editing)
     {
         for (UITableViewCell *cell in [self.tableView visibleCells])
             cell.selectionStyle = UITableViewCellSelectionStyleGray;
-        [self.navigationItem setLeftBarButtonItem:[[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"All", @"All") style:UIBarButtonItemStylePlain target:self action:@selector(selectAll:)] autorelease] animated:YES];
+        [self.navigationItem setLeftBarButtonItem:[[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"All", @"All") style:UIBarButtonItemStylePlain target:self action:@selector(selectAll:)] autorelease] animated:animate];
     }
     else
     {
         for (UITableViewCell *cell in [self.tableView visibleCells])
             cell.selectionStyle = UITableViewCellSelectionStyleBlue;
-        [self.navigationItem setLeftBarButtonItem:nil animated:YES];
+        [self.navigationItem setLeftBarButtonItem:nil animated:animate];
     }
     [super setEditing:editing animated:animate];
 }

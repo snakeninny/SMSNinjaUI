@@ -5,9 +5,15 @@
 #import <objc/runtime.h>
 #import <sqlite3.h>
 
+#ifndef SMSNinjaDebug
 #define SETTINGS @"/var/mobile/Library/SMSNinja/smsninja.plist"
 #define DATABASE @"/var/mobile/Library/SMSNinja/smsninja.db"
 #define PRIVATEPICTURES @"/var/mobile/Library/SMSNinja/PrivatePictures/"
+#else
+#define SETTINGS @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/Documents/var/mobile/Library/SMSNinja/smsninja.plist"
+#define DATABASE @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/Documents/var/mobile/Library/SMSNinja/smsninja.db"
+#define PRIVATEPICTURES @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/Documents/var/mobile/Library/SMSNinja/PrivatePictures/"
+#endif
 
 @implementation SNPrivateMessageHistoryViewController
 - (void)dealloc
@@ -60,19 +66,23 @@
                                    [fileManager removeItemAtPath:[[PRIVATEPICTURES stringByAppendingString:[weakSelf->idArray objectAtIndex:chosenRowIndexPath.row]] stringByAppendingFormat:@"-%d.jpg", i] error:&error];
                                    if (error) NSLog(@"SMSNinja: Failed to delete %@, error %@", [[PRIVATEPICTURES stringByAppendingString:[weakSelf->idArray objectAtIndex:chosenRowIndexPath.row]] stringByAppendingFormat:@"-%d.png", i], [error localizedDescription]);
                                }
-                               
-                               [weakSelf->idArray removeObjectAtIndex:chosenRowIndexPath.row];
-                               [weakSelf->nameArray removeObjectAtIndex:chosenRowIndexPath.row];
-                               [weakSelf->contentArray removeObjectAtIndex:chosenRowIndexPath.row];
-                               [weakSelf->timeArray removeObjectAtIndex:chosenRowIndexPath.row];
-                               [weakSelf->numberArray removeObjectAtIndex:chosenRowIndexPath.row];
-                               [weakSelf->picturesArray removeObjectAtIndex:chosenRowIndexPath.row];
                            }
                            sqlite3_close(database);
                        }
                        else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
                    }
                    );
+    
+    for (NSIndexPath *chosenRowIndexPath in bulkSet)
+    {
+        [idArray removeObjectAtIndex:chosenRowIndexPath.row];
+        [nameArray removeObjectAtIndex:chosenRowIndexPath.row];
+        [contentArray removeObjectAtIndex:chosenRowIndexPath.row];
+        [timeArray removeObjectAtIndex:chosenRowIndexPath.row];
+        [numberArray removeObjectAtIndex:chosenRowIndexPath.row];
+        [picturesArray removeObjectAtIndex:chosenRowIndexPath.row];
+    }
+    
 	[self.tableView beginUpdates];
 	[self.tableView deleteRowsAtIndexPaths:[bulkSet allObjects] withRowAnimation:UITableViewRowAnimationFade];
 	[self.tableView endUpdates];
@@ -247,19 +257,23 @@
                                            [fileManager removeItemAtPath:[[PRIVATEPICTURES stringByAppendingString:[weakSelf->idArray objectAtIndex:chosenRowIndexPath.row]] stringByAppendingFormat:@"-%d.jpg", i] error:&error];
                                            if (error) NSLog(@"SMSNinja: Failed to delete %@, error %@", [[PRIVATEPICTURES stringByAppendingString:[weakSelf->idArray objectAtIndex:chosenRowIndexPath.row]] stringByAppendingFormat:@"-%d.png", i], [error localizedDescription]);
                                        }
-                                       
-                                       [weakSelf->idArray removeObjectAtIndex:chosenRowIndexPath.row];
-                                       [weakSelf->nameArray removeObjectAtIndex:chosenRowIndexPath.row];
-                                       [weakSelf->contentArray removeObjectAtIndex:chosenRowIndexPath.row];
-                                       [weakSelf->timeArray removeObjectAtIndex:chosenRowIndexPath.row];
-                                       [weakSelf->numberArray removeObjectAtIndex:chosenRowIndexPath.row];
-                                       [weakSelf->picturesArray removeObjectAtIndex:chosenRowIndexPath.row];
                                    }
                                    sqlite3_close(database);
                                }
                                else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
                            }
                            );
+            
+            for (NSIndexPath *chosenRowIndexPath in bulkSet)
+            {
+                [idArray removeObjectAtIndex:chosenRowIndexPath.row];
+                [nameArray removeObjectAtIndex:chosenRowIndexPath.row];
+                [contentArray removeObjectAtIndex:chosenRowIndexPath.row];
+                [timeArray removeObjectAtIndex:chosenRowIndexPath.row];
+                [numberArray removeObjectAtIndex:chosenRowIndexPath.row];
+                [picturesArray removeObjectAtIndex:chosenRowIndexPath.row];
+            }
+            
 			[self.tableView beginUpdates];
 			[self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:[bulkSet allObjects]] withRowAnimation:UITableViewRowAnimationFade];
 			[self.tableView endUpdates];
@@ -287,7 +301,7 @@
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
         chosenRow = indexPath.row;
         UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel") destructiveButtonTitle:NSLocalizedString(@"Delete", @"Delete") otherButtonTitles:NSLocalizedString(@"Copy number", @"Copy number"), NSLocalizedString(@"Copy content", @"Copy content"), NSLocalizedString(@"SMS", @"SMS"), NSLocalizedString(@"Call", @"Call"), nil];
-        [actionSheet showFromToolbar:self.navigationController.toolbar];
+        [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
         [actionSheet release];
     }
 }
@@ -350,18 +364,18 @@
 - (void)setEditing:(BOOL)editing animated:(BOOL)animate
 {
     [bulkSet removeAllObjects];
-    self.navigationController.toolbarHidden = !editing;
+    [self.navigationController setToolbarHidden:!editing animated:animate];
     if (editing)
     {
         for (UITableViewCell *cell in [self.tableView visibleCells])
             cell.selectionStyle = UITableViewCellSelectionStyleGray;
-        [self.navigationItem setLeftBarButtonItem:[[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"All", @"All") style:UIBarButtonItemStylePlain target:self action:@selector(selectAll:)] autorelease] animated:YES];
+        [self.navigationItem setLeftBarButtonItem:[[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"All", @"All") style:UIBarButtonItemStylePlain target:self action:@selector(selectAll:)] autorelease] animated:animate];
     }
     else
     {
         for (UITableViewCell *cell in [self.tableView visibleCells])
             cell.selectionStyle = UITableViewCellSelectionStyleBlue;
-        [self.navigationItem setLeftBarButtonItem:nil animated:YES];
+        [self.navigationItem setLeftBarButtonItem:nil animated:animate];
     }
     [super setEditing:editing animated:animate];
 }
@@ -377,7 +391,7 @@
         for (int i = count; i < [idArray count]; i++)
         {
             NSIndexPath *newPath =  [NSIndexPath indexPathForRow:i inSection:0];
-            [insertIndexPaths addObject:newPath];
+            [insertIndexPaths insertObject:newPath atIndex:i];
         }
         [self.tableView insertRowsAtIndexPaths:insertIndexPaths withRowAnimation:UITableViewRowAnimationFade];
         [self.tableView endUpdates];

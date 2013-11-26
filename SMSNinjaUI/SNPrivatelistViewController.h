@@ -1,12 +1,18 @@
-#import "SNBlacklistViewController.h"
 #import "SMSNinja-private.h"
 #import <AddressBookUI/AddressBookUI.h>
 
-@interface SNWhitelistViewController : UITableViewController <UIActionSheetDelegate, UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate, ABPeoplePickerNavigationControllerDelegate>
+@interface SNPrivatelistViewController : UITableViewController <UIActionSheetDelegate, UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate, ABPeoplePickerNavigationControllerDelegate>
 {
 	NSMutableArray *keywordArray;
 	NSMutableArray *typeArray;
 	NSMutableArray *nameArray;
+	NSMutableArray *phoneArray;
+	NSMutableArray *smsArray;
+	NSMutableArray *replyArray;
+	NSMutableArray *messageArray;
+	NSMutableArray *forwardArray;
+	NSMutableArray *numberArray;
+	NSMutableArray *soundArray;
 }
 @property (nonatomic, retain) NSString *chosenName;
 @property (nonatomic, retain) NSString *chosenKeyword;
@@ -17,5 +23,4 @@
 - (void)gotoAddressbook;
 - (void)gotoSystemMessageHistoryView;
 - (void)gotoSystemCallHistoryView;
-- (void)segmentAction:(UISegmentedControl *)sender;
 @end

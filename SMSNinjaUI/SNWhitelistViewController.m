@@ -6,8 +6,13 @@
 #import "SNMainViewController.h"
 #import <sqlite3.h>
 
+#ifndef SMSNinjaDebug
 #define SETTINGS @"/var/mobile/Library/SMSNinja/smsninja.plist"
 #define DATABASE @"/var/mobile/Library/SMSNinja/smsninja.db"
+#else
+#define SETTINGS @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/Documents/var/mobile/Library/SMSNinja/smsninja.plist"
+#define DATABASE @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/Documents/var/mobile/Library/SMSNinja/smsninja.db"
+#endif
 
 @implementation SNWhitelistViewController
 
@@ -187,15 +192,19 @@
                                NSString *sql = [NSString stringWithFormat:@"delete from whitelist where keyword = '%@' and type = '%@' and name = '%@'", [weakSelf->keywordArray objectAtIndex:chosenRowIndexPath.row], [weakSelf->typeArray objectAtIndex:chosenRowIndexPath.row], [[weakSelf->nameArray objectAtIndex:chosenRowIndexPath.row] stringByReplacingOccurrencesOfString:@"'" withString:@"''"]];
                                int execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
                                if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
-                               
-                               [weakSelf->keywordArray removeObjectAtIndex:chosenRowIndexPath.row];
-                               [weakSelf->typeArray removeObjectAtIndex:chosenRowIndexPath.row];
-                               [weakSelf->nameArray removeObjectAtIndex:chosenRowIndexPath.row];
                            }
                            sqlite3_close(database);
                        }
                        else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
                    });
+    
+    for (NSIndexPath *chosenRowIndexPath in deleteSet)
+    {
+        [keywordArray removeObjectAtIndex:chosenRowIndexPath.row];
+        [typeArray removeObjectAtIndex:chosenRowIndexPath.row];
+        [nameArray removeObjectAtIndex:chosenRowIndexPath.row];
+    }
+    
 	[tableView beginUpdates];
 	[tableView deleteRowsAtIndexPaths:[deleteSet allObjects] withRowAnimation:UITableViewRowAnimationFade];
 	[tableView endUpdates];
@@ -274,14 +283,14 @@
 - (void)addRecord
 {
 	UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"From addressbook", @"From addressbook"), NSLocalizedString(@"From call history", @"From call history"), NSLocalizedString(@"From message history", @"From message history"), NSLocalizedString(@"Enter numbers", @"Enter numbers"), NSLocalizedString(@"Enter keywords", @"Enter keywords"), nil];
-	[actionSheet showFromToolbar:self.navigationController.toolbar];
+	[actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
 	[actionSheet release];
 }
 
 - (void)setEditing:(BOOL)editing animated:(BOOL)animated
 {
 	if (editing) [self.navigationItem setLeftBarButtonItem:[[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Add", @"Add") style:UIBarButtonItemStyleBordered target:self action:@selector(addRecord)] autorelease] animated:YES];
-	else [self.navigationItem setLeftBarButtonItem:nil animated:YES];
+	else [self.navigationItem setLeftBarButtonItem:nil animated:animated];
 	[super setEditing:editing animated:animated];
 }
 
@@ -301,16 +310,11 @@
 		if (lastName) CFRelease(lastName);
         
 		ABMultiValueRef keywords = ABRecordCopyValue(person, property);
-		if (!keywords)
-		{
-			CFRelease(keywords);
-			return NO;
-		}
+		if (!keywords) return NO;
 		CFStringRef keyword = (CFStringRef)ABMultiValueCopyValueAtIndex(keywords, identifier);
 		if (!keyword)
 		{
 			CFRelease(keywords);
-			CFRelease(keyword);
 			return NO;
 		}
 		self.chosenKeyword = (NSString *)keyword;
@@ -332,9 +336,9 @@
                            else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
                        });
         
-		[keywordArray addObject:self.chosenKeyword];
-		[typeArray addObject:@"0"];
-		[nameArray addObject:self.chosenName];
+		[keywordArray insertObject:self.chosenKeyword atIndex:0];
+		[typeArray insertObject:@"0" atIndex:0];
+		[nameArray insertObject:self.chosenName atIndex:0];
         
 		[self.tableView beginUpdates];
 		[self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:YES];

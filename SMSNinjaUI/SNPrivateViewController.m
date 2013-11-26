@@ -1,11 +1,16 @@
 #import "SNPrivateViewController.h"
-#import "SNPrivateCallHistoryViewController.h"
+#import "SNPrivatelistViewController.h"
 #import "SNPrivateMessageHistoryViewController.h"
 #import "SNTextTableViewCell.h"
 #import <sqlite3.h>
 
+#ifndef SMSNinjaDebug
 #define SETTINGS @"/var/mobile/Library/SMSNinja/smsninja.plist"
 #define DATABASE @"/var/mobile/Library/SMSNinja/smsninja.db"
+#else
+#define SETTINGS @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/Documents/var/mobile/Library/SMSNinja/smsninja.plist"
+#define DATABASE @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/Documents/var/mobile/Library/SMSNinja/smsninja.db"
+#endif
 
 @implementation SNPrivateViewController
 
@@ -20,6 +25,9 @@
 	[semicolonSwitch release];
 	semicolonSwitch = nil;
     
+    [tapRecognizer release];
+    tapRecognizer = nil;
+    
 	[super dealloc];
 }
 
@@ -32,6 +40,9 @@
         fakePasswordField = [[UITextField alloc] initWithFrame:CGRectZero];
         purpleSwitch = [[UISwitch alloc] initWithFrame:CGRectZero];
         semicolonSwitch = [[UISwitch alloc] initWithFrame:CGRectZero];
+        
+        tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissKeyboardWithTap:)];
+        tapRecognizer.delegate = self;
 	}
 	return self;
 }
@@ -93,7 +104,7 @@
                 
                 break;
             case 1:
-                cell.textLabel.text = NSLocalizedString(@"Show semicolon", @"Show semicolon");
+                cell.textLabel.text = NSLocalizedString(@"Show Semicolon", @"Show Semicolon");
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 cell.accessoryView = semicolonSwitch;
                 semicolonSwitch.on = [[dictionary objectForKey:@"shouldShowSemicolon"] boolValue];
@@ -123,9 +134,9 @@
             }
 			case 1:
             {
-                SNPrivateCallHistoryViewController *privateCallHistoryViewController = [[SNPrivateCallHistoryViewController alloc] init];
-                [self.navigationController pushViewController:privateCallHistoryViewController animated:YES];
-                [privateCallHistoryViewController release];
+                SNPrivatelistViewController *privatelistViewController = [[SNPrivatelistViewController alloc] init];
+                [self.navigationController pushViewController:privatelistViewController animated:YES];
+                [privatelistViewController release];
                 
                 break;
             }
@@ -152,5 +163,23 @@
 {
 	[textField resignFirstResponder];
 	return YES;
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    [self.view addGestureRecognizer:tapRecognizer];
+}
+
+- (void)dismissKeyboardWithTap:(UITapGestureRecognizer *)tap
+{
+    [fakePasswordField resignFirstResponder];
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+    if (gestureRecognizer == tapRecognizer && [touch.view isKindOfClass:NSClassFromString(@"UITableViewCellContentView")]) return NO;
+    return YES;
 }
 @end

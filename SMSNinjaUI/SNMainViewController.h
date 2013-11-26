@@ -1,4 +1,3 @@
-#import <UIKit/UIKit.h>
 #import "SMSNinja-private.h"
 
 @interface SNMainViewController : UITableViewController <UITableViewDelegate, UIAlertViewDelegate>

@@ -1,14 +1,19 @@
-#import <UIKit/UIKit.h>
+#import "SMSNinja-private.h"
 
-@interface SNSettingsViewController : UITableViewController <UIAlertViewDelegate, UITextFieldDelegate>
+@interface SNSettingsViewController : UITableViewController <UIAlertViewDelegate, UITextFieldDelegate, UIGestureRecognizerDelegate>
+{
+    UISwitch *iconBadgeSwitch;
+    UISwitch *statusBarBadgeSwitch;
+    UISwitch *hideIconSwitch;
+    UISwitch *clearSwitch;
+    UISwitch *addressbookSwitch;
+    UITextField *passwordField;
+    UITextField *launchCodeField;
+    
+    UITapGestureRecognizer *tapRecognizer;
+}
 @property (nonatomic, retain) NSNumber *fake;
-@property (nonatomic, retain) UISwitch *iconBadgeSwitch;
-@property (nonatomic, retain) UISwitch *statusBarBadgeSwitch;
-@property (nonatomic, retain) UISwitch *hideIconSwitch;
-@property (nonatomic, retain) UISwitch *clearSwitch;
-@property (nonatomic, retain) UISwitch *addressbookSwitch;
-@property (nonatomic, retain) UITextField *passwordField;
-@property (nonatomic, retain) UITextField *launchCodeField;
 - (void)resetSettings;
 - (void)saveSettings;
+- (void)dismissKeyboardWithTap:(UITapGestureRecognizer *)tap;
 @end

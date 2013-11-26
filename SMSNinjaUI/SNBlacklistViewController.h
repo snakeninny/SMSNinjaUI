@@ -1,3 +1,4 @@
+#import "SMSNinja-private.h"
 #import <AddressBookUI/AddressBookUI.h>
 
 @interface SNBlacklistViewController : UITableViewController <UIActionSheetDelegate, UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate, ABPeoplePickerNavigationControllerDelegate>

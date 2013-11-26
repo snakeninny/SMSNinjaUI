@@ -4,22 +4,23 @@
 #import "SNTextTableViewCell.h"
 #import <sqlite3.h>
 
+#ifndef SMSNinjaDebug
 #define SETTINGS @"/var/mobile/Library/SMSNinja/smsninja.plist"
 #define DATABASE @"/var/mobile/Library/SMSNinja/smsninja.db"
+#else
+#define SETTINGS @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/Documents/var/mobile/Library/SMSNinja/smsninja.plist"
+#define DATABASE @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/Documents/var/mobile/Library/SMSNinja/smsninja.db"
+#endif
 
 @implementation SNTimeViewController
 
 @synthesize keywordString;
-@synthesize nameField;
 @synthesize nameString;
 @synthesize phoneAction;
 @synthesize messageAction;
 @synthesize replyString;
-@synthesize replySwitch;
-@synthesize messageField;
 @synthesize messageString;
 @synthesize soundString;
-@synthesize soundSwitch;
 @synthesize forwardString;
 @synthesize numberString;
 
@@ -69,6 +70,9 @@
 	[soundSwitch release];
 	soundSwitch = nil;
     
+    [tapRecognizer release];
+    tapRecognizer = nil;
+    
 	[super dealloc];
 }
 
@@ -83,6 +87,9 @@
         messageField = [[UITextField alloc] initWithFrame:CGRectZero];
         soundSwitch = [[UISwitch alloc] initWithFrame:CGRectZero];
         
+        tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissKeyboardWithTap:)];
+        tapRecognizer.delegate = self;
+
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 	}
@@ -116,6 +123,8 @@
 	settingsTableView.dataSource = self;
 	settingsTableView.delegate = self;
 	[self.view addSubview:settingsTableView];
+    
+    [settingsTableView addGestureRecognizer:tapRecognizer];
 }
 
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
@@ -161,6 +170,8 @@
 {
 	SNTextTableViewCell *cell = [settingsTableView dequeueReusableCellWithIdentifier:@"any-cell"];
 	if (cell == nil) cell = [[[SNTextTableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"any-cell"] autorelease];
+    for (UIView *subview in [cell.contentView subviews])
+        [subview removeFromSuperview];
     
     switch (indexPath.section)
     {
@@ -178,8 +189,10 @@
             if (indexPath.row == 0)
             {
                 cell.textLabel.text = NSLocalizedString(@"Call", @"Call");
-                cell.detailTextLabel.text = NSLocalizedString(@"Ignore", @"Ignore");
-                if ([self.phoneAction isEqualToString:@"1"]) cell.detailTextLabel.text = NSLocalizedString(@"Disconnect", @"Disconnect");
+                NSString *detailText = @"";
+                if ([self.phoneAction isEqualToString:@"1"]) detailText = NSLocalizedString(@"Disconnect", @"Disconnect");
+                else if ([self.phoneAction isEqualToString:@"2"]) detailText = NSLocalizedString(@"Ignore", @"Ignore");
+                cell.detailTextLabel.text = detailText;
                 cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             }
             else if (indexPath.row == 1)
@@ -284,8 +297,10 @@
         if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
         sqlite3_close(database);
 	}
+    else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
     
     id viewController = [self.navigationController.viewControllers objectAtIndex:([self.navigationController.viewControllers count] - 2)];
+    if ([viewController isKindOfClass:[SNTimeViewController class]]) return;
     SEL selector = NSSelectorFromString(@"loadDatabaseSegment");
     if ([viewController respondsToSelector:selector]) [viewController performSelector:selector];
     [((UITableViewController *)viewController).tableView reloadData];
@@ -301,25 +316,37 @@
 {
     NSDictionary *userInfo = [notification userInfo];
     float movementDuration = [(NSNumber *)[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
-    const int movementDistance = [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size.height;
+    int movementDistance = [nameField isFirstResponder] ? [settingsTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]].bounds.size.height : [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size.height;
     
-	[UIView beginAnimations:@"animation" context:nil];
-	[UIView setAnimationBeginsFromCurrentState:YES];
-	[UIView setAnimationDuration: movementDuration];
-	self.view.center = CGPointMake(self.view.center.x, self.view.center.y - movementDistance);
-	[UIView commitAnimations];
+    [UIView beginAnimations:@"animation" context:nil];
+    [UIView setAnimationBeginsFromCurrentState:YES];
+    [UIView setAnimationDuration: movementDuration];
+    self.view.center = CGPointMake(self.view.center.x, self.view.center.y - movementDistance);
+    [UIView commitAnimations];
 }
 
 - (void)keyboardWillHide:(NSNotification *)notification
 {
     NSDictionary *userInfo = [notification userInfo];
     float movementDuration = [(NSNumber *)[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
-    int movementDistance = [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size.height;
+    int movementDistance = [nameField isFirstResponder] ? [settingsTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]].bounds.size.height : [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size.height;
     
-	[UIView beginAnimations:@"animation" context:nil];
-	[UIView setAnimationBeginsFromCurrentState:YES];
-	[UIView setAnimationDuration:movementDuration];
-	self.view.center = CGPointMake(self.view.center.x, self.view.center.y + movementDistance);
-	[UIView commitAnimations];
+    [UIView beginAnimations:@"animation" context:nil];
+    [UIView setAnimationBeginsFromCurrentState:YES];
+    [UIView setAnimationDuration:movementDuration];
+    self.view.center = CGPointMake(self.view.center.x, self.view.center.y + movementDistance);
+    [UIView commitAnimations];
+}
+
+- (void)dismissKeyboardWithTap:(UITapGestureRecognizer *)tap
+{
+    [nameField resignFirstResponder];
+    [messageField resignFirstResponder];
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+    if (gestureRecognizer == tapRecognizer && [touch.view isKindOfClass:NSClassFromString(@"UITableViewCellContentView")]) return NO;
+    return YES;
 }
 @end

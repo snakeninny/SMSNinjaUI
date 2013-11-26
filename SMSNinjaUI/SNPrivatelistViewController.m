@@ -1,11 +1,9 @@
-#import "SNBlacklistViewController.h"
-#import "SNWhitelistViewController.h"
+#import "SNPrivatelistViewController.h"
 #import "SNNumberViewController.h"
 #import "SNContentViewController.h"
 #import "SNTimeViewController.h"
 #import "SNSystemMessageHistoryViewController.h"
 #import "SNSystemCallHistoryViewController.h"
-#import "SNMainViewController.h"
 #import <sqlite3.h>
 
 #ifndef SMSNinjaDebug
@@ -16,7 +14,7 @@
 #define DATABASE @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/Documents/var/mobile/Library/SMSNinja/smsninja.db"
 #endif
 
-@implementation SNBlacklistViewController
+@implementation SNPrivatelistViewController
 
 @synthesize chosenKeyword;
 @synthesize chosenName;
@@ -69,7 +67,7 @@
 	int openResult = sqlite3_open([DATABASE UTF8String], &database);
 	if (openResult == SQLITE_OK)
 	{
-		NSString *sql = [NSString stringWithFormat:@"select keyword, type, name, phone, sms, reply, message, forward, number, sound from blacklist limit %d, 50", [keywordArray count]];
+		NSString *sql = [NSString stringWithFormat:@"select keyword, type, name, phone, sms, reply, message, forward, number, sound from privatelist limit %d, 50", [keywordArray count]];
 		int prepareResult = sqlite3_prepare_v2(database, [sql UTF8String], -1, &statement, NULL);
 		if (prepareResult == SQLITE_OK)
 		{
@@ -113,10 +111,11 @@
 	else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
 }
 
-- (SNBlacklistViewController *)init
+- (SNPrivatelistViewController *)init
 {
 	if ((self = [super initWithStyle:UITableViewStylePlain]))
 	{
+		self.title= NSLocalizedString(@"Private", @"Private");
 		self.navigationItem.rightBarButtonItem = self.editButtonItem;
         
 		keywordArray = [[NSMutableArray alloc] initWithCapacity:600];
@@ -135,29 +134,6 @@
 		[self loadDatabaseSegment];
 	}
 	return self;
-}
-
-- (void)segmentAction:(UISegmentedControl *)sender
-{
-	if (sender.selectedSegmentIndex == 0)
-	{
-        SNWhitelistViewController *whitelistViewController = [[SNWhitelistViewController alloc] init];
-        UINavigationController *navigationController = self.navigationController;
-        [navigationController popViewControllerAnimated:NO];
-        [navigationController pushViewController:whitelistViewController animated:NO];
-        [whitelistViewController release];
-	}
-    sender.selectedSegmentIndex = -1;
-}
-
-- (void)viewDidLoad
-{
-	UISegmentedControl *segmentedControl = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:NSLocalizedString(@"White", @"White"), NSLocalizedString(@"Black", @"Black"), nil]];
-	segmentedControl.segmentedControlStyle = UISegmentedControlStyleBar;
-	segmentedControl.frame = CGRectMake(0.0f, 0.0f, 100.0f, 30.0f);
-	[segmentedControl addTarget:self action:@selector(segmentAction:) forControlEvents:UIControlEventValueChanged];
-	self.navigationItem.titleView = segmentedControl;
-	[segmentedControl release];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -189,15 +165,10 @@
 	return cell;
 }
 
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
-{
-	return NSLocalizedString(@"Blacklist", @"Blacklist");
-}
-
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	__block NSSet *deleteSet = [NSSet setWithObject:[NSIndexPath indexPathForRow:indexPath.row inSection:0]];
-    __block SNBlacklistViewController *weakSelf = self;
+    __block NSSet *deleteSet = [NSSet setWithObject:[NSIndexPath indexPathForRow:indexPath.row inSection:0]];
+    __block SNPrivatelistViewController *weakSelf = self;
 	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
                    {
                        sqlite3 *database;
@@ -206,7 +177,7 @@
                        {
                            for (NSIndexPath *chosenRowIndexPath in deleteSet)
                            {
-                               NSString *sql = [NSString stringWithFormat:@"delete from blacklist where keyword = '%@' and type = '%@' and name = '%@' and phone = '%@' and sms = '%@' and reply = '%@' and message = '%@' and forward = '%@' and number = '%@' and sound = '%@'", [weakSelf->keywordArray objectAtIndex:chosenRowIndexPath.row], [weakSelf->typeArray objectAtIndex:chosenRowIndexPath.row], [[weakSelf->nameArray objectAtIndex:chosenRowIndexPath.row] stringByReplacingOccurrencesOfString:@"'" withString:@"''"], [weakSelf->phoneArray objectAtIndex:chosenRowIndexPath.row], [weakSelf->smsArray objectAtIndex:chosenRowIndexPath.row], [weakSelf->replyArray objectAtIndex:chosenRowIndexPath.row], [[weakSelf->messageArray objectAtIndex:chosenRowIndexPath.row] stringByReplacingOccurrencesOfString:@"'" withString:@"''"], [weakSelf->forwardArray objectAtIndex:chosenRowIndexPath.row], [weakSelf->numberArray objectAtIndex:chosenRowIndexPath.row], [weakSelf->soundArray objectAtIndex:chosenRowIndexPath.row]];
+                               NSString *sql = [NSString stringWithFormat:@"delete from privatelist where keyword = '%@' and type = '%@' and name = '%@' and phone = '%@' and sms = '%@' and reply = '%@' and message = '%@' and forward = '%@' and number = '%@' and sound = '%@'", [weakSelf->keywordArray objectAtIndex:chosenRowIndexPath.row], [weakSelf->typeArray objectAtIndex:chosenRowIndexPath.row], [[weakSelf->nameArray objectAtIndex:chosenRowIndexPath.row] stringByReplacingOccurrencesOfString:@"'" withString:@"''"], [weakSelf->phoneArray objectAtIndex:chosenRowIndexPath.row], [weakSelf->smsArray objectAtIndex:chosenRowIndexPath.row], [weakSelf->replyArray objectAtIndex:chosenRowIndexPath.row], [[weakSelf->messageArray objectAtIndex:chosenRowIndexPath.row] stringByReplacingOccurrencesOfString:@"'" withString:@"''"], [weakSelf->forwardArray objectAtIndex:chosenRowIndexPath.row], [weakSelf->numberArray objectAtIndex:chosenRowIndexPath.row], [weakSelf->soundArray objectAtIndex:chosenRowIndexPath.row]];
                                int execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
                                if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
                            }
@@ -237,16 +208,16 @@
 - (void)gotoNumberView
 {
 	SNNumberViewController *numberViewController = [[SNNumberViewController alloc] init];
-	numberViewController.flag = @"black";
+	numberViewController.flag = @"private";
 	numberViewController.nameString = @"";
 	numberViewController.keywordString = @"";
-	numberViewController.phoneAction= @"1";
+	numberViewController.phoneAction = @"1";
 	numberViewController.messageAction = @"1";
 	numberViewController.replyString = @"0";
 	numberViewController.messageString = @"";
 	numberViewController.forwardString = @"0";
 	numberViewController.numberString = @"";
-	numberViewController.soundString = @"1";
+	numberViewController.soundString = @"0";
 	[self.navigationController pushViewController:numberViewController animated:YES];
 	[numberViewController release];
 }
@@ -254,38 +225,22 @@
 - (void)gotoContentView
 {
 	SNContentViewController *contentViewController = [[SNContentViewController alloc] init];
-	contentViewController.flag = @"black";
+	contentViewController.flag = @"private";
 	contentViewController.nameString = @"";
 	contentViewController.keywordString = @"";
 	contentViewController.replyString = @"0";
 	contentViewController.messageString = @"";
 	contentViewController.forwardString = @"0";
 	contentViewController.numberString = @"";
-	contentViewController.soundString = @"1";
+	contentViewController.soundString = @"0";
 	[self.navigationController pushViewController:contentViewController animated:YES];
 	[contentViewController release];
-}
-
-- (void)gotoTimeView
-{
-	SNTimeViewController *timeViewController = [[SNTimeViewController alloc] init];
-	timeViewController.nameString = @"";
-	timeViewController.keywordString = @"06:06~06:06";
-	timeViewController.phoneAction = @"1";
-	timeViewController.messageAction = @"1";
-	timeViewController.replyString = @"0";
-	timeViewController.messageString = @"";
-	timeViewController.forwardString = @"0";
-	timeViewController.numberString = @"";
-	timeViewController.soundString = @"1";
-	[self.navigationController pushViewController:timeViewController animated:YES];
-	[timeViewController release];
 }
 
 - (void)gotoSystemCallHistoryView
 {
 	SNSystemCallHistoryViewController *systemCallHistoryViewController = [[SNSystemCallHistoryViewController alloc] init];
-	systemCallHistoryViewController.flag = @"black";
+	systemCallHistoryViewController.flag = @"private";
 	[self.navigationController pushViewController:systemCallHistoryViewController animated:YES];
 	[systemCallHistoryViewController release];
 }
@@ -293,7 +248,7 @@
 - (void)gotoSystemMessageHistoryView
 {
 	SNSystemMessageHistoryViewController *systemMessageHistoryViewController = [[SNSystemMessageHistoryViewController alloc] init];
-	systemMessageHistoryViewController.flag = @"black";
+	systemMessageHistoryViewController.flag = @"private";
 	[self.navigationController pushViewController:systemMessageHistoryViewController animated:YES];
 	[systemMessageHistoryViewController release];
 }
@@ -313,12 +268,9 @@
             [self gotoSystemMessageHistoryView];
             break;
         case 3:
-            [self gotoTimeView];
-            break;
-        case 4:
             [self gotoNumberView];
             break;
-        case 5:
+        case 4:
             [self gotoContentView];
             break;
     }
@@ -326,7 +278,7 @@
 	{
         if (buttonIndex != 2)
         {
-            __block SNBlacklistViewController *weakSelf = self;
+            __block SNPrivatelistViewController *weakSelf = self;
             __block NSInteger weakButtonIndex = buttonIndex;
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
                            {
@@ -334,7 +286,7 @@
                                int openResult = sqlite3_open([DATABASE UTF8String], &database);
                                if (openResult == SQLITE_OK)
                                {
-                                   NSString *sql = [NSString stringWithFormat:@"insert or replace into blacklist (keyword, type, name, phone, sms, reply, message, forward, number, sound) values ('%@', '0', '%@', '1', '1', '0', '', '0', '', '%d')", weakSelf.chosenKeyword, [weakSelf.chosenName stringByReplacingOccurrencesOfString:@"'" withString:@"''"], weakButtonIndex];
+                                   NSString *sql = [NSString stringWithFormat:@"insert or replace into privatelist (keyword, type, name, phone, sms, reply, message, forward, number, sound) values ('%@', '0', '%@', '1', '1', '0', '', '0', '', '%d')", weakSelf.chosenKeyword, [weakSelf.chosenName stringByReplacingOccurrencesOfString:@"'" withString:@"''"], weakButtonIndex];
                                    int execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
                                    if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
                                    sqlite3_close(database);
@@ -364,7 +316,7 @@
 
 - (void)addRecord
 {
-	UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"From addressbook", @"From addressbook"), NSLocalizedString(@"From call history", @"From call history"), NSLocalizedString(@"From message history", @"From message history"), NSLocalizedString(@"From time", @"From time"), NSLocalizedString(@"Enter numbers", @"Enter numbers"), NSLocalizedString(@"Enter keywords", @"Enter keywords"), nil];
+	UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"From addressbook", @"From addressbook"), NSLocalizedString(@"From call history", @"From call history"), NSLocalizedString(@"From message history", @"From message history"), NSLocalizedString(@"Enter numbers", @"Enter numbers"), NSLocalizedString(@"Enter keywords", @"Enter keywords"), nil];
 	actionSheet.tag = 1;
 	[actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
 	[actionSheet release];
@@ -382,7 +334,7 @@
 	if ([[typeArray objectAtIndex:indexPath.row] isEqualToString:@"0"]) // SNNumberViewController
 	{
 		SNNumberViewController *numberViewController = [[SNNumberViewController alloc] init];
-		numberViewController.flag = @"black";
+		numberViewController.flag = @"private";
 		numberViewController.nameString = [nameArray objectAtIndex:indexPath.row];
 		numberViewController.keywordString = [keywordArray objectAtIndex:indexPath.row];
 		numberViewController.phoneAction = [phoneArray objectAtIndex:indexPath.row];
@@ -398,7 +350,7 @@
 	else if ([[typeArray objectAtIndex:indexPath.row] isEqualToString:@"1"]) // SNContentViewController
 	{
 		SNContentViewController *contentViewController = [[SNContentViewController alloc] init];
-		contentViewController.flag = @"black";
+        contentViewController.flag = @"private";
 		contentViewController.nameString = [nameArray objectAtIndex:indexPath.row];
 		contentViewController.keywordString = [keywordArray objectAtIndex:indexPath.row];
 		contentViewController.replyString = [replyArray objectAtIndex:indexPath.row];
@@ -409,22 +361,8 @@
 		[self.navigationController pushViewController:contentViewController animated:YES];
 		[contentViewController release];
 	}
-	else if ([[typeArray objectAtIndex:indexPath.row] isEqualToString:@"2"]) // SNTimeViewController
-	{
-		SNTimeViewController *timeViewController = [[SNTimeViewController alloc] init];
-		timeViewController.nameString = [nameArray objectAtIndex:indexPath.row];
-		timeViewController.keywordString = [keywordArray objectAtIndex:indexPath.row];
-		timeViewController.phoneAction = [phoneArray objectAtIndex:indexPath.row];
-		timeViewController.messageAction = [smsArray objectAtIndex:indexPath.row];
-		timeViewController.replyString = [replyArray objectAtIndex:indexPath.row];
-		timeViewController.messageString = [messageArray objectAtIndex:indexPath.row];
-		timeViewController.forwardString = [forwardArray objectAtIndex:indexPath.row];
-		timeViewController.numberString = [numberArray objectAtIndex:indexPath.row];
-		timeViewController.soundString = [soundArray objectAtIndex:indexPath.row];
-		[self.navigationController pushViewController:timeViewController animated:YES];
-		[timeViewController release];
-	}
 }
+
 
 - (BOOL)peoplePickerNavigationController:(ABPeoplePickerNavigationController *)peoplePicker shouldContinueAfterSelectingPerson:(ABRecordRef)person
 {
