@@ -9,7 +9,7 @@
 #ifndef SMSNinjaDebug
 #define DOCUMENT @"/var/mobile/Library/SMSNinja"
 #else
-#define DOCUMENT @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/Documents/var/mobile/Library/SMSNinja"
+#define DOCUMENT @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/9E87534C-FD0A-450A-8863-0BAF0D62C9F0/Documents/var/mobile/Library/SMSNinja"
 #endif
 
 #define SETTINGS [DOCUMENT stringByAppendingString:@"/smsninja.plist"]
@@ -82,13 +82,13 @@ static void (^CreateDatabase)(void) = ^(void)
 #ifndef SMSNinjaDebug
 		[fileManager copyItemAtPath:@"/Applications/SMSNinja.app/smsninja.plist" toPath:SETTINGS error:nil];
 #else
-        [fileManager copyItemAtPath:@"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/SMSNinjaUI.app/smsninja.plist" toPath:SETTINGS error:nil];
+    [fileManager copyItemAtPath:@"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/9E87534C-FD0A-450A-8863-0BAF0D62C9F0/SMSNinjaUI.app/smsninja.plist" toPath:SETTINGS error:nil];
 #endif
 	if (![fileManager fileExistsAtPath:DATABASE])
 #ifndef SMSNinjaDebug
 		[fileManager copyItemAtPath:@"/Applications/SMSNinja.app/smsninja.db" toPath:DATABASE error:nil];
 #else
-        [fileManager copyItemAtPath:@"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/SMSNinjaUI.app/smsninja.db" toPath:DATABASE error:nil];
+    [fileManager copyItemAtPath:@"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/9E87534C-FD0A-450A-8863-0BAF0D62C9F0/SMSNinjaUI.app/smsninja.db" toPath:DATABASE error:nil];
 #endif
 	NSString *filePath = [DOCUMENT stringByAppendingString:@"/blocked.caf"];
 #ifndef SMSNinjaDebug
@@ -122,164 +122,9 @@ static void (^CreateDatabase)(void) = ^(void)
 #ifndef SMSNinjaDebug
 		[fileManager copyItemAtPath:@"/Applications/SMSNinja.app/smsninja.plist" toPath:SETTINGS error:nil];
 #else
-        [fileManager copyItemAtPath:@"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/SMSNinjaUI.app/smsninja.plist" toPath:SETTINGS error:nil];
+        [fileManager copyItemAtPath:@"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/9E87534C-FD0A-450A-8863-0BAF0D62C9F0/SMSNinjaUI.app/smsninja.plist" toPath:SETTINGS error:nil];
 #endif
-        __block SNMainViewController *weakSelf = self;
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            sqlite3 *database;
-            if (sqlite3_open([DATABASE UTF8String], &database) == SQLITE_OK)
-            {
-                // blacklist
-                NSString *sql = @"alter table blacklist add forward text";
-                int execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
-                if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
-                
-                sql = @"update blacklist set forward = ''";
-                execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
-                if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
-                
-                sql = @"alter table blacklist add number text";
-                execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
-                if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
-                
-                sql = @"update blacklist set number = ''";
-                execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
-                if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
-                
-                // whitelist
-                sql = @"alter table whitelist add forward text";
-                execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
-                if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
-                
-                sql = @"update whitelist set forward = ''";
-                execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
-                if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
-                
-                sql = @"alter table whitelist add number text";
-                execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
-                if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
-                
-                sql = @"update whitelist set number = ''";
-                execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
-                if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
-                
-                // privatelist
-                sql = @"alter table privatelist add forward text";
-                execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
-                if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
-                
-                sql = @"update privatelist set forward = ''";
-                execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
-                if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
-                
-                sql = @"alter table privatelist add number text";
-                execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
-                if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
-                
-                sql = @"update privatelist set number = ''";
-                execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
-                if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
-                
-                // blockedcall
-                sql = @"create table if not exists blockedcalltemp (id text primary key, content text, name text, number text, time text, pictures text, read text)";
-                execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
-                if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
-                
-                sql = @"insert into blockedcalltemp (id, content, name, number, time, read) select id, content, name, number, time, read from blockedcall";
-                execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
-                if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
-                
-                sql = @"update blockedcalltemp set pictures = '0'";
-                execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
-                if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
-                
-                sql = @"drop table if exists blockedcall";
-                execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
-                if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
-                
-                sql = @"alter table blockedcalltemp rename to blockedcall";
-                execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
-                if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
-                
-                // privatecall
-                sql = @"create table if not exists privatecalltemp (id text primary key, content text, name text, number text, time text, pictures text, read text)";
-                execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
-                if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
-                
-                sql = @"insert into privatecalltemp (id, content, name, number, time) select id, content, name, number, time from privatecall";
-                execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
-                if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
-                
-                sql = @"update privatecalltemp set pictures = '0', read = '1'";
-                execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
-                if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
-                
-                sql = @"drop table if exists privatecall";
-                execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
-                if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
-                
-                sql = @"alter table privatecalltemp rename to privatecall";
-                execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
-                if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
-                
-                // blockedsms
-                sql = @"create table if not exists blockedsmstemp (id text primary key, content text, name text, number text, time text, pictures text, read text)";
-                execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
-                if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
-                
-                sql = @"insert into blockedsmstemp (id, content, name, number, time, read) select id, content, name, number, time, read from blockedsms";
-                execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
-                if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
-                
-                sql = @"update blockedsmstemp set pictures = '0'";
-                execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
-                if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
-                
-                sql = @"drop table if exists blockedsms";
-                execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
-                if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
-                
-                sql = @"alter table blockedsmstemp rename to blockedsms";
-                execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
-                if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
-                
-                // privatesms
-                sql = @"create table if not exists privatesmstemp (id text primary key, content text, name text, number text, time text, pictures text, read text)";
-                execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
-                if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
-                
-                sql = @"insert into privatesmstemp (id, content, name, number, time) select id, content, name, number, time from privatesms";
-                execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
-                if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
-                
-                sql = @"update privatesmstemp set pictures = '0', read = '1'";
-                execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
-                if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
-                
-                sql = @"drop table if exists privatesms";
-                execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
-                if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
-                
-                sql = @"alter table privatesmstemp rename to privatesms";
-                execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
-                if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
-                
-                sqlite3_close(database);
-            }
-            
-            NSFileManager *fileManager = [NSFileManager defaultManager];
-            BOOL isDir;
-            
-            if (!([fileManager fileExistsAtPath:PICTURES isDirectory:&isDir] && isDir))
-                [fileManager createDirectoryAtPath:PICTURES withIntermediateDirectories:YES attributes:nil error:nil];
-            
-            if (!([fileManager fileExistsAtPath:PRIVATEPICTURES isDirectory:&isDir] && isDir))
-                [fileManager createDirectoryAtPath:PRIVATEPICTURES withIntermediateDirectories:YES attributes:nil error:nil];
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [weakSelf.tableView reloadData];
-            });
-        });
+        [self.tableView reloadData];
     }
 }
 
