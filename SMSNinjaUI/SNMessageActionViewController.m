@@ -61,6 +61,10 @@
 {
 	SNTextTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"any-cell"];
 	if (cell == nil) cell = [[[SNTextTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"any-cell"] autorelease];
+    for (UIView *subview in [cell.contentView subviews])
+        [subview removeFromSuperview];
+    cell.textLabel.text = nil;
+    cell.accessoryView = nil;
     
     switch (indexPath.row)
     {

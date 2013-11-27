@@ -5,7 +5,7 @@
 #ifndef SMSNinjaDebug
 #define DOCUMENT @"/var/mobile/Library/SMSNinja"
 #else
-#define DOCUMENT @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/9E87534C-FD0A-450A-8863-0BAF0D62C9F0/Documents/var/mobile/Library/SMSNinja"
+#define DOCUMENT @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/Documents/var/mobile/Library/SMSNinja"
 #endif
 
 #define SETTINGS [DOCUMENT stringByAppendingString:@"/smsninja.plist"]
@@ -120,6 +120,8 @@
     if (cell == nil) cell = [[[SNTextTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"any-cell"] autorelease];
     for (UIView *subview in [cell.contentView subviews])
         [subview removeFromSuperview];
+    cell.textLabel.text = nil;
+    cell.accessoryView = nil;
     
 	NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithContentsOfFile:SETTINGS];
 	switch (indexPath.section)
@@ -302,7 +304,7 @@
 
 - (void)resetSettings
 {
-	UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"SMSNinja", @"SMSNinja") message:NSLocalizedString(@"Are you sure to reset SMSNinja?", @"Are you sure to reset SMSNinja?") delegate:self cancelButtonTitle:NSLocalizedString(@"Forget that!", @"Forget that!") otherButtonTitles:NSLocalizedString(@"Go ahead!", @"Go ahead!") , nil];
+	UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Notice", @"Notice") message:NSLocalizedString(@"Are you sure to reset SMSNinja?", @"Are you sure to reset SMSNinja?") delegate:self cancelButtonTitle:NSLocalizedString(@"Forget that!", @"Forget that!") otherButtonTitles:NSLocalizedString(@"Go ahead!", @"Go ahead!") , nil];
 	[alertView show];
 	[alertView release];
 }
@@ -325,13 +327,13 @@ static void (^CreateDatabase)(void) = ^(void)
 #ifndef SMSNinjaDebug
 		[fileManager copyItemAtPath:@"/Applications/SMSNinja.app/smsninja.plist" toPath:SETTINGS error:nil];
 #else
-    [fileManager copyItemAtPath:@"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/9E87534C-FD0A-450A-8863-0BAF0D62C9F0/SMSNinjaUI.app/smsninja.plist" toPath:SETTINGS error:nil];
+    [fileManager copyItemAtPath:@"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/SMSNinjaUI.app/smsninja.plist" toPath:SETTINGS error:nil];
 #endif
 	if (![fileManager fileExistsAtPath:DATABASE])
 #ifndef SMSNinjaDebug
 		[fileManager copyItemAtPath:@"/Applications/SMSNinja.app/smsninja.db" toPath:DATABASE error:nil];
 #else
-    [fileManager copyItemAtPath:@"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/9E87534C-FD0A-450A-8863-0BAF0D62C9F0/SMSNinjaUI.app/smsninja.db" toPath:DATABASE error:nil];
+    [fileManager copyItemAtPath:@"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/SMSNinjaUI.app/smsninja.db" toPath:DATABASE error:nil];
 #endif
 	NSString *filePath = [DOCUMENT stringByAppendingString:@"/blocked.caf"];
 #ifndef SMSNinjaDebug
