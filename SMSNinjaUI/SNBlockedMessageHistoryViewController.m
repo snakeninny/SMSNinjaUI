@@ -10,9 +10,9 @@
 #define DATABASE @"/var/mobile/Library/SMSNinja/smsninja.db"
 #define PICTURES @"/var/mobile/Library/SMSNinja/Pictures/"
 #else
-#define SETTINGS @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/Documents/var/mobile/Library/SMSNinja/smsninja.plist"
-#define DATABASE @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/Documents/var/mobile/Library/SMSNinja/smsninja.db"
-#define PICTURES @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/Documents/var/mobile/Library/SMSNinja/Pictures/"
+#define SETTINGS @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/9E87534C-FD0A-450A-8863-0BAF0D62C9F0/Documents/var/mobile/Library/SMSNinja/smsninja.plist"
+#define DATABASE @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/9E87534C-FD0A-450A-8863-0BAF0D62C9F0/Documents/var/mobile/Library/SMSNinja/smsninja.db"
+#define PICTURES @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/9E87534C-FD0A-450A-8863-0BAF0D62C9F0/Documents/var/mobile/Library/SMSNinja/Pictures/"
 #endif
 
 @implementation SNBlockedMessageHistoryViewController
@@ -47,34 +47,29 @@
 
 - (void)bulkDelete
 {
-    __block SNBlockedMessageHistoryViewController *weakSelf = self;
-	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
-                   {
-                       sqlite3 *database;
-                       int openResult = sqlite3_open([DATABASE UTF8String], &database);
-                       if (openResult == SQLITE_OK)
-                       {
-                           for (NSIndexPath *chosenRowIndexPath in weakSelf->bulkSet)
-                           {
-                               NSString *sql = [NSString stringWithFormat:@"delete from blockedsms where number = '%@' and name = '%@' and time = '%@' and content = '%@' and read = '%@' and id = '%@' and pictures = '%@'", [weakSelf->numberArray objectAtIndex:chosenRowIndexPath.row], [[weakSelf->nameArray objectAtIndex:chosenRowIndexPath.row] stringByReplacingOccurrencesOfString:@"'" withString:@"''"], [weakSelf->timeArray objectAtIndex:chosenRowIndexPath.row], [[weakSelf->contentArray objectAtIndex:chosenRowIndexPath.row] stringByReplacingOccurrencesOfString:@"'" withString:@"''"], [weakSelf->readArray objectAtIndex:chosenRowIndexPath.row], [weakSelf->idArray objectAtIndex:chosenRowIndexPath.row], [weakSelf->picturesArray objectAtIndex:chosenRowIndexPath.row]];
-                               int execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
-                               if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
-                               
-                               NSFileManager *fileManager = [NSFileManager defaultManager];
-                               NSError *error = nil;
-                               for (int i = 0; i < [[weakSelf->picturesArray objectAtIndex:chosenRowIndexPath.row] intValue]; i++)
-                               {
-                                   [fileManager removeItemAtPath:[[PICTURES stringByAppendingString:[weakSelf->idArray objectAtIndex:chosenRowIndexPath.row]] stringByAppendingFormat:@"-%d.png", i] error:&error];
-                                   if (error) NSLog(@"SMSNinja: Failed to delete %@, error %@", [[PICTURES stringByAppendingString:[weakSelf->idArray objectAtIndex:chosenRowIndexPath.row]] stringByAppendingFormat:@"-%d.png", i], [error localizedDescription]);
-                                   [fileManager removeItemAtPath:[[PICTURES stringByAppendingString:[weakSelf->idArray objectAtIndex:chosenRowIndexPath.row]] stringByAppendingFormat:@"-%d.jpg", i] error:&error];
-                                   if (error) NSLog(@"SMSNinja: Failed to delete %@, error %@", [[PICTURES stringByAppendingString:[weakSelf->idArray objectAtIndex:chosenRowIndexPath.row]] stringByAppendingFormat:@"-%d.png", i], [error localizedDescription]);
-                               }
-                           }
-                           sqlite3_close(database);
-                       }
-                       else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
-                   }
-                   );
+    sqlite3 *database;
+    int openResult = sqlite3_open([DATABASE UTF8String], &database);
+    if (openResult == SQLITE_OK)
+    {
+        for (NSIndexPath *chosenRowIndexPath in bulkSet)
+        {
+            NSString *sql = [NSString stringWithFormat:@"delete from blockedsms where number = '%@' and name = '%@' and time = '%@' and content = '%@' and read = '%@' and id = '%@' and pictures = '%@'", [numberArray objectAtIndex:chosenRowIndexPath.row], [[nameArray objectAtIndex:chosenRowIndexPath.row] stringByReplacingOccurrencesOfString:@"'" withString:@"''"], [timeArray objectAtIndex:chosenRowIndexPath.row], [[contentArray objectAtIndex:chosenRowIndexPath.row] stringByReplacingOccurrencesOfString:@"'" withString:@"''"], [readArray objectAtIndex:chosenRowIndexPath.row], [idArray objectAtIndex:chosenRowIndexPath.row], [picturesArray objectAtIndex:chosenRowIndexPath.row]];
+            int execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
+            if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
+            
+            NSFileManager *fileManager = [NSFileManager defaultManager];
+            NSError *error = nil;
+            for (int i = 0; i < [[picturesArray objectAtIndex:chosenRowIndexPath.row] intValue]; i++)
+            {
+                [fileManager removeItemAtPath:[[PICTURES stringByAppendingString:[idArray objectAtIndex:chosenRowIndexPath.row]] stringByAppendingFormat:@"-%d.png", i] error:&error];
+                if (error) NSLog(@"SMSNinja: Failed to delete %@, error %@", [[PICTURES stringByAppendingString:[idArray objectAtIndex:chosenRowIndexPath.row]] stringByAppendingFormat:@"-%d.png", i], [error localizedDescription]);
+                [fileManager removeItemAtPath:[[PICTURES stringByAppendingString:[idArray objectAtIndex:chosenRowIndexPath.row]] stringByAppendingFormat:@"-%d.jpg", i] error:&error];
+                if (error) NSLog(@"SMSNinja: Failed to delete %@, error %@", [[PICTURES stringByAppendingString:[idArray objectAtIndex:chosenRowIndexPath.row]] stringByAppendingFormat:@"-%d.png", i], [error localizedDescription]);
+            }
+        }
+        sqlite3_close(database);
+    }
+    else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
     
     for (NSIndexPath *chosenRowIndexPath in bulkSet)
     {
@@ -87,9 +82,9 @@
         [picturesArray removeObjectAtIndex:chosenRowIndexPath.row];
     }
     
-	[self.tableView beginUpdates];
-	[self.tableView deleteRowsAtIndexPaths:[bulkSet allObjects] withRowAnimation:UITableViewRowAnimationFade];
-	[self.tableView endUpdates];
+    [self.tableView beginUpdates];
+    [self.tableView deleteRowsAtIndexPaths:[bulkSet allObjects] withRowAnimation:UITableViewRowAnimationFade];
+    [self.tableView endUpdates];
 }
 
 - (void)bulkUnread
@@ -317,33 +312,30 @@
 		case 0:
             [bulkSet removeAllObjects];
             [bulkSet addObject:[NSIndexPath indexPathForRow:chosenRow inSection:0]];
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
-                           {
-                               sqlite3 *database;
-                               int openResult = sqlite3_open([DATABASE UTF8String], &database);
-                               if (openResult == SQLITE_OK)
-                               {
-                                   for (NSIndexPath *chosenRowIndexPath in weakSelf->bulkSet)
-                                   {
-                                       NSString *sql = [NSString stringWithFormat:@"delete from blockedsms where number = '%@' and name = '%@' and time = '%@' and content = '%@' and read = '%@' and id = '%@' and pictures = '%@'", [weakSelf->numberArray objectAtIndex:chosenRowIndexPath.row], [[weakSelf->nameArray objectAtIndex:chosenRowIndexPath.row] stringByReplacingOccurrencesOfString:@"'" withString:@"''"], [weakSelf->timeArray objectAtIndex:chosenRowIndexPath.row], [[weakSelf->contentArray objectAtIndex:chosenRowIndexPath.row] stringByReplacingOccurrencesOfString:@"'" withString:@"''"], [weakSelf->readArray objectAtIndex:chosenRowIndexPath.row], [weakSelf->idArray objectAtIndex:chosenRowIndexPath.row], [weakSelf->picturesArray objectAtIndex:chosenRowIndexPath.row]];
-                                       int execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
-                                       if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
-                                       
-                                       NSFileManager *fileManager = [NSFileManager defaultManager];
-                                       NSError *error = nil;
-                                       for (int i = 0; i < [[weakSelf->picturesArray objectAtIndex:chosenRowIndexPath.row] intValue]; i++)
-                                       {
-                                           [fileManager removeItemAtPath:[[PICTURES stringByAppendingString:[weakSelf->idArray objectAtIndex:chosenRowIndexPath.row]] stringByAppendingFormat:@"-%d.png", i] error:&error];
-                                           if (error) NSLog(@"SMSNinja: Failed to delete %@, error %@", [[PICTURES stringByAppendingString:[weakSelf->idArray objectAtIndex:chosenRowIndexPath.row]] stringByAppendingFormat:@"-%d.png", i], [error localizedDescription]);
-                                           [fileManager removeItemAtPath:[[PICTURES stringByAppendingString:[weakSelf->idArray objectAtIndex:chosenRowIndexPath.row]] stringByAppendingFormat:@"-%d.jpg", i] error:&error];
-                                           if (error) NSLog(@"SMSNinja: Failed to delete %@, error %@", [[PICTURES stringByAppendingString:[weakSelf->idArray objectAtIndex:chosenRowIndexPath.row]] stringByAppendingFormat:@"-%d.png", i], [error localizedDescription]);
-                                       }
-                                   }
-                                   sqlite3_close(database);
-                               }
-                               else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
-                           }
-                           );
+            
+            sqlite3 *database;
+            int openResult = sqlite3_open([DATABASE UTF8String], &database);
+            if (openResult == SQLITE_OK)
+            {
+                for (NSIndexPath *chosenRowIndexPath in bulkSet)
+                {
+                    NSString *sql = [NSString stringWithFormat:@"delete from blockedsms where number = '%@' and name = '%@' and time = '%@' and content = '%@' and read = '%@' and id = '%@' and pictures = '%@'", [numberArray objectAtIndex:chosenRowIndexPath.row], [[nameArray objectAtIndex:chosenRowIndexPath.row] stringByReplacingOccurrencesOfString:@"'" withString:@"''"], [timeArray objectAtIndex:chosenRowIndexPath.row], [[contentArray objectAtIndex:chosenRowIndexPath.row] stringByReplacingOccurrencesOfString:@"'" withString:@"''"], [readArray objectAtIndex:chosenRowIndexPath.row], [idArray objectAtIndex:chosenRowIndexPath.row], [picturesArray objectAtIndex:chosenRowIndexPath.row]];
+                    int execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
+                    if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
+                    
+                    NSFileManager *fileManager = [NSFileManager defaultManager];
+                    NSError *error = nil;
+                    for (int i = 0; i < [[picturesArray objectAtIndex:chosenRowIndexPath.row] intValue]; i++)
+                    {
+                        [fileManager removeItemAtPath:[[PICTURES stringByAppendingString:[idArray objectAtIndex:chosenRowIndexPath.row]] stringByAppendingFormat:@"-%d.png", i] error:&error];
+                        if (error) NSLog(@"SMSNinja: Failed to delete %@, error %@", [[PICTURES stringByAppendingString:[idArray objectAtIndex:chosenRowIndexPath.row]] stringByAppendingFormat:@"-%d.png", i], [error localizedDescription]);
+                        [fileManager removeItemAtPath:[[PICTURES stringByAppendingString:[idArray objectAtIndex:chosenRowIndexPath.row]] stringByAppendingFormat:@"-%d.jpg", i] error:&error];
+                        if (error) NSLog(@"SMSNinja: Failed to delete %@, error %@", [[PICTURES stringByAppendingString:[idArray objectAtIndex:chosenRowIndexPath.row]] stringByAppendingFormat:@"-%d.png", i], [error localizedDescription]);
+                    }
+                }
+                sqlite3_close(database);
+            }
+            else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
             
             for (NSIndexPath *chosenRowIndexPath in bulkSet)
             {
@@ -357,7 +349,7 @@
             }
             
 			[self.tableView beginUpdates];
-			[self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:[bulkSet allObjects]] withRowAnimation:UITableViewRowAnimationFade];
+			[self.tableView deleteRowsAtIndexPaths:[bulkSet allObjects] withRowAnimation:UITableViewRowAnimationFade];
 			[self.tableView endUpdates];
             
 			break;
@@ -433,7 +425,7 @@
     {
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
         chosenRow = indexPath.row;
-        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel") destructiveButtonTitle:NSLocalizedString(@"Delete", @"Delete") otherButtonTitles:NSLocalizedString(@"Mark as read", @"Mark as read"), NSLocalizedString(@"Mark as unread", @"Mark as unread"), NSLocalizedString(@"Copy number", @"Copy number"), NSLocalizedString(@"Copy content", @"Copy content"), NSLocalizedString(@"SMS", @"SMS"), NSLocalizedString(@"Call", @"Call"), nil];
+        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel") destructiveButtonTitle:NSLocalizedString(@"Delete", @"Delete") otherButtonTitles:NSLocalizedString(@"Mark as unread", @"Mark as unread"), NSLocalizedString(@"Mark as read", @"Mark as read"), NSLocalizedString(@"Copy number", @"Copy number"), NSLocalizedString(@"Copy content", @"Copy content"), NSLocalizedString(@"SMS", @"SMS"), NSLocalizedString(@"Call", @"Call"), nil];
         [actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
         [actionSheet release];
     }
@@ -490,7 +482,7 @@
     {
         buttonItem.title = NSLocalizedString(@"All", @"All");
         for (int i = 0; i < [idArray count]; i++)
-            [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]].selected = YES;
+            [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]].selected = NO;
         [bulkSet removeAllObjects];
     }
 }

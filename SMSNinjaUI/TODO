@@ -1,3 +1,15 @@
+9E87534C-FD0A-450A-8863-0BAF0D62C9F0
+9E87534C-FD0A-450A-8863-0BAF0D62C9F0
+
 各种小细节修正
-多线程部分再次检查
 SNMainViewController
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    // 数据库更新了，但datasource没更新；要对上一个UIViewController的datasource进行更新，而不是调用loadDatabaseSegment
+
+    id viewController = [self.navigationController.viewControllers objectAtIndex:([self.navigationController.viewControllers count] - 1)];
+    SEL selector = sel_registerName("loadDatabaseSegment");
+    if ([viewController respondsToSelector:selector]) [viewController performSelector:selector];
+    [((UITableViewController *)viewController).tableView reloadData];
+}

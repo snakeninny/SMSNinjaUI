@@ -7,8 +7,8 @@
 #define SETTINGS @"/var/mobile/Library/SMSNinja/smsninja.plist"
 #define DATABASE @"/var/mobile/Library/SMSNinja/smsninja.db"
 #else
-#define SETTINGS @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/Documents/var/mobile/Library/SMSNinja/smsninja.plist"
-#define DATABASE @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/Documents/var/mobile/Library/SMSNinja/smsninja.db"
+#define SETTINGS @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/9E87534C-FD0A-450A-8863-0BAF0D62C9F0/Documents/var/mobile/Library/SMSNinja/smsninja.plist"
+#define DATABASE @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/9E87534C-FD0A-450A-8863-0BAF0D62C9F0/Documents/var/mobile/Library/SMSNinja/smsninja.db"
 #endif
 
 @implementation SNPrivateCallHistoryViewController
@@ -37,23 +37,19 @@
 
 - (void)bulkDelete
 {
-    __block SNPrivateCallHistoryViewController *weakSelf = self;
-	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
-                   {
-                       sqlite3 *database;
-                       int openResult = sqlite3_open([DATABASE UTF8String], &database);
-                       if (openResult == SQLITE_OK)
-                       {
-                           for (NSIndexPath *chosenRowIndexPath in weakSelf->bulkSet)
-                           {
-                               NSString *sql = [NSString stringWithFormat:@"delete from privatecall where number = '%@' and name = '%@' and time = '%@' and content = '%@' and id = '%@'", [weakSelf->numberArray objectAtIndex:chosenRowIndexPath.row], [[weakSelf->nameArray objectAtIndex:chosenRowIndexPath.row] stringByReplacingOccurrencesOfString:@"'" withString:@"''"], [weakSelf->timeArray objectAtIndex:chosenRowIndexPath.row], [[weakSelf->contentArray objectAtIndex:chosenRowIndexPath.row] stringByReplacingOccurrencesOfString:@"'" withString:@"''"], [weakSelf->idArray objectAtIndex:chosenRowIndexPath.row]];
-                               int execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
-                               if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
-                           }
-                           sqlite3_close(database);
-                       }
-                       else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
-                   });
+    sqlite3 *database;
+    int openResult = sqlite3_open([DATABASE UTF8String], &database);
+    if (openResult == SQLITE_OK)
+    {
+        for (NSIndexPath *chosenRowIndexPath in bulkSet)
+        {
+            NSString *sql = [NSString stringWithFormat:@"delete from privatecall where number = '%@' and name = '%@' and time = '%@' and content = '%@' and id = '%@'", [numberArray objectAtIndex:chosenRowIndexPath.row], [[nameArray objectAtIndex:chosenRowIndexPath.row] stringByReplacingOccurrencesOfString:@"'" withString:@"''"], [timeArray objectAtIndex:chosenRowIndexPath.row], [[contentArray objectAtIndex:chosenRowIndexPath.row] stringByReplacingOccurrencesOfString:@"'" withString:@"''"], [idArray objectAtIndex:chosenRowIndexPath.row]];
+            int execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
+            if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
+        }
+        sqlite3_close(database);
+    }
+    else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
     
     for (NSIndexPath *chosenRowIndexPath in bulkSet)
     {
@@ -219,28 +215,25 @@
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    __block SNPrivateCallHistoryViewController *weakSelf = self;
 	switch (buttonIndex)
 	{
 		case 0:
             [bulkSet removeAllObjects];
             [bulkSet addObject:[NSIndexPath indexPathForRow:chosenRow inSection:0]];
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
-                           {
-                               sqlite3 *database;
-                               int openResult = sqlite3_open([DATABASE UTF8String], &database);
-                               if (openResult == SQLITE_OK)
-                               {
-                                   for (NSIndexPath *chosenRowIndexPath in weakSelf->bulkSet)
-                                   {
-                                       NSString *sql = [NSString stringWithFormat:@"delete from blockedcall where number = '%@' and name = '%@' and time = '%@' and content = '%@' and id = '%@'", [weakSelf->numberArray objectAtIndex:chosenRowIndexPath.row], [[weakSelf->nameArray objectAtIndex:chosenRowIndexPath.row] stringByReplacingOccurrencesOfString:@"'" withString:@"''"], [weakSelf->timeArray objectAtIndex:chosenRowIndexPath.row], [[weakSelf->contentArray objectAtIndex:chosenRowIndexPath.row] stringByReplacingOccurrencesOfString:@"'" withString:@"''"], [weakSelf->idArray objectAtIndex:chosenRowIndexPath.row]];
-                                       int execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
-                                       if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
-                                   }
-                                   sqlite3_close(database);
-                               }
-                               else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
-                           });
+            
+            sqlite3 *database;
+            int openResult = sqlite3_open([DATABASE UTF8String], &database);
+            if (openResult == SQLITE_OK)
+            {
+                for (NSIndexPath *chosenRowIndexPath in bulkSet)
+                {
+                    NSString *sql = [NSString stringWithFormat:@"delete from blockedcall where number = '%@' and name = '%@' and time = '%@' and content = '%@' and id = '%@'", [numberArray objectAtIndex:chosenRowIndexPath.row], [[nameArray objectAtIndex:chosenRowIndexPath.row] stringByReplacingOccurrencesOfString:@"'" withString:@"''"], [timeArray objectAtIndex:chosenRowIndexPath.row], [[contentArray objectAtIndex:chosenRowIndexPath.row] stringByReplacingOccurrencesOfString:@"'" withString:@"''"], [idArray objectAtIndex:chosenRowIndexPath.row]];
+                    int execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
+                    if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
+                }
+                sqlite3_close(database);
+            }
+            else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
             
             for (NSIndexPath *chosenRowIndexPath in bulkSet)
             {
@@ -252,7 +245,7 @@
             }
             
 			[self.tableView beginUpdates];
-			[self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:[bulkSet allObjects]] withRowAnimation:UITableViewRowAnimationFade];
+			[self.tableView deleteRowsAtIndexPaths:[bulkSet allObjects] withRowAnimation:UITableViewRowAnimationFade];
 			[self.tableView endUpdates];
 			break;
 		case 1:
@@ -315,7 +308,7 @@
 	{
 		buttonItem.title = NSLocalizedString(@"All", @"All");
         for (int i = 0; i < [idArray count]; i++)
-            [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]].selected = YES;
+            [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]].selected = NO;
         [bulkSet removeAllObjects];
 	}
 }
