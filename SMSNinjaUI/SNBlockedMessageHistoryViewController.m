@@ -305,8 +305,8 @@
 	contentLabel.textColor = nameLabel.textColor;
 	[cell.contentView addSubview:contentLabel];
 	[contentLabel release];
-
-     return cell;
+    
+    return cell;
 }
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex

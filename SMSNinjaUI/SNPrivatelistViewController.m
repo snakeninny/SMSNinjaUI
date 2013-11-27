@@ -172,24 +172,21 @@
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    __block NSSet *deleteSet = [NSSet setWithObject:[NSIndexPath indexPathForRow:indexPath.row inSection:0]];
-    __block SNPrivatelistViewController *weakSelf = self;
-	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
-                   {
-                       sqlite3 *database;
-                       int openResult = sqlite3_open([DATABASE UTF8String], &database);
-                       if (openResult == SQLITE_OK)
-                       {
-                           for (NSIndexPath *chosenRowIndexPath in deleteSet)
-                           {
-                               NSString *sql = [NSString stringWithFormat:@"delete from privatelist where keyword = '%@' and type = '%@' and name = '%@' and phone = '%@' and sms = '%@' and reply = '%@' and message = '%@' and forward = '%@' and number = '%@' and sound = '%@'", [weakSelf->keywordArray objectAtIndex:chosenRowIndexPath.row], [weakSelf->typeArray objectAtIndex:chosenRowIndexPath.row], [[weakSelf->nameArray objectAtIndex:chosenRowIndexPath.row] stringByReplacingOccurrencesOfString:@"'" withString:@"''"], [weakSelf->phoneArray objectAtIndex:chosenRowIndexPath.row], [weakSelf->smsArray objectAtIndex:chosenRowIndexPath.row], [weakSelf->replyArray objectAtIndex:chosenRowIndexPath.row], [[weakSelf->messageArray objectAtIndex:chosenRowIndexPath.row] stringByReplacingOccurrencesOfString:@"'" withString:@"''"], [weakSelf->forwardArray objectAtIndex:chosenRowIndexPath.row], [weakSelf->numberArray objectAtIndex:chosenRowIndexPath.row], [weakSelf->soundArray objectAtIndex:chosenRowIndexPath.row]];
-                               int execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
-                               if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
-                           }
-                           sqlite3_close(database);
-                       }
-                       else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
-                   });
+    NSSet *deleteSet = [NSSet setWithObject:[NSIndexPath indexPathForRow:indexPath.row inSection:0]];
+    
+    sqlite3 *database;
+    int openResult = sqlite3_open([DATABASE UTF8String], &database);
+    if (openResult == SQLITE_OK)
+    {
+        for (NSIndexPath *chosenRowIndexPath in deleteSet)
+        {
+            NSString *sql = [NSString stringWithFormat:@"delete from privatelist where keyword = '%@' and type = '%@' and name = '%@' and phone = '%@' and sms = '%@' and reply = '%@' and message = '%@' and forward = '%@' and number = '%@' and sound = '%@'", [keywordArray objectAtIndex:chosenRowIndexPath.row], [typeArray objectAtIndex:chosenRowIndexPath.row], [[nameArray objectAtIndex:chosenRowIndexPath.row] stringByReplacingOccurrencesOfString:@"'" withString:@"''"], [phoneArray objectAtIndex:chosenRowIndexPath.row], [smsArray objectAtIndex:chosenRowIndexPath.row], [replyArray objectAtIndex:chosenRowIndexPath.row], [[messageArray objectAtIndex:chosenRowIndexPath.row] stringByReplacingOccurrencesOfString:@"'" withString:@"''"], [forwardArray objectAtIndex:chosenRowIndexPath.row], [numberArray objectAtIndex:chosenRowIndexPath.row], [soundArray objectAtIndex:chosenRowIndexPath.row]];
+            int execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
+            if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
+        }
+        sqlite3_close(database);
+    }
+    else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
     
     for (NSIndexPath *chosenRowIndexPath in deleteSet)
     {
