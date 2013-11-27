@@ -276,9 +276,16 @@
 	UILabel *timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(nameLabel.frame.origin.x + nameLabel.bounds.size.width, nameLabel.frame.origin.y, nameLabel.bounds.size.width, nameLabel.bounds.size.height)];
 	timeLabel.tag = 2;
 	timeLabel.font = nameLabel.font;
-    timeLabel.textAlignment = NSTextAlignmentRight;
-	if (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_5_0 && kCFCoreFoundationVersionNumber <= kCFCoreFoundationVersionNumber_iOS_5_1) timeLabel.minimumFontSize = nameLabel.minimumFontSize;
-	else if (kCFCoreFoundationVersionNumber > kCFCoreFoundationVersionNumber_iOS_5_1) timeLabel.minimumScaleFactor = nameLabel.minimumScaleFactor;
+	if (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_5_0 && kCFCoreFoundationVersionNumber <= kCFCoreFoundationVersionNumber_iOS_5_1)
+    {
+        timeLabel.minimumFontSize = nameLabel.minimumFontSize;
+        timeLabel.textAlignment = UITextAlignmentRight;
+    }
+	else if (kCFCoreFoundationVersionNumber > kCFCoreFoundationVersionNumber_iOS_5_1)
+    {
+        timeLabel.minimumScaleFactor = nameLabel.minimumScaleFactor;
+        timeLabel.textAlignment = NSTextAlignmentRight;
+    }
 	timeLabel.adjustsFontSizeToFitWidth = nameLabel.adjustsFontSizeToFitWidth;
 	timeLabel.text = [timeArray objectAtIndex:indexPath.row];
 	timeLabel.textColor = nameLabel.textColor;
