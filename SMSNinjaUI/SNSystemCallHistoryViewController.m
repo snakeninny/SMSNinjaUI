@@ -7,8 +7,8 @@
 #define SETTINGS @"/var/mobile/Library/SMSNinja/smsninja.plist"
 #define DATABASE @"/var/mobile/Library/SMSNinja/smsninja.db"
 #else
-#define SETTINGS @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/9E87534C-FD0A-450A-8863-0BAF0D62C9F0/Documents/var/mobile/Library/SMSNinja/smsninja.plist"
-#define DATABASE @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/9E87534C-FD0A-450A-8863-0BAF0D62C9F0/Documents/var/mobile/Library/SMSNinja/smsninja.db"
+#define SETTINGS @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/Documents/var/mobile/Library/SMSNinja/smsninja.plist"
+#define DATABASE @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/Documents/var/mobile/Library/SMSNinja/smsninja.db"
 #endif
 
 @implementation SNSystemCallHistoryViewController
@@ -43,8 +43,7 @@
     [super viewWillDisappear:animated];
 
     id viewController = [self.navigationController.viewControllers objectAtIndex:([self.navigationController.viewControllers count] - 1)];
-    SEL selector = sel_registerName("loadDatabaseSegment");
-    if ([viewController respondsToSelector:selector]) [viewController performSelector:selector];
+    if ([viewController isKindOfClass:[SNNumberViewController class]]) return;
     [((UITableViewController *)viewController).tableView reloadData];
 }
 
@@ -204,7 +203,7 @@
                            {
                                for (NSString *number in weakSelf->numberArray)
                                {
-                                   NSString *sql = [NSString stringWithFormat:@"insert or replace into %@list (keyword, type, name, phone, sms, reply, message, forward, number, sound) values ('%@', '0', '', '1', '1', '0', '', '0', '', '%d')", weakSelf->flag, number, index];
+                                   NSString *sql = [NSString stringWithFormat:@"insert or replace into %@list (keyword, type, name, phone, sms, reply, message, forward, number, sound) values ('%@', '0', '', '1', '1', '0', '', '0', '', '%d')", weakSelf.flag, number, index];
                                    int execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
                                    if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
                                }
@@ -231,7 +230,9 @@
         numberViewController.forwardString = @"0";
         numberViewController.numberString = @"";
         numberViewController.soundString = @"1";
-        [self.navigationController pushViewController:numberViewController animated:YES];
+        UINavigationController *navigationController = self.navigationController;
+        [navigationController popViewControllerAnimated:NO];
+        [navigationController pushViewController:numberViewController animated:YES];
         [numberViewController release];
     }
     else

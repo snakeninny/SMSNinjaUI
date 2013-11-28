@@ -2,6 +2,7 @@
 
 @interface SNSystemMessageHistoryViewController : UITableViewController <UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate, UIActionSheetDelegate>
 {
+@public
 	NSMutableArray *numberArray;
 	NSMutableArray *nameArray;
 	NSMutableArray *timeArray;

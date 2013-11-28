@@ -2,14 +2,15 @@
 #import "SNCallActionViewController.h"
 #import "SNMessageActionViewController.h"
 #import "SNTextTableViewCell.h"
+#import "SNBlacklistViewController.h"
 #import <sqlite3.h>
 
 #ifndef SMSNinjaDebug
 #define SETTINGS @"/var/mobile/Library/SMSNinja/smsninja.plist"
 #define DATABASE @"/var/mobile/Library/SMSNinja/smsninja.db"
 #else
-#define SETTINGS @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/9E87534C-FD0A-450A-8863-0BAF0D62C9F0/Documents/var/mobile/Library/SMSNinja/smsninja.plist"
-#define DATABASE @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/9E87534C-FD0A-450A-8863-0BAF0D62C9F0/Documents/var/mobile/Library/SMSNinja/smsninja.db"
+#define SETTINGS @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/Documents/var/mobile/Library/SMSNinja/smsninja.plist"
+#define DATABASE @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/Documents/var/mobile/Library/SMSNinja/smsninja.db"
 #endif
 
 @implementation SNTimeViewController
@@ -89,7 +90,7 @@
         
         tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissKeyboardWithTap:)];
         tapRecognizer.delegate = self;
-
+        
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 	}
@@ -274,7 +275,7 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-
+    
 	self.nameString = nil;
 	self.replyString = nil;
 	self.messageString = nil;
@@ -291,24 +292,62 @@
 	NSString *four = [NSString stringWithFormat:([timePickerView selectedRowInComponent:4] % 60 < 10 ? @"0%d" : @"%d"), [timePickerView selectedRowInComponent:4] % 60];
 	NSString *keyword = [[[[[[one stringByAppendingString:@":"] stringByAppendingString:two] stringByAppendingString:@"~"] stringByAppendingString:three] stringByAppendingString:@":"] stringByAppendingString:four];
     
-	sqlite3 *database;
-    int openResult = sqlite3_open([DATABASE UTF8String], &database);
-    if (openResult == SQLITE_OK)
-	{
-        NSString *sql = @"";
-        if ([keyword isEqualToString:keywordString]) sql = [NSString stringWithFormat:@"update blacklist set keyword = '%@', type = '2', name = '%@', phone = '%@', sms = '%@', reply = '%@', message = '%@', forward = '%@', number = '%@', sound = '%@' where keyword = '%@'", keyword, [nameField.text length] == 0 ? @"" : [nameField.text stringByReplacingOccurrencesOfString:@"'" withString:@"''"], self.phoneAction, self.messageAction, replySwitch ? (replySwitch.on == YES ? @"1" : @"0") : self.replyString, messageField ? ([messageField.text length] == 0 ? @"" : [messageField.text stringByReplacingOccurrencesOfString:@"'" withString:@"''"]) : self.messageString, self.forwardString, self.numberString, soundSwitch ? (soundSwitch.on == YES ? @"1" : @"0") : self.soundString, keywordString];
-        else sql = [NSString stringWithFormat:@"insert or replace into blacklist (keyword, type, name, phone, sms, reply, message, forward, number, sound) values ('%@', '2', '%@', '%@', '%@', '%@', '%@', '%@', '%@', '%@')", keyword, [nameField.text length] == 0 ? @"" : [nameField.text stringByReplacingOccurrencesOfString:@"'" withString:@"''"], self.phoneAction, self.messageAction, replySwitch ? (replySwitch.on == YES ? @"1" : @"0") : self.replyString, messageField ? ([messageField.text length] == 0 ? @"" : [messageField.text stringByReplacingOccurrencesOfString:@"'" withString:@"''"]) : self.messageString, self.forwardString, self.numberString, soundSwitch ? (soundSwitch.on == YES ? @"1" : @"0") : self.soundString];
-        
-        int execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
-        if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
-        sqlite3_close(database);
-	}
-    else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
-    
     id viewController = [self.navigationController.viewControllers objectAtIndex:([self.navigationController.viewControllers count] - 1)];
-    if ([viewController isKindOfClass:[SNTimeViewController class]]) return;
-    SEL selector = NSSelectorFromString(@"loadDatabaseSegment");
-    if ([viewController respondsToSelector:selector]) [viewController performSelector:selector];
+    if ([viewController isKindOfClass:[SNCallActionViewController class]] || [viewController isKindOfClass:[SNMessageActionViewController class]]) return;
+    
+    __block SNTimeViewController *weakSelf = self;
+	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
+                   {
+                       sqlite3 *database;
+                       int openResult = sqlite3_open([DATABASE UTF8String], &database);
+                       if (openResult == SQLITE_OK)
+                       {
+                           NSString *sql = @"";
+                           if ([keyword isEqualToString:weakSelf.keywordString]) sql = [NSString stringWithFormat:@"update blacklist set keyword = '%@', type = '2', name = '%@', phone = '%@', sms = '%@', reply = '%@', message = '%@', forward = '%@', number = '%@', sound = '%@' where keyword = '%@'", keyword, [weakSelf->nameField.text length] == 0 ? @"" : [weakSelf->nameField.text stringByReplacingOccurrencesOfString:@"'" withString:@"''"], weakSelf.phoneAction, weakSelf.messageAction, weakSelf->replySwitch ? (weakSelf->replySwitch.on == YES ? @"1" : @"0") : weakSelf.replyString, weakSelf->messageField ? ([weakSelf->messageField.text length] == 0 ? @"" : [weakSelf->messageField.text stringByReplacingOccurrencesOfString:@"'" withString:@"''"]) : weakSelf.messageString, weakSelf.forwardString, weakSelf.numberString, weakSelf->soundSwitch ? (weakSelf->soundSwitch.on == YES ? @"1" : @"0") : weakSelf.soundString, weakSelf.keywordString];
+                           else sql = [NSString stringWithFormat:@"insert or replace into blacklist (keyword, type, name, phone, sms, reply, message, forward, number, sound) values ('%@', '2', '%@', '%@', '%@', '%@', '%@', '%@', '%@', '%@')", keyword, [weakSelf->nameField.text length] == 0 ? @"" : [weakSelf->nameField.text stringByReplacingOccurrencesOfString:@"'" withString:@"''"], weakSelf.phoneAction, weakSelf.messageAction, weakSelf->replySwitch ? (weakSelf->replySwitch.on == YES ? @"1" : @"0") : weakSelf.replyString, weakSelf->messageField ? ([weakSelf->messageField.text length] == 0 ? @"" : [weakSelf->messageField.text stringByReplacingOccurrencesOfString:@"'" withString:@"''"]) : weakSelf.messageString, weakSelf.forwardString, weakSelf.numberString, weakSelf->soundSwitch ? (weakSelf->soundSwitch.on == YES ? @"1" : @"0") : weakSelf.soundString];
+                           
+                           int execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
+                           if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
+                           sqlite3_close(database);
+                       }
+                       else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
+                   });
+    
+    int index = [((SNBlacklistViewController *)viewController)->keywordArray indexOfObject:self.keywordString];
+    if ([keyword isEqualToString:self.keywordString])
+    {
+        [((SNBlacklistViewController *)viewController)->keywordArray replaceObjectAtIndex:index withObject:keyword];
+        [((SNBlacklistViewController *)viewController)->nameArray replaceObjectAtIndex:index withObject:nameField.text ? [nameField.text stringByReplacingOccurrencesOfString:@"'" withString:@"''"] : @""];
+        [((SNBlacklistViewController *)viewController)->replyArray replaceObjectAtIndex:index withObject:replySwitch.on == YES ? @"1" : @"0"];
+        [((SNBlacklistViewController *)viewController)->messageArray replaceObjectAtIndex:index withObject:messageField.text ? [messageField.text stringByReplacingOccurrencesOfString:@"'" withString:@"''"] : @""];
+        [((SNBlacklistViewController *)viewController)->forwardArray replaceObjectAtIndex:index withObject:self.forwardString];
+        [((SNBlacklistViewController *)viewController)->numberArray replaceObjectAtIndex:index withObject:self.numberString];
+        [((SNBlacklistViewController *)viewController)->soundArray replaceObjectAtIndex:index withObject:soundSwitch.on == YES ? @"1" : @"0"];
+    }
+    else
+    {
+        [((SNBlacklistViewController *)viewController)->keywordArray removeObjectAtIndex:index];
+        [((SNBlacklistViewController *)viewController)->typeArray removeObjectAtIndex:index];
+        [((SNBlacklistViewController *)viewController)->nameArray removeObjectAtIndex:index];
+        [((SNBlacklistViewController *)viewController)->messageArray removeObjectAtIndex:index];
+        [((SNBlacklistViewController *)viewController)->numberArray removeObjectAtIndex:index];
+        [((SNBlacklistViewController *)viewController)->smsArray removeObjectAtIndex:index];
+        [((SNBlacklistViewController *)viewController)->phoneArray removeObjectAtIndex:index];
+        [((SNBlacklistViewController *)viewController)->forwardArray removeObjectAtIndex:index];
+        [((SNBlacklistViewController *)viewController)->replyArray removeObjectAtIndex:index];
+        [((SNBlacklistViewController *)viewController)->soundArray removeObjectAtIndex:index];
+        
+        [((SNBlacklistViewController *)viewController)->keywordArray insertObject:keyword atIndex:0];
+        [((SNBlacklistViewController *)viewController)->typeArray insertObject:@"0" atIndex:0];
+        [((SNBlacklistViewController *)viewController)->nameArray insertObject:nameField.text ? [nameField.text stringByReplacingOccurrencesOfString:@"'" withString:@"''"] : @"" atIndex:0];
+        [((SNBlacklistViewController *)viewController)->messageArray insertObject:messageField.text ? [messageField.text stringByReplacingOccurrencesOfString:@"'" withString:@"''"] : @"" atIndex:0];
+        [((SNBlacklistViewController *)viewController)->numberArray insertObject:self.numberString atIndex:0];
+        [((SNBlacklistViewController *)viewController)->smsArray insertObject:self.messageAction atIndex:0];
+        [((SNBlacklistViewController *)viewController)->phoneArray insertObject:self.phoneAction atIndex:0];
+        [((SNBlacklistViewController *)viewController)->forwardArray insertObject:self.forwardString atIndex:0];
+        [((SNBlacklistViewController *)viewController)->replyArray insertObject:replySwitch.on == YES ? @"1" : @"0" atIndex:0];
+        [((SNBlacklistViewController *)viewController)->soundArray insertObject:soundSwitch.on == YES ? @"1" : @"0" atIndex:0];
+    }
     [((UITableViewController *)viewController).tableView reloadData];
 }
 
