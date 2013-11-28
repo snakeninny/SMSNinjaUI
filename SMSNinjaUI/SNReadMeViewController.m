@@ -45,7 +45,7 @@
     
 	UITextView *textView = [[UITextView alloc] init];
 	textView.editable = NO;
-	[textView setContentToHTMLString:readMe];
+    textView.text = readMe;
 	textView.font = [UIFont systemFontOfSize:16.0f];
 	textView.textAlignment = NSTextAlignmentLeft;
 	self.view = textView;

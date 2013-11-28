@@ -377,7 +377,6 @@ static void (^CreateDatabase)(void) = ^(void)
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
     [self.view addGestureRecognizer:tapRecognizer];
 }
 

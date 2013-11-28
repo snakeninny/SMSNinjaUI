@@ -40,6 +40,8 @@
 
 - (void)viewWillDisappear:(BOOL)animated
 {
+    [super viewWillDisappear:animated];
+
     id viewController = [self.navigationController.viewControllers objectAtIndex:([self.navigationController.viewControllers count] - 1)];
     SEL selector = sel_registerName("loadDatabaseSegment");
     if ([viewController respondsToSelector:selector]) [viewController performSelector:selector];

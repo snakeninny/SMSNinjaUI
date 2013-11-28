@@ -273,6 +273,8 @@
 
 - (void)viewWillDisappear:(BOOL)animated
 {
+    [super viewWillDisappear:animated];
+
 	self.nameString = nil;
 	self.replyString = nil;
 	self.messageString = nil;
@@ -293,7 +295,9 @@
     int openResult = sqlite3_open([DATABASE UTF8String], &database);
     if (openResult == SQLITE_OK)
 	{
-		NSString *sql = [NSString stringWithFormat:@"insert or replace into blacklist (keyword, type, name, phone, sms, reply, message, forward, number, sound) values ('%@', '2', '%@', '%@', '%@', '%@', '%@', '%@', '%@', '%@')", keyword, [nameField.text length] == 0 ? @"" : [nameField.text stringByReplacingOccurrencesOfString:@"'" withString:@"''"], self.phoneAction, self.messageAction, replySwitch ? (replySwitch.on == YES ? @"1" : @"0") : self.replyString, messageField ? ([messageField.text length] == 0 ? @"" : [messageField.text stringByReplacingOccurrencesOfString:@"'" withString:@"''"]) : self.messageString, self.forwardString, self.numberString, soundSwitch ? (soundSwitch.on == YES ? @"1" : @"0") : self.soundString];
+        NSString *sql = @"";
+        if ([keyword isEqualToString:keywordString]) sql = [NSString stringWithFormat:@"update blacklist set keyword = '%@', type = '2', name = '%@', phone = '%@', sms = '%@', reply = '%@', message = '%@', forward = '%@', number = '%@', sound = '%@' where keyword = '%@'", keyword, [nameField.text length] == 0 ? @"" : [nameField.text stringByReplacingOccurrencesOfString:@"'" withString:@"''"], self.phoneAction, self.messageAction, replySwitch ? (replySwitch.on == YES ? @"1" : @"0") : self.replyString, messageField ? ([messageField.text length] == 0 ? @"" : [messageField.text stringByReplacingOccurrencesOfString:@"'" withString:@"''"]) : self.messageString, self.forwardString, self.numberString, soundSwitch ? (soundSwitch.on == YES ? @"1" : @"0") : self.soundString, keywordString];
+        else sql = [NSString stringWithFormat:@"insert or replace into blacklist (keyword, type, name, phone, sms, reply, message, forward, number, sound) values ('%@', '2', '%@', '%@', '%@', '%@', '%@', '%@', '%@', '%@')", keyword, [nameField.text length] == 0 ? @"" : [nameField.text stringByReplacingOccurrencesOfString:@"'" withString:@"''"], self.phoneAction, self.messageAction, replySwitch ? (replySwitch.on == YES ? @"1" : @"0") : self.replyString, messageField ? ([messageField.text length] == 0 ? @"" : [messageField.text stringByReplacingOccurrencesOfString:@"'" withString:@"''"]) : self.messageString, self.forwardString, self.numberString, soundSwitch ? (soundSwitch.on == YES ? @"1" : @"0") : self.soundString];
         
         int execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
         if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);

@@ -125,6 +125,8 @@
 
 - (void)viewWillDisappear:(BOOL)animated
 {
+    [super viewWillDisappear:animated];
+
     id viewController = [self.navigationController.viewControllers objectAtIndex:([self.navigationController.viewControllers count] - 1)];
     SEL selector = NSSelectorFromString(@"setForwardString:");
     [viewController performSelector:selector withObject:nil];
@@ -147,7 +149,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
     [self.view addGestureRecognizer:tapRecognizer];
 }
 
