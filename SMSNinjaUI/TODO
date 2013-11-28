@@ -4,7 +4,11 @@
 各种小细节修正
 SNMainViewController
 
-1. - (void)viewWillDisappear:(BOOL)animated
+1. 
+- (void)viewWillDisappear:(BOOL)animated中SQL部分按照SNContentViewController标准更改SNNumberViewController和SNTimeViewController
+
+2.
+- (void)viewWillDisappear:(BOOL)animated
 {
     // 数据库更新了，但datasource没更新；要对上一个UIViewController的datasource进行更新（更新NSMutableArray），而不是调用loadDatabaseSegment
 
@@ -13,5 +17,3 @@ SNMainViewController
     if ([viewController respondsToSelector:selector]) [viewController performSelector:selector];
     [((UITableViewController *)viewController).tableView reloadData];
 }
-
-2. 检查有没有遗漏的需要分段加载的UIViewController，现缺black, white和private

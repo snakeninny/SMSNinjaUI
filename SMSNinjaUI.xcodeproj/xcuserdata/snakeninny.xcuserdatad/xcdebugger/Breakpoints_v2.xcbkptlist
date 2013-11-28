@@ -25,13 +25,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "SMSNinjaUI/SNWhitelistViewController.m"
-            timestampString = "407294994.35649"
+            filePath = "SMSNinjaUI/SNContentViewController.m"
+            timestampString = "407308471.031329"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "44"
-            endingLineNumber = "44"
-            landmarkName = "-loadDatabaseSegment"
+            startingLineNumber = "205"
+            endingLineNumber = "205"
+            landmarkName = "-viewWillDisappear:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

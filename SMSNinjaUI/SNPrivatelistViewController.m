@@ -10,8 +10,8 @@
 #define SETTINGS @"/var/mobile/Library/SMSNinja/smsninja.plist"
 #define DATABASE @"/var/mobile/Library/SMSNinja/smsninja.db"
 #else
-#define SETTINGS @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/Documents/var/mobile/Library/SMSNinja/smsninja.plist"
-#define DATABASE @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/Documents/var/mobile/Library/SMSNinja/smsninja.db"
+#define SETTINGS @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/9E87534C-FD0A-450A-8863-0BAF0D62C9F0/Documents/var/mobile/Library/SMSNinja/smsninja.plist"
+#define DATABASE @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/9E87534C-FD0A-450A-8863-0BAF0D62C9F0/Documents/var/mobile/Library/SMSNinja/smsninja.db"
 #endif
 
 @implementation SNPrivatelistViewController
@@ -412,5 +412,23 @@
 	picker.peoplePickerDelegate = self;
 	[self presentModalViewController:picker animated:YES];
 	[picker release];
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+	if (scrollView.contentOffset.y > scrollView.contentSize.height - scrollView.frame.size.height)
+	{
+		[self.tableView beginUpdates];
+		int count = [keywordArray count];
+		[self loadDatabaseSegment];
+		NSMutableArray *insertIndexPaths = [NSMutableArray arrayWithCapacity:50];
+		for (int i = count; i < [keywordArray count]; i++)
+		{
+			NSIndexPath *newPath =  [NSIndexPath indexPathForRow:i inSection:0];
+			[insertIndexPaths insertObject:newPath atIndex:i];
+		}
+		[self.tableView insertRowsAtIndexPaths:insertIndexPaths withRowAnimation:UITableViewRowAnimationFade];
+		[self.tableView endUpdates];
+	}
 }
 @end
