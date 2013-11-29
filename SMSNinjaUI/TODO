@@ -3,12 +3,12 @@
 
 各种小细节修正
 
-1. 还剩SNSystemMessageHistoryViewController和SNSystemCallHistoryViewController
+1. 还剩SNSystemMessageHistoryViewController的actionSheet和SNSystemCallHistoryViewController
 - (void)viewWillDisappear:(BOOL)animated
 {
     // 数据库更新了，但datasource没更新；要对上一个UIViewController的datasource进行更新（更新NSMutableArray），而不是调用loadDatabaseSegment
 
-    id viewController = [self.navigationController.viewControllers objectAtIndex:([self.navigationController.viewControllers count] - 1)];
+    id viewController = self.navigationController.topViewController;
     SEL selector = sel_registerName("loadDatabaseSegment");
     if ([viewController respondsToSelector:selector]) [viewController performSelector:selector];
     [((UITableViewController *)viewController).tableView reloadData];

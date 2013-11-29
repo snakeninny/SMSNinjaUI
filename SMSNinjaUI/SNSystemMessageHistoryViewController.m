@@ -45,7 +45,7 @@
 {
     [super viewWillDisappear:animated];
     
-    id viewController = [self.navigationController.viewControllers objectAtIndex:([self.navigationController.viewControllers count] - 1)];
+    id viewController = self.navigationController.topViewController;
     if ([viewController isKindOfClass:[SNNumberViewController class]]) return;
     [((UITableViewController *)viewController).tableView reloadData];
 }
@@ -131,12 +131,12 @@
     UILabel *timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(nameLabel.frame.origin.x + nameLabel.bounds.size.width, nameLabel.frame.origin.y, nameLabel.bounds.size.width, nameLabel.bounds.size.height)];
     timeLabel.tag = 2;
     timeLabel.font = nameLabel.font;
-	if (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_5_0 && kCFCoreFoundationVersionNumber <= kCFCoreFoundationVersionNumber_iOS_5_1)
+    if (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_5_0 && kCFCoreFoundationVersionNumber <= kCFCoreFoundationVersionNumber_iOS_5_1)
     {
         timeLabel.minimumFontSize = nameLabel.minimumFontSize;
         timeLabel.textAlignment = UITextAlignmentRight;
     }
-	else if (kCFCoreFoundationVersionNumber > kCFCoreFoundationVersionNumber_iOS_5_1)
+    else if (kCFCoreFoundationVersionNumber > kCFCoreFoundationVersionNumber_iOS_5_1)
     {
         timeLabel.minimumScaleFactor = nameLabel.minimumScaleFactor;
         timeLabel.textAlignment = NSTextAlignmentRight;
@@ -147,22 +147,22 @@
     [cell.contentView addSubview:timeLabel];
     [timeLabel release];
     
-	UILabel *contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(nameLabel.frame.origin.x, nameLabel.frame.origin.y + nameLabel.bounds.size.height, nameLabel.bounds.size.width + timeLabel.bounds.size.width, nameLabel.bounds.size.height)];
-	contentLabel.tag = 3;
-	contentLabel.lineBreakMode = NSLineBreakByWordWrapping;
-	contentLabel.numberOfLines = 0;
-	contentLabel.font = nameLabel.font;
-	contentLabel.text = [contentArray objectAtIndex:indexPath.row];
-	CGSize expectedLabelSize = [contentLabel.text sizeWithFont:contentLabel.font constrainedToSize:CGSizeMake(contentLabel.bounds.size.width, contentLabel.bounds.size.height * 60.0f) lineBreakMode:contentLabel.lineBreakMode];
-	CGRect newFrame = contentLabel.frame;
-	newFrame.size.height = expectedLabelSize.height;
-	contentLabel.frame = newFrame;
-	contentLabel.textColor = nameLabel.textColor;
-	[cell.contentView addSubview:contentLabel];
-	[contentLabel release];
+    UILabel *contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(nameLabel.frame.origin.x, nameLabel.frame.origin.y + nameLabel.bounds.size.height, nameLabel.bounds.size.width + timeLabel.bounds.size.width, nameLabel.bounds.size.height)];
+    contentLabel.tag = 3;
+    contentLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    contentLabel.numberOfLines = 0;
+    contentLabel.font = nameLabel.font;
+    contentLabel.text = [contentArray objectAtIndex:indexPath.row];
+    CGSize expectedLabelSize = [contentLabel.text sizeWithFont:contentLabel.font constrainedToSize:CGSizeMake(contentLabel.bounds.size.width, contentLabel.bounds.size.height * 60.0f) lineBreakMode:contentLabel.lineBreakMode];
+    CGRect newFrame = contentLabel.frame;
+    newFrame.size.height = expectedLabelSize.height;
+    contentLabel.frame = newFrame;
+    contentLabel.textColor = nameLabel.textColor;
+    [cell.contentView addSubview:contentLabel];
+    [contentLabel release];
     
-    if ([keywordSet containsObject:[numberArray objectAtIndex:indexPath.row]]) cell.accessoryType = UITableViewCellAccessoryCheckmark;
-    else cell.accessoryType = UITableViewCellAccessoryNone;
+    if ([keywordSet containsObject:[numberArray objectAtIndex:indexPath.row]]) cell.selected = YES;
+    else cell.selected = NO;
     
     return cell;
 }
@@ -257,21 +257,25 @@
         }
         else
         {
-            SNWhitelistViewController *viewController = (SNWhitelistViewController *)[self.navigationController.viewControllers objectAtIndex:([self.navigationController.viewControllers count] - 2)];
-            [viewController->nameArray insertObject:@"" atIndex:0];
-            [viewController->keywordArray insertObject:[self->numberArray objectAtIndex:self->chosenRow] atIndex:0];
-            [viewController->typeArray insertObject:@"0" atIndex:0];
-            
-            sqlite3 *database;
-            int openResult = sqlite3_open([DATABASE UTF8String], &database);
-            if (openResult == SQLITE_OK)
-            {
-                NSString *sql = [NSString stringWithFormat:@"insert or replace into whitelist (keyword, type, name, phone, sms, reply, message, forward, number, sound) values ('%@', '0', '', '1', '1', '0', '', '0', '', '0')", [self->numberArray objectAtIndex:self->chosenRow]];
-                int execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
-                if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
-                sqlite3_close(database);
-            }
-            else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
+            __block SNSystemMessageHistoryViewController *weakSelf = self;
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
+                           {
+                               sqlite3 *database;
+                               int openResult = sqlite3_open([DATABASE UTF8String], &database);
+                               if (openResult == SQLITE_OK)
+                               {
+                                   NSString *sql = [NSString stringWithFormat:@"insert or replace into whitelist (keyword, type, name, phone, sms, reply, message, forward, number, sound) values ('%@', '0', '', '1', '1', '0', '', '0', '', '0')", [weakSelf->numberArray objectAtIndex:weakSelf->chosenRow]];
+                                   int execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
+                                   if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
+                                   sqlite3_close(database);
+                               }
+                               else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
+                               
+                               SNWhitelistViewController *viewController = (SNWhitelistViewController *)[weakSelf.navigationController.viewControllers objectAtIndex:([weakSelf.navigationController.viewControllers count] - 2)];
+                               [viewController->nameArray insertObject:@"" atIndex:0];
+                               [viewController->keywordArray insertObject:[weakSelf->numberArray objectAtIndex:weakSelf->chosenRow] atIndex:0];
+                               [viewController->typeArray insertObject:@"0" atIndex:0];
+                           });
         }
     }
 }
@@ -292,6 +296,40 @@
                            sqlite3_close(database);
                        }
                        else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
+                       
+                       id viewController = [weakSelf.navigationController.viewControllers objectAtIndex:([weakSelf.navigationController.viewControllers count] - 2)];
+                       if ([viewController isKindOfClass:[SNBlacklistViewController class]])
+                       {
+                           [((SNBlacklistViewController *)viewController)->keywordArray removeObjectAtIndex:index];
+                           [((SNBlacklistViewController *)viewController)->typeArray removeObjectAtIndex:index];
+                           [((SNBlacklistViewController *)viewController)->nameArray removeObjectAtIndex:index];
+                           [((SNBlacklistViewController *)viewController)->messageArray removeObjectAtIndex:index];
+                           [((SNBlacklistViewController *)viewController)->numberArray removeObjectAtIndex:index];
+                           [((SNBlacklistViewController *)viewController)->smsArray removeObjectAtIndex:index];
+                           [((SNBlacklistViewController *)viewController)->phoneArray removeObjectAtIndex:index];
+                           [((SNBlacklistViewController *)viewController)->forwardArray removeObjectAtIndex:index];
+                           [((SNBlacklistViewController *)viewController)->replyArray removeObjectAtIndex:index];
+                           [((SNBlacklistViewController *)viewController)->soundArray removeObjectAtIndex:index];
+                       }
+                       else if ([viewController isKindOfClass:[SNWhitelistViewController class]])
+                       {
+                           [((SNWhitelistViewController *)viewController)->keywordArray removeObjectAtIndex:index];
+                           [((SNWhitelistViewController *)viewController)->typeArray removeObjectAtIndex:index];
+                           [((SNWhitelistViewController *)viewController)->nameArray removeObjectAtIndex:index];
+                       }
+                       else if ([viewController isKindOfClass:[SNPrivatelistViewController class]])
+                       {
+                           [((SNPrivatelistViewController *)viewController)->keywordArray removeObjectAtIndex:index];
+                           [((SNPrivatelistViewController *)viewController)->typeArray removeObjectAtIndex:index];
+                           [((SNPrivatelistViewController *)viewController)->nameArray removeObjectAtIndex:index];
+                           [((SNPrivatelistViewController *)viewController)->messageArray removeObjectAtIndex:index];
+                           [((SNPrivatelistViewController *)viewController)->numberArray removeObjectAtIndex:index];
+                           [((SNPrivatelistViewController *)viewController)->smsArray removeObjectAtIndex:index];
+                           [((SNPrivatelistViewController *)viewController)->phoneArray removeObjectAtIndex:index];
+                           [((SNPrivatelistViewController *)viewController)->forwardArray removeObjectAtIndex:index];
+                           [((SNPrivatelistViewController *)viewController)->replyArray removeObjectAtIndex:index];
+                           [((SNPrivatelistViewController *)viewController)->soundArray removeObjectAtIndex:index];
+                       }
                    });
 }
 
@@ -334,6 +372,11 @@
                                        NSString *sql = [NSString stringWithFormat:@"insert or replace into whitelist (keyword, type, name, phone, sms, reply, message, forward, number, sound) values ('%@', '0', '', '1', '1', '0', '', '0', '', '0')", number];
                                        int execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
                                        if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
+                                       
+                                       SNWhitelistViewController *viewController = (SNWhitelistViewController *)[weakSelf.navigationController.viewControllers objectAtIndex:([weakSelf.navigationController.viewControllers count] - 2)];
+                                       [viewController->nameArray insertObject:@"" atIndex:0];
+                                       [viewController->keywordArray insertObject:number atIndex:0];
+                                       [viewController->typeArray insertObject:@"0" atIndex:0];
                                    }
                                    sqlite3_close(database);
                                }
@@ -358,6 +401,40 @@
                                    NSString *sql = [NSString stringWithFormat:@"delete from %@list where keyword = '%@'", weakSelf.flag, number];
                                    int execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
                                    if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
+                                   
+                                   id viewController = [weakSelf.navigationController.viewControllers objectAtIndex:([weakSelf.navigationController.viewControllers count] - 2)];
+                                   if ([viewController isKindOfClass:[SNBlacklistViewController class]])
+                                   {
+                                       [((SNBlacklistViewController *)viewController)->keywordArray removeObject:number];
+                                       [((SNBlacklistViewController *)viewController)->typeArray removeObject:number];
+                                       [((SNBlacklistViewController *)viewController)->nameArray removeObject:number];
+                                       [((SNBlacklistViewController *)viewController)->messageArray removeObject:number];
+                                       [((SNBlacklistViewController *)viewController)->numberArray removeObject:number];
+                                       [((SNBlacklistViewController *)viewController)->smsArray removeObject:number];
+                                       [((SNBlacklistViewController *)viewController)->phoneArray removeObject:number];
+                                       [((SNBlacklistViewController *)viewController)->forwardArray removeObject:number];
+                                       [((SNBlacklistViewController *)viewController)->replyArray removeObject:number];
+                                       [((SNBlacklistViewController *)viewController)->soundArray removeObject:number];
+                                   }
+                                   else if ([viewController isKindOfClass:[SNWhitelistViewController class]])
+                                   {
+                                       [((SNWhitelistViewController *)viewController)->keywordArray removeObject:number];
+                                       [((SNWhitelistViewController *)viewController)->typeArray removeObject:number];
+                                       [((SNWhitelistViewController *)viewController)->nameArray removeObject:number];
+                                   }
+                                   else if ([viewController isKindOfClass:[SNPrivatelistViewController class]])
+                                   {
+                                       [((SNPrivatelistViewController *)viewController)->keywordArray removeObject:number];
+                                       [((SNPrivatelistViewController *)viewController)->typeArray removeObject:number];
+                                       [((SNPrivatelistViewController *)viewController)->nameArray removeObject:number];
+                                       [((SNPrivatelistViewController *)viewController)->messageArray removeObject:number];
+                                       [((SNPrivatelistViewController *)viewController)->numberArray removeObject:number];
+                                       [((SNPrivatelistViewController *)viewController)->smsArray removeObject:number];
+                                       [((SNPrivatelistViewController *)viewController)->phoneArray removeObject:number];
+                                       [((SNPrivatelistViewController *)viewController)->forwardArray removeObject:number];
+                                       [((SNPrivatelistViewController *)viewController)->replyArray removeObject:number];
+                                       [((SNPrivatelistViewController *)viewController)->soundArray removeObject:number];
+                                   }
                                }
                                sqlite3_close(database);
                            }

@@ -267,7 +267,7 @@
 	if ([tempString length] != 0)
 		[keywordArray addObject:tempString];
     
-    id viewController = [self.navigationController.viewControllers objectAtIndex:([self.navigationController.viewControllers count] - 1)];
+    id viewController = self.navigationController.topViewController;
     if ([viewController isKindOfClass:[SNCallActionViewController class]] || [viewController isKindOfClass:[SNMessageActionViewController class]]) return;
     
     __block SNNumberViewController *weakSelf = self;

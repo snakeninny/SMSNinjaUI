@@ -239,7 +239,7 @@
                        else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
                    });
     
-    id viewController = [self.navigationController.viewControllers objectAtIndex:([self.navigationController.viewControllers count] - 1)];
+    id viewController = self.navigationController.topViewController;
 	for (NSString *keyword in keywordArray)
 	{
         if ([viewController isKindOfClass:[SNBlacklistViewController class]])

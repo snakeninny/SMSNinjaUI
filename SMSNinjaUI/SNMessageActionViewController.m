@@ -127,7 +127,7 @@
 {
     [super viewWillDisappear:animated];
 
-    id viewController = [self.navigationController.viewControllers objectAtIndex:([self.navigationController.viewControllers count] - 1)];
+    id viewController = self.navigationController.topViewController;
     SEL selector = NSSelectorFromString(@"setForwardString:");
     [viewController performSelector:selector withObject:nil];
     [viewController performSelector:selector withObject:forwardSwitch.on ? @"1" : @"0"];

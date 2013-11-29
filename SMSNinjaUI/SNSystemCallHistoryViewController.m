@@ -42,7 +42,7 @@
 {
     [super viewWillDisappear:animated];
 
-    id viewController = [self.navigationController.viewControllers objectAtIndex:([self.navigationController.viewControllers count] - 1)];
+    id viewController = self.navigationController.topViewController;
     if ([viewController isKindOfClass:[SNNumberViewController class]]) return;
     [((UITableViewController *)viewController).tableView reloadData];
 }
@@ -157,8 +157,8 @@
     [cell.contentView addSubview:typeLabel];
     [typeLabel release];
     
-    if ([keywordSet containsObject:numberLabel.text]) cell.accessoryType = UITableViewCellAccessoryCheckmark;
-    else cell.accessoryType = UITableViewCellAccessoryNone;
+    if ([keywordSet containsObject:numberLabel.text]) cell.selected = YES;
+    else cell.selected = NO;
     
     return cell;
 }
