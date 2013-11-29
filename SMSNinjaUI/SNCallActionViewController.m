@@ -47,6 +47,7 @@
         [subview removeFromSuperview];
     cell.textLabel.text = nil;
     cell.accessoryView = nil;
+    cell.accessoryType = UITableViewCellAccessoryNone;
     
     switch (indexPath.row)
     {
