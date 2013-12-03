@@ -1,5 +1,17 @@
 #import "SNPictureViewController.h"
 
+#ifndef SMSNinjaDebug
+#define SETTINGS @"/var/mobile/Library/SMSNinja/smsninja.plist"
+#define DATABASE @"/var/mobile/Library/SMSNinja/smsninja.db"
+#define PICTURES @"/var/mobile/Library/SMSNinja/Pictures/"
+#define PRIVATEPICTURES @"/var/mobile/Library/SMSNinja/PrivatePictures/"
+#else
+#define SETTINGS @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/9E87534C-FD0A-450A-8863-0BAF0D62C9F0/Documents/var/mobile/Library/SMSNinja/smsninja.plist"
+#define DATABASE @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/9E87534C-FD0A-450A-8863-0BAF0D62C9F0/Documents/var/mobile/Library/SMSNinja/smsninja.db"
+#define PICTURES @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/9E87534C-FD0A-450A-8863-0BAF0D62C9F0/Documents/var/mobile/Library/SMSNinja/Pictures/"
+#define PRIVATEPICTURES @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/9E87534C-FD0A-450A-8863-0BAF0D62C9F0/Documents/var/mobile/Library/SMSNinja/PrivatePictures/"
+#endif
+
 @implementation SNPictureViewController
 
 @synthesize idString;
@@ -53,7 +65,11 @@
     
     for (int i = 0; i < 2; i++)
     {
-        UIImage *image = [[UIImage alloc] initWithContentsOfFile:[NSString stringWithFormat:@"/Users/snakeninny/Desktop/iOS7-Wallpaper-Pack/%d.png", i + 1]];
+        NSString *fileName = nil;
+        if ([self.flag isEqualToString:@"black"]) fileName = [NSString stringWithFormat:@"%@%@-%d.%@", PICTURES, self.idString, i, @"png"];
+        else if ([self.flag isEqualToString:@"private"]) fileName = [NSString stringWithFormat:@"%@%@-%d.%@", PRIVATEPICTURES, self.idString, i, @"png"];
+        
+        UIImage *image = [[UIImage alloc] initWithContentsOfFile:fileName];
         UIImageView *imageView= [[UIImageView alloc] initWithFrame:CGRectMake([UIScreen mainScreen].applicationFrame.size.width * i, 0.0f, [UIScreen mainScreen].applicationFrame.size.width, [UIScreen mainScreen].applicationFrame.size.height)];
         imageView.contentMode = UIViewContentModeScaleAspectFit;
         imageView.image = image;
@@ -63,7 +79,7 @@
         [imageView release];
     }
     
-    self.title = [NSString stringWithFormat:NSLocalizedString(@"Picture %d/picturesCount", @"Picture %d/picturesCount"), 1];
+    self.title = [NSString stringWithFormat:NSLocalizedString(@"Picture %d/%d", @"Picture %d/%d"), 1, self->picturesCount];
     [self.view addSubview:pictureScrollView];
 }
 
@@ -76,7 +92,10 @@
 {
     int currentViewIndex = ceil(pictureScrollView.contentOffset.x / [UIScreen mainScreen].applicationFrame.size.width);
     int currentViewTag = currentViewIndex + 1;
-    UIImage *image = [[UIImage alloc] initWithContentsOfFile:[NSString stringWithFormat:@"/Users/snakeninny/Desktop/iOS7-Wallpaper-Pack/%d.png", currentViewTag]];
+    NSString *fileName = nil;
+    if ([self.flag isEqualToString:@"black"]) fileName = [NSString stringWithFormat:@"%@%@-%d.%@", PICTURES, self.idString, currentViewTag, @"png"];
+    else if ([self.flag isEqualToString:@"private"]) fileName = [NSString stringWithFormat:@"%@%@-%d.%@", PRIVATEPICTURES, self.idString, currentViewTag, @"png"];
+    UIImage *image = [[UIImage alloc] initWithContentsOfFile:fileName];
     UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil);
     [image release];
     NSString *originalTitle = self.title;
@@ -104,21 +123,25 @@
                     completion:nil];
 }
 
-- (void)pictureScrollViewDidEndDecelerating:(UIScrollView *)view
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)view
 {
     int currentViewIndex = ceil(view.contentOffset.x / [UIScreen mainScreen].applicationFrame.size.width);
     int currentViewTag = currentViewIndex + 1;
-    self.title = [NSString stringWithFormat:NSLocalizedString(@"Picture %d/picturesCount", @"Picture %d/picturesCount"), currentViewTag];
+    self.title = [NSString stringWithFormat:NSLocalizedString(@"Picture %d/%d", @"Picture %d/%d"), currentViewTag];
 }
 
-- (void)pictureScrollViewDidScroll:(UIScrollView *)view
+- (void)scrollViewDidScroll:(UIScrollView *)view
 {
     int currentViewIndex = ceil(view.contentOffset.x / [UIScreen mainScreen].applicationFrame.size.width);
     int currentViewTag = currentViewIndex + 1;
     
     if ([view viewWithTag:currentViewTag + 1] == nil && currentViewTag != picturesCount) // next
     {
-        UIImage *image = [[UIImage alloc] initWithContentsOfFile:[NSString stringWithFormat:@"/Users/snakeninny/Desktop/iOS7-Wallpaper-Pack/%d.png", currentViewTag + 1]];
+        NSString *fileName = nil;
+        if ([self.flag isEqualToString:@"black"]) fileName = [NSString stringWithFormat:@"%@%@-%d.%@", PICTURES, self.idString, currentViewTag + 1, @"png"];
+        else if ([self.flag isEqualToString:@"private"]) fileName = [NSString stringWithFormat:@"%@%@-%d.%@", PRIVATEPICTURES, self.idString, currentViewTag + 1, @"png"];
+        
+        UIImage *image = [[UIImage alloc] initWithContentsOfFile:fileName];
         UIImageView *imageView= [[UIImageView alloc] initWithFrame:CGRectMake([UIScreen mainScreen].applicationFrame.size.width * (currentViewIndex + 1), 0.0f, [UIScreen mainScreen].applicationFrame.size.width, [UIScreen mainScreen].applicationFrame.size.height)];
         imageView.contentMode = UIViewContentModeScaleAspectFit;
         imageView.image = image;
@@ -129,7 +152,11 @@
     }
     if ([view viewWithTag:currentViewTag - 1] == nil && currentViewTag != 0) // previous
     {
-        UIImage *image = [[UIImage alloc] initWithContentsOfFile:[NSString stringWithFormat:@"/Users/snakeninny/Desktop/iOS7-Wallpaper-Pack/%d.png", currentViewTag - 1]];
+        NSString *fileName = nil;
+        if ([self.flag isEqualToString:@"black"]) fileName = [NSString stringWithFormat:@"%@%@-%d.%@", PICTURES, self.idString, currentViewTag - 1, @"png"];
+        else if ([self.flag isEqualToString:@"private"]) fileName = [NSString stringWithFormat:@"%@%@-%d.%@", PRIVATEPICTURES, self.idString, currentViewTag - 1, @"png"];
+        
+        UIImage *image = [[UIImage alloc] initWithContentsOfFile:fileName];
         UIImageView *imageView= [[UIImageView alloc] initWithFrame:CGRectMake([UIScreen mainScreen].applicationFrame.size.width * (currentViewIndex - 1), 0.0f, [UIScreen mainScreen].applicationFrame.size.width, [UIScreen mainScreen].applicationFrame.size.height)];
         imageView.contentMode = UIViewContentModeScaleAspectFit;
         imageView.image = image;

@@ -1,6 +1,6 @@
 #import "SMSNinja-private.h"
 
-@interface SNPictureViewController : UIViewController <UIAlertViewDelegate, UIScrollViewDelegate>
+@interface SNPictureViewController : UIViewController <UIScrollViewDelegate>
 {
 @public
     int picturesCount;
