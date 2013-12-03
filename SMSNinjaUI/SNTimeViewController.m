@@ -9,8 +9,8 @@
 #define SETTINGS @"/var/mobile/Library/SMSNinja/smsninja.plist"
 #define DATABASE @"/var/mobile/Library/SMSNinja/smsninja.db"
 #else
-#define SETTINGS @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/9E87534C-FD0A-450A-8863-0BAF0D62C9F0/Documents/var/mobile/Library/SMSNinja/smsninja.plist"
-#define DATABASE @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/9E87534C-FD0A-450A-8863-0BAF0D62C9F0/Documents/var/mobile/Library/SMSNinja/smsninja.db"
+#define SETTINGS @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/Documents/var/mobile/Library/SMSNinja/smsninja.plist"
+#define DATABASE @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/Documents/var/mobile/Library/SMSNinja/smsninja.db"
 #endif
 
 @implementation SNTimeViewController
@@ -24,6 +24,7 @@
 @synthesize soundString;
 @synthesize forwardString;
 @synthesize numberString;
+@synthesize originalKeyword;
 
 - (void)dealloc
 {
@@ -70,6 +71,9 @@
     
 	[soundSwitch release];
 	soundSwitch = nil;
+    
+    [originalKeyword release];
+    originalKeyword = nil;
     
     [tapRecognizer release];
     tapRecognizer = nil;
@@ -120,7 +124,7 @@
 	[timePickerView selectRow:(4800 + [three intValue]) inComponent:3 animated:YES];
 	[timePickerView selectRow:(4800 + [four intValue]) inComponent:4 animated:YES];
     
-	settingsTableView = [[UITableView alloc] initWithFrame:CGRectMake(self.view.frame.origin.x, timePickerView.bounds.size.height, timePickerView.bounds.size.width, self.view.bounds.size.height - timePickerView.bounds.size.height) style:UITableViewStyleGrouped];
+	settingsTableView = [[UITableView alloc] initWithFrame:CGRectMake(self.view.frame.origin.x, timePickerView.bounds.size.height, timePickerView.bounds.size.width, self.view.bounds.size.height - timePickerView.bounds.size.height - ([[[UIDevice currentDevice] systemVersion] intValue] < 7 ? self.navigationController.navigationBar.frame.size.height : 0.0f)) style:UITableViewStyleGrouped];
 	settingsTableView.dataSource = self;
 	settingsTableView.delegate = self;
 	[self.view addSubview:settingsTableView];
@@ -174,6 +178,7 @@
     for (UIView *subview in [cell.contentView subviews])
         [subview removeFromSuperview];
     cell.textLabel.text = nil;
+    cell.detailTextLabel.text = nil;
     cell.accessoryView = nil;
     cell.accessoryType = UITableViewCellAccessoryNone;
     
@@ -218,6 +223,7 @@
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 cell.accessoryView = replySwitch;
                 replySwitch.on = [self.replyString isEqualToString:@"0"] ? NO : YES;
+                [replySwitch addTarget:self action:@selector(saveSwitchValues) forControlEvents:UIControlEventValueChanged];
             }
             else if (indexPath.row == 1)
             {
@@ -236,6 +242,7 @@
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             cell.accessoryView = soundSwitch;
             soundSwitch.on = [self.soundString isEqualToString:@"0"] ? NO : YES;
+            [soundSwitch addTarget:self action:@selector(saveSwitchValues) forControlEvents:UIControlEventValueChanged];
             
             break;
     }
@@ -277,16 +284,6 @@
 {
     [super viewWillDisappear:animated];
     
-	self.nameString = nil;
-	self.replyString = nil;
-	self.messageString = nil;
-	self.soundString = nil;
-    
-	self.nameString = nameField.text ? nameField.text : @"";
-	self.replyString = replySwitch.on ? @"1" : @"0";
-	self.messageString = messageField.text ? messageField.text : @"";
-	self.soundString = soundSwitch.on ? @"1" : @"0";
-    
 	NSString *one = [NSString stringWithFormat:([timePickerView selectedRowInComponent:0] % 24 < 10 ? @"0%d" : @"%d"), [timePickerView selectedRowInComponent:0] % 24];
 	NSString *two = [NSString stringWithFormat:([timePickerView selectedRowInComponent:1] % 60 < 10 ? @"0%d" : @"%d"), [timePickerView selectedRowInComponent:1] % 60];
 	NSString *three = [NSString stringWithFormat:([timePickerView selectedRowInComponent:3] % 24 < 10 ? @"0%d" : @"%d"), [timePickerView selectedRowInComponent:3] % 24];
@@ -304,9 +301,8 @@
                        if (openResult == SQLITE_OK)
                        {
                            NSString *sql = @"";
-                           if ([keyword isEqualToString:weakSelf.keywordString]) sql = [NSString stringWithFormat:@"update blacklist set keyword = '%@', type = '2', name = '%@', phone = '%@', sms = '%@', reply = '%@', message = '%@', forward = '%@', number = '%@', sound = '%@' where keyword = '%@'", keyword, [weakSelf->nameField.text length] == 0 ? @"" : [weakSelf->nameField.text stringByReplacingOccurrencesOfString:@"'" withString:@"''"], weakSelf.phoneAction, weakSelf.messageAction, weakSelf->replySwitch ? (weakSelf->replySwitch.on == YES ? @"1" : @"0") : weakSelf.replyString, weakSelf->messageField ? ([weakSelf->messageField.text length] == 0 ? @"" : [weakSelf->messageField.text stringByReplacingOccurrencesOfString:@"'" withString:@"''"]) : weakSelf.messageString, weakSelf.forwardString, weakSelf.numberString, weakSelf->soundSwitch ? (weakSelf->soundSwitch.on == YES ? @"1" : @"0") : weakSelf.soundString, weakSelf.keywordString];
-                           else sql = [NSString stringWithFormat:@"insert or replace into blacklist (keyword, type, name, phone, sms, reply, message, forward, number, sound) values ('%@', '2', '%@', '%@', '%@', '%@', '%@', '%@', '%@', '%@')", keyword, [weakSelf->nameField.text length] == 0 ? @"" : [weakSelf->nameField.text stringByReplacingOccurrencesOfString:@"'" withString:@"''"], weakSelf.phoneAction, weakSelf.messageAction, weakSelf->replySwitch ? (weakSelf->replySwitch.on == YES ? @"1" : @"0") : weakSelf.replyString, weakSelf->messageField ? ([weakSelf->messageField.text length] == 0 ? @"" : [weakSelf->messageField.text stringByReplacingOccurrencesOfString:@"'" withString:@"''"]) : weakSelf.messageString, weakSelf.forwardString, weakSelf.numberString, weakSelf->soundSwitch ? (weakSelf->soundSwitch.on == YES ? @"1" : @"0") : weakSelf.soundString];
-                           
+                           if ([keyword isEqualToString:weakSelf.originalKeyword]) sql = [NSString stringWithFormat:@"update blacklist set keyword = '%@', type = '2', name = '%@', phone = '%@', sms = '%@', reply = '%@', message = '%@', forward = '%@', number = '%@', sound = '%@' where keyword = '%@'", keyword, weakSelf.nameString, weakSelf.phoneAction, weakSelf.messageAction, weakSelf.replyString, weakSelf.messageString, weakSelf.forwardString, weakSelf.numberString, weakSelf.soundString, weakSelf.keywordString];
+                           else sql = [NSString stringWithFormat:@"insert or replace into blacklist (keyword, type, name, phone, sms, reply, message, forward, number, sound) values ('%@', '2', '%@', '%@', '%@', '%@', '%@', '%@', '%@', '%@')", keyword, weakSelf.nameString, weakSelf.phoneAction, weakSelf.messageAction, weakSelf.replyString, weakSelf.messageString, weakSelf.forwardString, weakSelf.numberString, weakSelf.soundString];
                            int execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
                            if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
                            sqlite3_close(database);
@@ -314,42 +310,59 @@
                        else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
                    });
     
-    int index = [((SNBlacklistViewController *)viewController)->keywordArray indexOfObject:self.keywordString];
-    if ([keyword isEqualToString:self.keywordString])
+    if (![((SNBlacklistViewController *)viewController)->keywordArray containsObject:keyword])
     {
-        [((SNBlacklistViewController *)viewController)->keywordArray replaceObjectAtIndex:index withObject:keyword];
-        [((SNBlacklistViewController *)viewController)->nameArray replaceObjectAtIndex:index withObject:nameField.text ? [nameField.text stringByReplacingOccurrencesOfString:@"'" withString:@"''"] : @""];
-        [((SNBlacklistViewController *)viewController)->replyArray replaceObjectAtIndex:index withObject:replySwitch.on == YES ? @"1" : @"0"];
-        [((SNBlacklistViewController *)viewController)->messageArray replaceObjectAtIndex:index withObject:messageField.text ? [messageField.text stringByReplacingOccurrencesOfString:@"'" withString:@"''"] : @""];
-        [((SNBlacklistViewController *)viewController)->forwardArray replaceObjectAtIndex:index withObject:self.forwardString];
-        [((SNBlacklistViewController *)viewController)->numberArray replaceObjectAtIndex:index withObject:self.numberString];
-        [((SNBlacklistViewController *)viewController)->soundArray replaceObjectAtIndex:index withObject:soundSwitch.on == YES ? @"1" : @"0"];
-    }
-    else
-    {
-        [((SNBlacklistViewController *)viewController)->keywordArray removeObjectAtIndex:index];
-        [((SNBlacklistViewController *)viewController)->typeArray removeObjectAtIndex:index];
-        [((SNBlacklistViewController *)viewController)->nameArray removeObjectAtIndex:index];
-        [((SNBlacklistViewController *)viewController)->messageArray removeObjectAtIndex:index];
-        [((SNBlacklistViewController *)viewController)->numberArray removeObjectAtIndex:index];
-        [((SNBlacklistViewController *)viewController)->smsArray removeObjectAtIndex:index];
-        [((SNBlacklistViewController *)viewController)->phoneArray removeObjectAtIndex:index];
-        [((SNBlacklistViewController *)viewController)->forwardArray removeObjectAtIndex:index];
-        [((SNBlacklistViewController *)viewController)->replyArray removeObjectAtIndex:index];
-        [((SNBlacklistViewController *)viewController)->soundArray removeObjectAtIndex:index];
-        
-        [((SNBlacklistViewController *)viewController)->keywordArray insertObject:keyword atIndex:0];
-        [((SNBlacklistViewController *)viewController)->typeArray insertObject:@"0" atIndex:0];
-        [((SNBlacklistViewController *)viewController)->nameArray insertObject:nameField.text ? [nameField.text stringByReplacingOccurrencesOfString:@"'" withString:@"''"] : @"" atIndex:0];
-        [((SNBlacklistViewController *)viewController)->messageArray insertObject:messageField.text ? [messageField.text stringByReplacingOccurrencesOfString:@"'" withString:@"''"] : @"" atIndex:0];
-        [((SNBlacklistViewController *)viewController)->numberArray insertObject:self.numberString atIndex:0];
-        [((SNBlacklistViewController *)viewController)->smsArray insertObject:self.messageAction atIndex:0];
-        [((SNBlacklistViewController *)viewController)->phoneArray insertObject:self.phoneAction atIndex:0];
-        [((SNBlacklistViewController *)viewController)->forwardArray insertObject:self.forwardString atIndex:0];
-        [((SNBlacklistViewController *)viewController)->replyArray insertObject:replySwitch.on == YES ? @"1" : @"0" atIndex:0];
-        [((SNBlacklistViewController *)viewController)->soundArray insertObject:soundSwitch.on == YES ? @"1" : @"0" atIndex:0];
+        int index = [((SNBlacklistViewController *)viewController)->keywordArray indexOfObject:self.originalKeyword];
+        if ([keyword isEqualToString:self.originalKeyword])
+        {
+            [((SNBlacklistViewController *)viewController)->keywordArray replaceObjectAtIndex:index withObject:keyword];
+            [((SNBlacklistViewController *)viewController)->nameArray replaceObjectAtIndex:index withObject:self.nameString];
+            [((SNBlacklistViewController *)viewController)->replyArray replaceObjectAtIndex:index withObject:self.replyString];
+            [((SNBlacklistViewController *)viewController)->messageArray replaceObjectAtIndex:index withObject:self.messageString];
+            [((SNBlacklistViewController *)viewController)->forwardArray replaceObjectAtIndex:index withObject:self.forwardString];
+            [((SNBlacklistViewController *)viewController)->numberArray replaceObjectAtIndex:index withObject:self.numberString];
+            [((SNBlacklistViewController *)viewController)->soundArray replaceObjectAtIndex:index withObject:self.soundString];
+            [((SNBlacklistViewController *)viewController)->smsArray replaceObjectAtIndex:index withObject:self.messageAction];
+            [((SNBlacklistViewController *)viewController)->phoneArray replaceObjectAtIndex:index withObject:self.phoneAction];
+        }
+        else
+        {
+            if (![((SNBlacklistViewController *)viewController)->keywordArray containsObject:keyword])
+            {
+                [((SNBlacklistViewController *)viewController)->keywordArray addObject:keyword];
+                [((SNBlacklistViewController *)viewController)->typeArray addObject:@"2"];
+                [((SNBlacklistViewController *)viewController)->nameArray addObject:self.nameString];
+                [((SNBlacklistViewController *)viewController)->messageArray addObject:self.messageString];
+                [((SNBlacklistViewController *)viewController)->numberArray addObject:self.numberString];
+                [((SNBlacklistViewController *)viewController)->smsArray addObject:self.messageAction];
+                [((SNBlacklistViewController *)viewController)->phoneArray addObject:self.phoneAction];
+                [((SNBlacklistViewController *)viewController)->forwardArray addObject:self.forwardString];
+                [((SNBlacklistViewController *)viewController)->replyArray addObject:self.replyString];
+                [((SNBlacklistViewController *)viewController)->soundArray addObject:self.soundString];
+            }
+        }
     }
     [((UITableViewController *)viewController).tableView reloadData];
+}
+
+- (void)saveTextFieldValues
+{
+    if (nameField)
+    {
+        self.nameString = nil;
+        self.nameString = nameField.text ? nameField.text : @"";
+    }
+    if (messageField)
+    {
+        self.messageString = nil;
+        self.messageString = messageField.text ? messageField.text : @"";
+    }
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    [textField resignFirstResponder];
+    [self saveTextFieldValues];
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
@@ -362,7 +375,7 @@
 {
     NSDictionary *userInfo = [notification userInfo];
     float movementDuration = [(NSNumber *)[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
-    int movementDistance = [nameField isFirstResponder] ? [settingsTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]].bounds.size.height : [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size.height;
+    int movementDistance = [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size.height - ([[[UIDevice currentDevice] systemVersion] intValue] == 7 ? self.navigationController.navigationBar.frame.size.height : 0.0f);
     
     [UIView beginAnimations:@"animation" context:nil];
     [UIView setAnimationBeginsFromCurrentState:YES];
@@ -375,7 +388,7 @@
 {
     NSDictionary *userInfo = [notification userInfo];
     float movementDuration = [(NSNumber *)[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
-    int movementDistance = [nameField isFirstResponder] ? [settingsTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]].bounds.size.height : [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size.height;
+    int movementDistance = [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size.height - ([[[UIDevice currentDevice] systemVersion] intValue] == 7 ? self.navigationController.navigationBar.frame.size.height : 0.0f);
     
     [UIView beginAnimations:@"animation" context:nil];
     [UIView setAnimationBeginsFromCurrentState:YES];
@@ -394,5 +407,19 @@
 {
     if (gestureRecognizer == tapRecognizer && [touch.view isKindOfClass:NSClassFromString(@"UITableViewCellContentView")]) return NO;
     return YES;
+}
+
+- (void)saveSwitchValues
+{
+    if (replySwitch)
+    {
+        self.replyString = nil;
+        self.replyString = replySwitch.on ? @"1" : @"0";
+    }
+    if (soundSwitch)
+    {
+        self.soundString = nil;
+        self.soundString = soundSwitch.on ? @"1" : @"0";
+    }
 }
 @end

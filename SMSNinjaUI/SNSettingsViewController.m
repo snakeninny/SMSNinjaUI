@@ -5,7 +5,7 @@
 #ifndef SMSNinjaDebug
 #define DOCUMENT @"/var/mobile/Library/SMSNinja"
 #else
-#define DOCUMENT @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/9E87534C-FD0A-450A-8863-0BAF0D62C9F0/Documents/var/mobile/Library/SMSNinja"
+#define DOCUMENT @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/Documents/var/mobile/Library/SMSNinja"
 #endif
 
 #define SETTINGS [DOCUMENT stringByAppendingString:@"/smsninja.plist"]
@@ -18,28 +18,28 @@
 @synthesize fake;
 
 - (void)dealloc
-{  
+{
 	[iconBadgeSwitch release];
 	iconBadgeSwitch = nil;
-
+    
 	[statusBarBadgeSwitch release];
 	statusBarBadgeSwitch = nil;
-
+    
 	[hideIconSwitch release];
 	hideIconSwitch = nil;
-
+    
 	[clearSwitch release];
 	clearSwitch = nil;
-
+    
 	[addressbookSwitch release];
 	addressbookSwitch = nil;
-
+    
 	[passwordField release];
 	passwordField = nil;
-
+    
 	[launchCodeField release];
 	launchCodeField = nil;
-
+    
     [tapRecognizer release];
     tapRecognizer = nil;
     
@@ -89,7 +89,7 @@
 			return 2;
 			break;
 	}
-
+    
 	return 0;
 }
 
@@ -110,7 +110,7 @@
 			return NSLocalizedString(@"About", @"About");
 			break;
 	}
-
+    
 	return @"";
 }
 
@@ -132,78 +132,78 @@
             cell.accessoryType = UITableViewCellAccessoryNone;
             cell.accessoryView = nil;
 			switch (indexPath.row)
-			{
-				case 0:
-					cell.textLabel.text = NSLocalizedString(@"Password", @"Password");
-                    passwordField.delegate = self;
-					passwordField.secureTextEntry = YES;
-					passwordField.placeholder = NSLocalizedString(@"Input here", @"Input here");
-					passwordField.text = [dictionary objectForKey:@"startPassword"];
-					passwordField.clearButtonMode = UITextFieldViewModeWhileEditing;
-					[cell.contentView addSubview:passwordField];
-
-					break;
-				case 1:
-					cell.textLabel.text = NSLocalizedString(@"Launch Code", @"Launch Code");
-                    launchCodeField.delegate = self;
-					launchCodeField.secureTextEntry = YES;
-					launchCodeField.placeholder = NSLocalizedString(@"Numbers only", @"Numbers only");
-					launchCodeField.text = [dictionary objectForKey:@"launchCode"];
-					launchCodeField.clearButtonMode = UITextFieldViewModeWhileEditing;
-					[cell.contentView addSubview:launchCodeField];
-
-					break;
-				case 2:
-					cell.textLabel.text = NSLocalizedString(@"Hide Icon", @"Hide Icon");
-					cell.accessoryView = hideIconSwitch;
-					hideIconSwitch.on = [[dictionary objectForKey:@"shouldHideIcon"] boolValue];
-					[hideIconSwitch addTarget:self action:@selector(saveSettings) forControlEvents:UIControlEventValueChanged];
-
-					break;
-				case 3:
-					cell.textLabel.text = NSLocalizedString(@"Icon Badge", @"Icon Badge");
-					cell.accessoryView = iconBadgeSwitch;
-					iconBadgeSwitch.on = [[dictionary objectForKey:@"shouldShowIconBadge"] boolValue];
-					[iconBadgeSwitch addTarget:self action:@selector(saveSettings) forControlEvents:UIControlEventValueChanged];
-
-					break;
-				case 4:
-					cell.textLabel.text = NSLocalizedString(@"Statusbar Badge", @"Statusbar Badge");
-					cell.accessoryView = statusBarBadgeSwitch;
-					statusBarBadgeSwitch.on = [[dictionary objectForKey:@"shouldShowStatusBarBadge"] boolValue];
-					[statusBarBadgeSwitch addTarget:self action:@selector(saveSettings) forControlEvents:UIControlEventValueChanged];
-
-					break;
-				case 5:
-					cell.textLabel.text = NSLocalizedString(@"Contacts ⊆ Whitelist", @"Contacts ⊆ Whitelist");
-					cell.accessoryView = addressbookSwitch;
-					addressbookSwitch.on = [[dictionary objectForKey:@"shouldIncludeContactsInWhitelist"] boolValue];
-					[addressbookSwitch addTarget:self action:@selector(saveSettings) forControlEvents:UIControlEventValueChanged];
-
-					break;
-			}
+        {
+            case 0:
+                cell.textLabel.text = NSLocalizedString(@"Password", @"Password");
+                passwordField.delegate = self;
+                passwordField.secureTextEntry = YES;
+                passwordField.placeholder = NSLocalizedString(@"Input here", @"Input here");
+                passwordField.text = [dictionary objectForKey:@"startPassword"];
+                passwordField.clearButtonMode = UITextFieldViewModeWhileEditing;
+                [cell.contentView addSubview:passwordField];
+                
+                break;
+            case 1:
+                cell.textLabel.text = NSLocalizedString(@"Launch Code", @"Launch Code");
+                launchCodeField.delegate = self;
+                launchCodeField.secureTextEntry = YES;
+                launchCodeField.placeholder = NSLocalizedString(@"Numbers only", @"Numbers only");
+                launchCodeField.text = [dictionary objectForKey:@"launchCode"];
+                launchCodeField.clearButtonMode = UITextFieldViewModeWhileEditing;
+                [cell.contentView addSubview:launchCodeField];
+                
+                break;
+            case 2:
+                cell.textLabel.text = NSLocalizedString(@"Hide Icon", @"Hide Icon");
+                cell.accessoryView = hideIconSwitch;
+                hideIconSwitch.on = [[dictionary objectForKey:@"shouldHideIcon"] boolValue];
+                [hideIconSwitch addTarget:self action:@selector(saveSettings) forControlEvents:UIControlEventValueChanged];
+                
+                break;
+            case 3:
+                cell.textLabel.text = NSLocalizedString(@"Icon Badge", @"Icon Badge");
+                cell.accessoryView = iconBadgeSwitch;
+                iconBadgeSwitch.on = [[dictionary objectForKey:@"shouldShowIconBadge"] boolValue];
+                [iconBadgeSwitch addTarget:self action:@selector(saveSettings) forControlEvents:UIControlEventValueChanged];
+                
+                break;
+            case 4:
+                cell.textLabel.text = NSLocalizedString(@"Statusbar Badge", @"Statusbar Badge");
+                cell.accessoryView = statusBarBadgeSwitch;
+                statusBarBadgeSwitch.on = [[dictionary objectForKey:@"shouldShowStatusBarBadge"] boolValue];
+                [statusBarBadgeSwitch addTarget:self action:@selector(saveSettings) forControlEvents:UIControlEventValueChanged];
+                
+                break;
+            case 5:
+                cell.textLabel.text = NSLocalizedString(@"Contacts ⊆ Whitelist", @"Contacts ⊆ Whitelist");
+                cell.accessoryView = addressbookSwitch;
+                addressbookSwitch.on = [[dictionary objectForKey:@"shouldIncludeContactsInWhitelist"] boolValue];
+                [addressbookSwitch addTarget:self action:@selector(saveSettings) forControlEvents:UIControlEventValueChanged];
+                
+                break;
+        }
 			break;
 		case 1: // Call
             cell.accessoryView = nil;
 			switch (indexPath.row)
-			{
-				case 0:
-					cell.textLabel.text = NSLocalizedString(@"Whitelist calls only w/ beep", @"Whitelist calls only w/ beep");
-					cell.accessoryType = [[dictionary objectForKey:@"whitelistCallsOnlyWithBeep"] boolValue] ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
-					break;
-				case 1:
-					cell.textLabel.text = NSLocalizedString(@"Whitelist calls only w/o beep", @"Whitelist calls only w/o beep");
-					cell.accessoryType = [[dictionary objectForKey:@"whitelistCallsOnlyWithoutBeep"] boolValue] ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
-					break;
-				case 2:
-					cell.textLabel.text = NSLocalizedString(@"Whitelist msgs only w/ beep", @"Whitelist msgs only w/ beep");
-					cell.accessoryType = [[dictionary objectForKey:@"whitelistMessagesOnlyWithBeep"] boolValue] ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
-					break;
-				case 3:
-					cell.textLabel.text = NSLocalizedString(@"Whitelist msgs only w/o beep", @"Whitelist msgs only w/o beep");
-					cell.accessoryType = [[dictionary objectForKey:@"whitelistMessagesOnlyWithoutBeep"] boolValue] ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
-					break;
-			}
+        {
+            case 0:
+                cell.textLabel.text = NSLocalizedString(@"Whitelist calls only w/ beep", @"Whitelist calls only w/ beep");
+                cell.accessoryType = [[dictionary objectForKey:@"whitelistCallsOnlyWithBeep"] boolValue] ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+                break;
+            case 1:
+                cell.textLabel.text = NSLocalizedString(@"Whitelist calls only w/o beep", @"Whitelist calls only w/o beep");
+                cell.accessoryType = [[dictionary objectForKey:@"whitelistCallsOnlyWithoutBeep"] boolValue] ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+                break;
+            case 2:
+                cell.textLabel.text = NSLocalizedString(@"Whitelist msgs only w/ beep", @"Whitelist msgs only w/ beep");
+                cell.accessoryType = [[dictionary objectForKey:@"whitelistMessagesOnlyWithBeep"] boolValue] ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+                break;
+            case 3:
+                cell.textLabel.text = NSLocalizedString(@"Whitelist msgs only w/o beep", @"Whitelist msgs only w/o beep");
+                cell.accessoryType = [[dictionary objectForKey:@"whitelistMessagesOnlyWithoutBeep"] boolValue] ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+                break;
+        }
 			break;
 		case 2: // NoBlockedCallLog
 			cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -212,39 +212,39 @@
 			cell.accessoryView = clearSwitch;
 			clearSwitch.on = [[dictionary objectForKey:@"shouldClearSpam"] boolValue];
 			[clearSwitch addTarget:self action:@selector(saveSettings) forControlEvents:UIControlEventValueChanged];
-
+            
 			break;
 		case 3:
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             cell.accessoryView = nil;
 			switch (indexPath.row)
-			{
-				case 0:
-					cell.textLabel.text = NSLocalizedString(@"Questions & Suggestions", @"Questions & Suggestions");
-					break;
-				case 1:
-					cell.textLabel.text = NSLocalizedString(@"Donate via PayPal. Thank you!", @"Donate via PayPal. Thank you!");
-					break;
-			}
+        {
+            case 0:
+                cell.textLabel.text = NSLocalizedString(@"Questions & Suggestions", @"Questions & Suggestions");
+                break;
+            case 1:
+                cell.textLabel.text = NSLocalizedString(@"Donate via PayPal. Thank you!", @"Donate via PayPal. Thank you!");
+                break;
+        }
 			break;
 	}
-
+    
 	return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	[tableView deselectRowAtIndexPath:indexPath animated:YES];
-
+    
 	if (indexPath.section == 1)
 	{
 		NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithContentsOfFile:SETTINGS];
-
+        
 		if ([tableView cellForRowAtIndexPath:indexPath].accessoryType == UITableViewCellAccessoryCheckmark)
 		{
 			[tableView cellForRowAtIndexPath:indexPath].accessoryType = UITableViewCellAccessoryNone;
-
+            
 			switch (indexPath.row)
 			{
 				case 0:
@@ -264,23 +264,23 @@
 		else if ([tableView cellForRowAtIndexPath:indexPath].accessoryType == UITableViewCellAccessoryNone)
 		{
 			[tableView cellForRowAtIndexPath:indexPath].accessoryType = UITableViewCellAccessoryCheckmark;
-
+            
 			if (indexPath.row == 0 || indexPath.row == 1)
 			{
 				[tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:(1 - indexPath.row) inSection:1]].accessoryType = UITableViewCellAccessoryNone;
-
+                
 				[dictionary setObject:[NSNumber numberWithBool:YES] forKey:indexPath.row == 0 ? @"whitelistCallsOnlyWithBeep" : @"whitelistCallsOnlyWithoutBeep"];
 				[dictionary setObject:[NSNumber numberWithBool:NO] forKey:indexPath.row == 1 ? @"whitelistCallsOnlyWithBeep" : @"whitelistCallsOnlyWithoutBeep"];
 			}
 			else if (indexPath.row == 2 || indexPath.row == 3)
 			{
 				[tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:(5 - indexPath.row) inSection:1]].accessoryType = UITableViewCellAccessoryNone;
-
+                
 				[dictionary setObject:[NSNumber numberWithBool:YES] forKey:indexPath.row == 2 ? @"whitelistMessagesOnlyWithBeep" : @"whitelistMessagesOnlyWithoutBeep"];
 				[dictionary setObject:[NSNumber numberWithBool:NO] forKey:indexPath.row == 3 ? @"whitelistMessagesOnlyWithBeep" : @"whitelistMessagesOnlyWithoutBeep"];
 			}
 		}
-
+        
 		[dictionary writeToFile:SETTINGS atomically:YES];
 	}
 	else if (indexPath.section == 3)
@@ -328,13 +328,13 @@ static void (^CreateDatabase)(void) = ^(void)
 #ifndef SMSNinjaDebug
 		[fileManager copyItemAtPath:@"/Applications/SMSNinja.app/smsninja.plist" toPath:SETTINGS error:nil];
 #else
-    [fileManager copyItemAtPath:@"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/9E87534C-FD0A-450A-8863-0BAF0D62C9F0/SMSNinjaUI.app/smsninja.plist" toPath:SETTINGS error:nil];
+    [fileManager copyItemAtPath:@"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/SMSNinjaUI.app/smsninja.plist" toPath:SETTINGS error:nil];
 #endif
 	if (![fileManager fileExistsAtPath:DATABASE])
 #ifndef SMSNinjaDebug
 		[fileManager copyItemAtPath:@"/Applications/SMSNinja.app/smsninja.db" toPath:DATABASE error:nil];
 #else
-    [fileManager copyItemAtPath:@"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/9E87534C-FD0A-450A-8863-0BAF0D62C9F0/SMSNinjaUI.app/smsninja.db" toPath:DATABASE error:nil];
+    [fileManager copyItemAtPath:@"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/SMSNinjaUI.app/smsninja.db" toPath:DATABASE error:nil];
 #endif
 	NSString *filePath = [DOCUMENT stringByAppendingString:@"/blocked.caf"];
 #ifndef SMSNinjaDebug
@@ -359,14 +359,18 @@ static void (^CreateDatabase)(void) = ^(void)
 	}
 }
 
-- (void)textFieldDidEndEditing:(UITextField *)textField
+- (void)saveTextFieldValues
 {
-	[textField resignFirstResponder];
-
 	NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithContentsOfFile:SETTINGS];
 	[dictionary setObject:[passwordField.text length] != 0 ? passwordField.text : @"" forKey:[self.fake boolValue] ? @"fakePassword" : @"startPassword"];
 	[dictionary setObject:[[[launchCodeField.text componentsSeparatedByCharactersInSet:[[NSCharacterSet decimalDigitCharacterSet] invertedSet]] componentsJoinedByString:@""] length] != 0 ? [[launchCodeField.text componentsSeparatedByCharactersInSet:[[NSCharacterSet decimalDigitCharacterSet] invertedSet]] componentsJoinedByString:@""] : @"" forKey:@"launchCode"];
 	[dictionary writeToFile:SETTINGS atomically:YES];
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+	[textField resignFirstResponder];
+    [self saveTextFieldValues];
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField

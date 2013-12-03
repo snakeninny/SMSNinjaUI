@@ -10,8 +10,8 @@
 #define SETTINGS @"/var/mobile/Library/SMSNinja/smsninja.plist"
 #define DATABASE @"/var/mobile/Library/SMSNinja/smsninja.db"
 #else
-#define SETTINGS @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/9E87534C-FD0A-450A-8863-0BAF0D62C9F0/Documents/var/mobile/Library/SMSNinja/smsninja.plist"
-#define DATABASE @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/9E87534C-FD0A-450A-8863-0BAF0D62C9F0/Documents/var/mobile/Library/SMSNinja/smsninja.db"
+#define SETTINGS @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/Documents/var/mobile/Library/SMSNinja/smsninja.plist"
+#define DATABASE @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/Documents/var/mobile/Library/SMSNinja/smsninja.db"
 #endif
 
 @implementation SNSystemMessageHistoryViewController
@@ -44,7 +44,8 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    
+    [self setEditing:NO animated:NO];
+ 
     id viewController = self.navigationController.topViewController;
     if ([viewController isKindOfClass:[SNNumberViewController class]]) return;
     [((UITableViewController *)viewController).tableView reloadData];
@@ -88,7 +89,8 @@
     {
         self.title = NSLocalizedString(@"Message History", @"Message History");
         self.navigationItem.rightBarButtonItem = self.editButtonItem;
-        
+        self.tableView.allowsSelectionDuringEditing = YES;
+
         [self initializeAllArrays];
     }
     return self;
@@ -121,9 +123,6 @@
     
     UILabel *nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 2.0f, (defaultCellWidth - 50.0f) / 2.0f, (defaultCellHeight - 4.0f) / 2.0f)];
     nameLabel.tag = 1;
-    nameLabel.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
-    if (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_5_0 && kCFCoreFoundationVersionNumber <= kCFCoreFoundationVersionNumber_iOS_5_1) nameLabel.minimumFontSize = 6.0f;
-    else if (kCFCoreFoundationVersionNumber > kCFCoreFoundationVersionNumber_iOS_5_1) nameLabel.minimumScaleFactor = 6.0f;
     nameLabel.adjustsFontSizeToFitWidth = YES;
     nameLabel.text = [[nameArray objectAtIndex:indexPath.row] length] != 0 ? [nameArray objectAtIndex:indexPath.row] : [numberArray objectAtIndex:indexPath.row];
     [cell.contentView addSubview:nameLabel];
@@ -132,16 +131,8 @@
     UILabel *timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(nameLabel.frame.origin.x + nameLabel.bounds.size.width, nameLabel.frame.origin.y, nameLabel.bounds.size.width, nameLabel.bounds.size.height)];
     timeLabel.tag = 2;
     timeLabel.font = nameLabel.font;
-    if (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_5_0 && kCFCoreFoundationVersionNumber <= kCFCoreFoundationVersionNumber_iOS_5_1)
-    {
-        timeLabel.minimumFontSize = nameLabel.minimumFontSize;
-        timeLabel.textAlignment = UITextAlignmentRight;
-    }
-    else if (kCFCoreFoundationVersionNumber > kCFCoreFoundationVersionNumber_iOS_5_1)
-    {
-        timeLabel.minimumScaleFactor = nameLabel.minimumScaleFactor;
-        timeLabel.textAlignment = NSTextAlignmentRight;
-    }
+    if ([[[UIDevice currentDevice] systemVersion] hasPrefix:@"5"]) timeLabel.textAlignment = UITextAlignmentRight;
+    else if ([[[UIDevice currentDevice] systemVersion] intValue] > 5) timeLabel.textAlignment = NSTextAlignmentRight;
     timeLabel.adjustsFontSizeToFitWidth = nameLabel.adjustsFontSizeToFitWidth;
     timeLabel.text = [timeArray objectAtIndex:indexPath.row];
     timeLabel.textColor = nameLabel.textColor;
@@ -150,7 +141,6 @@
     
     UILabel *contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(nameLabel.frame.origin.x, nameLabel.frame.origin.y + nameLabel.bounds.size.height, nameLabel.bounds.size.width + timeLabel.bounds.size.width, nameLabel.bounds.size.height)];
     contentLabel.tag = 3;
-    contentLabel.lineBreakMode = NSLineBreakByWordWrapping;
     contentLabel.numberOfLines = 0;
     contentLabel.font = nameLabel.font;
     contentLabel.text = [contentArray objectAtIndex:indexPath.row];
@@ -162,8 +152,8 @@
     [cell.contentView addSubview:contentLabel];
     [contentLabel release];
     
-    if ([keywordSet containsObject:[numberArray objectAtIndex:indexPath.row]]) cell.selected = YES;
-    else cell.selected = NO;
+    if ([keywordSet containsObject:[numberArray objectAtIndex:indexPath.row]]) [self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+    else [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
     
     return cell;
 }
@@ -171,14 +161,17 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"default-cell"] autorelease];
-    return (cell.contentView.bounds.size.height - 4.0f) / 2.0f + [[contentArray objectAtIndex:indexPath.row] sizeWithFont:[UIFont systemFontOfSize:[UIFont systemFontSize]] constrainedToSize:CGSizeMake((cell.contentView.bounds.size.width - 50.0f), (cell.contentView.bounds.size.height - 4.0f) / 2.0f * 60.0f) lineBreakMode:NSLineBreakByWordWrapping].height + 4.0f;
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
+    UIFont *font = label.font;
+    [label release];
+    return (cell.contentView.bounds.size.height - 4.0f) / 2.0f + [[contentArray objectAtIndex:indexPath.row] sizeWithFont:font constrainedToSize:CGSizeMake((cell.contentView.bounds.size.width - 50.0f), (cell.contentView.bounds.size.height - 4.0f) / 2.0f * 60.0f) lineBreakMode:NSLineBreakByWordWrapping].height + 4.0f;
 }
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (actionSheet.tag == 1) // single
     {
-        if (buttonIndex == 2) [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:buttonIndex inSection:0]].selected = NO;
+        if (buttonIndex == 2) [self.tableView deselectRowAtIndexPath:[NSIndexPath indexPathForRow:buttonIndex inSection:0] animated:NO];
         
         __block NSInteger index = buttonIndex;
         __block SNSystemMessageHistoryViewController *weakSelf = self;
@@ -196,29 +189,29 @@
                                id viewController = [weakSelf.navigationController.viewControllers objectAtIndex:([weakSelf.navigationController.viewControllers count] - 2)];
                                if ([viewController isKindOfClass:[SNBlacklistViewController class]])
                                {
-                                   [((SNBlacklistViewController *)viewController)->keywordArray insertObject:[weakSelf->numberArray objectAtIndex:weakSelf->chosenRow] atIndex:0];
-                                   [((SNBlacklistViewController *)viewController)->typeArray insertObject:@"0" atIndex:0];
-                                   [((SNBlacklistViewController *)viewController)->nameArray insertObject:@"" atIndex:0];
-                                   [((SNBlacklistViewController *)viewController)->messageArray insertObject:@"1" atIndex:0];
-                                   [((SNBlacklistViewController *)viewController)->numberArray insertObject:@"1" atIndex:0];
-                                   [((SNBlacklistViewController *)viewController)->smsArray insertObject:@"0" atIndex:0];
-                                   [((SNBlacklistViewController *)viewController)->phoneArray insertObject:@"" atIndex:0];
-                                   [((SNBlacklistViewController *)viewController)->forwardArray insertObject:@"0" atIndex:0];
-                                   [((SNBlacklistViewController *)viewController)->replyArray insertObject:@"" atIndex:0];
-                                   [((SNBlacklistViewController *)viewController)->soundArray insertObject:[NSString stringWithFormat:@"%d", index] atIndex:0];
+                                   [((SNBlacklistViewController *)viewController)->keywordArray addObject:[weakSelf->numberArray objectAtIndex:weakSelf->chosenRow]];
+                                   [((SNBlacklistViewController *)viewController)->typeArray addObject:@"0"];
+                                   [((SNBlacklistViewController *)viewController)->nameArray addObject:@""];
+                                   [((SNBlacklistViewController *)viewController)->messageArray addObject:@"1"];
+                                   [((SNBlacklistViewController *)viewController)->numberArray addObject:@"1"];
+                                   [((SNBlacklistViewController *)viewController)->smsArray addObject:@"0"];
+                                   [((SNBlacklistViewController *)viewController)->phoneArray addObject:@""];
+                                   [((SNBlacklistViewController *)viewController)->forwardArray addObject:@"0"];
+                                   [((SNBlacklistViewController *)viewController)->replyArray addObject:@""];
+                                   [((SNBlacklistViewController *)viewController)->soundArray addObject:[NSString stringWithFormat:@"%d", index]];
                                }
                                else if ([viewController isKindOfClass:[SNPrivatelistViewController class]])
                                {
-                                   [((SNPrivatelistViewController *)viewController)->keywordArray insertObject:[weakSelf->numberArray objectAtIndex:weakSelf->chosenRow] atIndex:0];
-                                   [((SNPrivatelistViewController *)viewController)->typeArray insertObject:@"0" atIndex:0];
-                                   [((SNPrivatelistViewController *)viewController)->nameArray insertObject:@"" atIndex:0];
-                                   [((SNPrivatelistViewController *)viewController)->messageArray insertObject:@"1" atIndex:0];
-                                   [((SNPrivatelistViewController *)viewController)->numberArray insertObject:@"1" atIndex:0];
-                                   [((SNPrivatelistViewController *)viewController)->smsArray insertObject:@"0" atIndex:0];
-                                   [((SNPrivatelistViewController *)viewController)->phoneArray insertObject:@"" atIndex:0];
-                                   [((SNPrivatelistViewController *)viewController)->forwardArray insertObject:@"0" atIndex:0];
-                                   [((SNPrivatelistViewController *)viewController)->replyArray insertObject:@"" atIndex:0];
-                                   [((SNPrivatelistViewController *)viewController)->soundArray insertObject:[NSString stringWithFormat:@"%d", index] atIndex:0];
+                                   [((SNPrivatelistViewController *)viewController)->keywordArray addObject:[weakSelf->numberArray objectAtIndex:weakSelf->chosenRow]];
+                                   [((SNPrivatelistViewController *)viewController)->typeArray addObject:@"0"];
+                                   [((SNPrivatelistViewController *)viewController)->nameArray addObject:@""];
+                                   [((SNPrivatelistViewController *)viewController)->messageArray addObject:@"1"];
+                                   [((SNPrivatelistViewController *)viewController)->numberArray addObject:@"1"];
+                                   [((SNPrivatelistViewController *)viewController)->smsArray addObject:@"0"];
+                                   [((SNPrivatelistViewController *)viewController)->phoneArray addObject:@""];
+                                   [((SNPrivatelistViewController *)viewController)->forwardArray addObject:@"0"];
+                                   [((SNPrivatelistViewController *)viewController)->replyArray addObject:@""];
+                                   [((SNPrivatelistViewController *)viewController)->soundArray addObject:[NSString stringWithFormat:@"%d", index]];
                                }
                            }
                            else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
@@ -228,7 +221,7 @@
     {
         if (buttonIndex == 2)
             for (int i = 0; i < [numberArray count]; i++)
-                [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]].selected = NO;
+                [self.tableView deselectRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0] animated:NO];
         
         __block NSInteger index = buttonIndex;
         __block SNSystemMessageHistoryViewController *weakSelf = self;
@@ -247,29 +240,29 @@
                                    id viewController = [weakSelf.navigationController.viewControllers objectAtIndex:([weakSelf.navigationController.viewControllers count] - 2)];
                                    if ([viewController isKindOfClass:[SNBlacklistViewController class]])
                                    {
-                                       [((SNBlacklistViewController *)viewController)->keywordArray insertObject:number atIndex:0];
-                                       [((SNBlacklistViewController *)viewController)->typeArray insertObject:@"0" atIndex:0];
-                                       [((SNBlacklistViewController *)viewController)->nameArray insertObject:@"" atIndex:0];
-                                       [((SNBlacklistViewController *)viewController)->messageArray insertObject:@"1" atIndex:0];
-                                       [((SNBlacklistViewController *)viewController)->numberArray insertObject:@"1" atIndex:0];
-                                       [((SNBlacklistViewController *)viewController)->smsArray insertObject:@"0" atIndex:0];
-                                       [((SNBlacklistViewController *)viewController)->phoneArray insertObject:@"" atIndex:0];
-                                       [((SNBlacklistViewController *)viewController)->forwardArray insertObject:@"0" atIndex:0];
-                                       [((SNBlacklistViewController *)viewController)->replyArray insertObject:@"" atIndex:0];
-                                       [((SNBlacklistViewController *)viewController)->soundArray insertObject:[NSString stringWithFormat:@"%d", index] atIndex:0];
+                                       [((SNBlacklistViewController *)viewController)->keywordArray addObject:number];
+                                       [((SNBlacklistViewController *)viewController)->typeArray addObject:@"0"];
+                                       [((SNBlacklistViewController *)viewController)->nameArray addObject:@""];
+                                       [((SNBlacklistViewController *)viewController)->messageArray addObject:@"1"];
+                                       [((SNBlacklistViewController *)viewController)->numberArray addObject:@"1"];
+                                       [((SNBlacklistViewController *)viewController)->smsArray addObject:@"0"];
+                                       [((SNBlacklistViewController *)viewController)->phoneArray addObject:@""];
+                                       [((SNBlacklistViewController *)viewController)->forwardArray addObject:@"0"];
+                                       [((SNBlacklistViewController *)viewController)->replyArray addObject:@""];
+                                       [((SNBlacklistViewController *)viewController)->soundArray addObject:[NSString stringWithFormat:@"%d", index]];
                                    }
                                    else if ([viewController isKindOfClass:[SNPrivatelistViewController class]])
                                    {
-                                       [((SNPrivatelistViewController *)viewController)->keywordArray insertObject:number atIndex:0];
-                                       [((SNPrivatelistViewController *)viewController)->typeArray insertObject:@"0" atIndex:0];
-                                       [((SNPrivatelistViewController *)viewController)->nameArray insertObject:@"" atIndex:0];
-                                       [((SNPrivatelistViewController *)viewController)->messageArray insertObject:@"1" atIndex:0];
-                                       [((SNPrivatelistViewController *)viewController)->numberArray insertObject:@"1" atIndex:0];
-                                       [((SNPrivatelistViewController *)viewController)->smsArray insertObject:@"0" atIndex:0];
-                                       [((SNPrivatelistViewController *)viewController)->phoneArray insertObject:@"" atIndex:0];
-                                       [((SNPrivatelistViewController *)viewController)->forwardArray insertObject:@"0" atIndex:0];
-                                       [((SNPrivatelistViewController *)viewController)->replyArray insertObject:@"" atIndex:0];
-                                       [((SNPrivatelistViewController *)viewController)->soundArray insertObject:[NSString stringWithFormat:@"%d", index] atIndex:0];
+                                       [((SNPrivatelistViewController *)viewController)->keywordArray addObject:number];
+                                       [((SNPrivatelistViewController *)viewController)->typeArray addObject:@"0"];
+                                       [((SNPrivatelistViewController *)viewController)->nameArray addObject:@""];
+                                       [((SNPrivatelistViewController *)viewController)->messageArray addObject:@"1"];
+                                       [((SNPrivatelistViewController *)viewController)->numberArray addObject:@"1"];
+                                       [((SNPrivatelistViewController *)viewController)->smsArray addObject:@"0"];
+                                       [((SNPrivatelistViewController *)viewController)->phoneArray addObject:@""];
+                                       [((SNPrivatelistViewController *)viewController)->forwardArray addObject:@"0"];
+                                       [((SNPrivatelistViewController *)viewController)->replyArray addObject:@""];
+                                       [((SNPrivatelistViewController *)viewController)->soundArray addObject:[NSString stringWithFormat:@"%d", index]];
                                    }
                                }
                                sqlite3_close(database);
@@ -288,6 +281,7 @@
         numberViewController.flag = self.flag;
         numberViewController.nameString = [nameArray objectAtIndex:indexPath.row];
         numberViewController.keywordString = [numberArray objectAtIndex:indexPath.row];
+        numberViewController.originalKeyword = numberViewController.keywordString;
         numberViewController.phoneAction = @"1";
         numberViewController.messageAction = @"1";
         numberViewController.replyString = @"0";
@@ -325,9 +319,9 @@
                                    sqlite3_close(database);
                                    
                                    SNWhitelistViewController *viewController = (SNWhitelistViewController *)[weakSelf.navigationController.viewControllers objectAtIndex:([weakSelf.navigationController.viewControllers count] - 2)];
-                                   [viewController->nameArray insertObject:@"" atIndex:0];
-                                   [viewController->keywordArray insertObject:[weakSelf->numberArray objectAtIndex:weakSelf->chosenRow] atIndex:0];
-                                   [viewController->typeArray insertObject:@"0" atIndex:0];
+                                   [viewController->nameArray addObject:@""];
+                                   [viewController->keywordArray addObject:[weakSelf->numberArray objectAtIndex:weakSelf->chosenRow]];
+                                   [viewController->typeArray addObject:@"0"];
                                }
                                else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
                            });
@@ -404,7 +398,7 @@
     {
         buttonItem.title = NSLocalizedString(@"None", @"None");
         for (int i = 0; i < [numberArray count]; i++)
-            [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]].selected = YES;
+            [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
         
         if (![self.flag isEqualToString:@"white"])
         {
@@ -429,9 +423,9 @@
                                        if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
                                        
                                        SNWhitelistViewController *viewController = (SNWhitelistViewController *)[weakSelf.navigationController.viewControllers objectAtIndex:([weakSelf.navigationController.viewControllers count] - 2)];
-                                       [viewController->nameArray insertObject:@"" atIndex:0];
-                                       [viewController->keywordArray insertObject:number atIndex:0];
-                                       [viewController->typeArray insertObject:@"0" atIndex:0];
+                                       [viewController->nameArray addObject:@""];
+                                       [viewController->keywordArray addObject:number];
+                                       [viewController->typeArray addObject:@"0"];
                                    }
                                    sqlite3_close(database);
                                }
@@ -443,7 +437,7 @@
     {
         buttonItem.title = NSLocalizedString(@"All", @"All");
         for (int i = 0; i < [numberArray count]; i++)
-            [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]].selected = NO;
+            [self.tableView deselectRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0] animated:NO];
         __block SNSystemMessageHistoryViewController *weakSelf = self;
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
                        {

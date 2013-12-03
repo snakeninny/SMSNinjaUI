@@ -1,0 +1,65 @@
+Welcome!
+SMSNinja is a high-effective firewall of FILTERing/BLOCKing SMS/MMS/iMessage/Call, it handles everything of telecommunication for you perfectly.
+Thanks for your support! Have fun!
+
+User's Guide
+0 GENERAL
+There're 3 lists in SMSNinja, including Privatelist, Whitelist and Blacklist. The priorities of them are Privatelist > Whitelist > Blacklist, which mean messages and calls will be FILTERED/BLOCKED in this way: If the caller/sender is in Privatelist, he's FILTERED by Privatelist; Otherwise he's checked by Whitelist, if he's in Whitelist, SMSNinja lets him go; Else SMSNinja sees whether he's in Blacklist to decide if he should be BLOCKED. All entries' priorities inside the 3 lists decrease from top to bottom, once a message or call matches one of the entries, the FILTERing/BLOCKing process stops right at that point. I'll use FILTER on Privatelist and BLOCK on Blacklist in the following text, please pay attention. Read through this page before you ask a question online, or jump to 9# if you're already familiar with SMSNinja. If you're interested to help translate SMSNinja into your native language, please let me know and your name will be listed here :)
+
+1 "SMSNinja" page
+1.1
+A complete SMSNinja shows 4 rows in this page, which are "SMSNinja", "Blocked Info", "Black & Whitelist" and "Private Zone". A fake SMSNinja shows 3 rows, without "Private Zone".
+
+2 "Settings" page
+2.1
+If you fill in "Password", you will be asked to enter this password each time you launch SMSNinja.
+
+2.2
+If you turn on "Number on badge", a pair of numbers will be shown on the up right corner of SMSNinja's icon, representing "Unread Calls Counts, Unread SMS Counts" in "Blocked Info".
+
+2.3
+If "Contacts ⊆ Whitelist" is on, the AddressBook will be treated as Whitelist, i.e. people from AddressBook won't be BLOCKED by blacklist (but may be FILTERED by privatelist according to the list priority).
+
+2.4
+If you turn on "NoBlockedCallLog", BLOCKED call history will be deleted from Phone's "Recents" view.
+
+2.5
+As SMSNinja is growing bigger and bigger, if you also think it's not easy for a SINGLE ONE (not a team) to make such an app FOR FREE, please consider making a donation. Thank you!
+
+3 "Blocked Info" page
+3.1
+In "SMS" page, unread messages are colored blue, while others are colored black. There'll be a round button with an arrow inside at the end of the row if that message contains images, tap the button to view the images. An asterisk (*) will be added at the end of numbers that are BLOCKED by "Whitelist only", and the lower left pointed arrow on the right side of time stands for "incoming SMS". When you tap a row, you can call/text this number, meanwhile the content of this message is copied to the pasteboard. If you need to delete one row, swipe horizontally and hit the red button. The same rules apply to "Call" page.
+
+4 "Black & Whitelist" page
+4.1
+Asterisk (*) as wildcards are supported in Black/Whitelist: "12345*" (without the quotation marks) for numbers with a prefix of "12345"; "*12345" for numbers with a suffix of "12345"; "*12345*" for numbers containing "12345".
+
+4.2
+You can add several numbers/keywords at once, using space ( ) as the separator. For example, "1 2 3" (without the quotation marks) turns to "1", "2", "3".
+
+4.3
+With a keyword "pear", messages containing "p*ear", "(pear]" and words like this will also be FILTERED/BLOCKED.
+
+5 "Private Zone" page
+5.1
+If you fill in both "FakePW" and "Password" (in "Settings" page), a fake SMSNinja is presented when you enter "FakePW" at launch.
+
+5.2
+If you toggle on "YellowSquare", a yellow square will be added to the status bar when there's unread private info. Once you go the "Private Info" page, the yellow square disappears.
+
+5.3
+If you toggle on "Show Colon", the badge of SMSNinja will use colon instead of comma, i.e. "6;6" not "6,6", when there's unread private info. Once you go the "Private Info" page, colon will be replace by comma again.
+
+6 "Private Info" page
+6.1
+In "SMS" page, the lower left/upper right pointed arrow on the right side of time stands for "incoming/outgoing SMS". Other rules are the same to "Blocked Info" page.
+
+7. "Privatelist" page
+7.1
+Since the moment you add a person into Privatelist, all communication logs between you two will be deleted from stock applications and saved only in Private Zone. Other rules are the same to "Black & Whitelist" page.
+
+8 Customization
+8.1 The beeps of Black/Whitelist and Privatelist are located in "/var/mobile/Library/SMSNinja/blocked.caf" and "/var/mobile/Library/SMSNinja/private.caf". Replace them with other caf files (System caf files are under "/System/Library/Audio/UISounds/") and restart your SpringBoard.
+
+8.2
+Data files of SMSNinja are stored in "/var/mobile/Library/SMSNinja/". Make a backup of these files before reinstallation, authorize read/write permissions to them (using iFile or something alike) and then put them back afterwards.

@@ -11,6 +11,11 @@
 		8804857A1843339100746698 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 880485781843339100746698 /* Localizable.strings */; };
 		8804857E1843347C00746698 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8804857C1843347C00746698 /* Localizable.strings */; };
 		880485811844365500746698 /* SNPrivatelistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8804857F1844365500746698 /* SNPrivatelistViewController.m */; };
+		8804DC30184C12B40082CDFF /* smsninja.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8804DC2F184C12B40082CDFF /* smsninja.plist */; };
+		8804DC3D184C16B00082CDFF /* zh-Hans_fake.txt in Resources */ = {isa = PBXBuildFile; fileRef = 8804DC39184C16B00082CDFF /* zh-Hans_fake.txt */; };
+		8804DC3E184C16B00082CDFF /* en.txt in Resources */ = {isa = PBXBuildFile; fileRef = 8804DC3A184C16B00082CDFF /* en.txt */; };
+		8804DC3F184C16B00082CDFF /* zh-Hans.txt in Resources */ = {isa = PBXBuildFile; fileRef = 8804DC3B184C16B00082CDFF /* zh-Hans.txt */; };
+		8804DC40184C16B00082CDFF /* en_fake.txt in Resources */ = {isa = PBXBuildFile; fileRef = 8804DC3C184C16B00082CDFF /* en_fake.txt */; };
 		888C8F5C183B278F00698D52 /* SNWhitelistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 888C8F5B183B278F00698D52 /* SNWhitelistViewController.m */; };
 		888C8F5F183B2DFA00698D52 /* SNSystemCallHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 888C8F5E183B2DFA00698D52 /* SNSystemCallHistoryViewController.m */; };
 		88A3052E18289E72006A69D8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88A3052D18289E72006A69D8 /* Foundation.framework */; };
@@ -56,6 +61,11 @@
 		8804857D1843347C00746698 /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_CN; path = Localizable.strings; sourceTree = "<group>"; };
 		8804857F1844365500746698 /* SNPrivatelistViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNPrivatelistViewController.m; sourceTree = "<group>"; };
 		880485801844365500746698 /* SNPrivatelistViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNPrivatelistViewController.h; sourceTree = "<group>"; };
+		8804DC2F184C12B40082CDFF /* smsninja.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = smsninja.plist; sourceTree = "<group>"; };
+		8804DC39184C16B00082CDFF /* zh-Hans_fake.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "zh-Hans_fake.txt"; sourceTree = "<group>"; };
+		8804DC3A184C16B00082CDFF /* en.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = en.txt; sourceTree = "<group>"; };
+		8804DC3B184C16B00082CDFF /* zh-Hans.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "zh-Hans.txt"; sourceTree = "<group>"; };
+		8804DC3C184C16B00082CDFF /* en_fake.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = en_fake.txt; sourceTree = "<group>"; };
 		888C8F5A183B278F00698D52 /* SNWhitelistViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNWhitelistViewController.h; sourceTree = "<group>"; };
 		888C8F5B183B278F00698D52 /* SNWhitelistViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNWhitelistViewController.m; sourceTree = "<group>"; };
 		888C8F5D183B2DFA00698D52 /* SNSystemCallHistoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNSystemCallHistoryViewController.h; sourceTree = "<group>"; };
@@ -183,6 +193,11 @@
 		88A3053318289E72006A69D8 /* SMSNinjaUI */ = {
 			isa = PBXGroup;
 			children = (
+				8804DC3B184C16B00082CDFF /* zh-Hans.txt */,
+				8804DC39184C16B00082CDFF /* zh-Hans_fake.txt */,
+				8804DC3A184C16B00082CDFF /* en.txt */,
+				8804DC3C184C16B00082CDFF /* en_fake.txt */,
+				8804DC2F184C12B40082CDFF /* smsninja.plist */,
 				880485801844365500746698 /* SNPrivatelistViewController.h */,
 				8804857F1844365500746698 /* SNPrivatelistViewController.m */,
 				88C0E1E2183B092F00E0A343 /* SNBlacklistViewController.h */,
@@ -318,9 +333,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8804DC3F184C16B00082CDFF /* zh-Hans.txt in Resources */,
 				88DBD956183E5E7D00DE60DD /* TODO in Resources */,
+				8804DC40184C16B00082CDFF /* en_fake.txt in Resources */,
 				8804857E1843347C00746698 /* Localizable.strings in Resources */,
 				8804857A1843339100746698 /* Localizable.strings in Resources */,
+				8804DC3E184C16B00082CDFF /* en.txt in Resources */,
+				8804DC30184C12B40082CDFF /* smsninja.plist in Resources */,
+				8804DC3D184C16B00082CDFF /* zh-Hans_fake.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -483,6 +503,7 @@
 				INFOPLIST_FILE = "SMSNinjaUI/SMSNinjaUI-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
@@ -499,6 +520,7 @@
 				INFOPLIST_FILE = "SMSNinjaUI/SMSNinjaUI-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};

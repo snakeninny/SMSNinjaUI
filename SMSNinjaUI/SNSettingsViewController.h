@@ -16,4 +16,5 @@
 - (void)resetSettings;
 - (void)saveSettings;
 - (void)dismissKeyboardWithTap:(UITapGestureRecognizer *)tap;
+- (void)saveTextFieldValues;
 @end

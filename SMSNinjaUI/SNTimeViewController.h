@@ -21,7 +21,10 @@
 @property (nonatomic, retain) NSString *soundString;
 @property (nonatomic, retain) NSString *forwardString; // in another view
 @property (nonatomic, retain) NSString *numberString; // in another view
+@property (nonatomic, retain) NSString *originalKeyword;
 - (void)keyboardWillShow:(NSNotification *)notification;
 - (void)keyboardWillHide:(NSNotification *)notification;
 - (void)dismissKeyboardWithTap:(UITapGestureRecognizer *)tap;
+- (void)saveTextFieldValues;
+- (void)saveSwitchValues;
 @end

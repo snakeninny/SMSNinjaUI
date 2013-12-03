@@ -41,7 +41,7 @@
 
 - (void)viewDidLoad
 {
-    if (kCFCoreFoundationVersionNumber <= kCFCoreFoundationVersionNumber_iOS_6_1)
+    if ([[[UIDevice currentDevice] systemVersion] intValue] < 7)
     {
         [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackTranslucent animated:NO];
         self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;

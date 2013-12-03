@@ -10,9 +10,9 @@
 #define DATABASE @"/var/mobile/Library/SMSNinja/smsninja.db"
 #define PRIVATEPICTURES @"/var/mobile/Library/SMSNinja/PrivatePictures/"
 #else
-#define SETTINGS @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/9E87534C-FD0A-450A-8863-0BAF0D62C9F0/Documents/var/mobile/Library/SMSNinja/smsninja.plist"
-#define DATABASE @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/9E87534C-FD0A-450A-8863-0BAF0D62C9F0/Documents/var/mobile/Library/SMSNinja/smsninja.db"
-#define PRIVATEPICTURES @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/9E87534C-FD0A-450A-8863-0BAF0D62C9F0/Documents/var/mobile/Library/SMSNinja/PrivatePictures/"
+#define SETTINGS @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/Documents/var/mobile/Library/SMSNinja/smsninja.plist"
+#define DATABASE @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/Documents/var/mobile/Library/SMSNinja/smsninja.db"
+#define PRIVATEPICTURES @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/Documents/var/mobile/Library/SMSNinja/PrivatePictures/"
 #endif
 
 @implementation SNPrivateMessageHistoryViewController
@@ -68,15 +68,15 @@
     }
     else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
     
-    for (NSIndexPath *chosenRowIndexPath in bulkSet)
-    {
-        [idArray removeObjectAtIndex:chosenRowIndexPath.row];
-        [nameArray removeObjectAtIndex:chosenRowIndexPath.row];
-        [contentArray removeObjectAtIndex:chosenRowIndexPath.row];
-        [timeArray removeObjectAtIndex:chosenRowIndexPath.row];
-        [numberArray removeObjectAtIndex:chosenRowIndexPath.row];
-        [picturesArray removeObjectAtIndex:chosenRowIndexPath.row];
-    }
+    NSMutableIndexSet *discardedItems = [NSMutableIndexSet indexSet];
+    for (NSIndexPath *chosenRowIndexPath in bulkSet) [discardedItems addIndex:chosenRowIndexPath.row];
+    
+    [idArray removeObjectsAtIndexes:discardedItems];
+    [nameArray removeObjectsAtIndexes:discardedItems];
+    [contentArray removeObjectsAtIndexes:discardedItems];
+    [timeArray removeObjectsAtIndexes:discardedItems];
+    [numberArray removeObjectsAtIndexes:discardedItems];
+    [picturesArray removeObjectsAtIndexes:discardedItems];
     
 	[self.tableView beginUpdates];
 	[self.tableView deleteRowsAtIndexPaths:[bulkSet allObjects] withRowAnimation:UITableViewRowAnimationFade];
@@ -88,6 +88,7 @@
 	if ((self = [super initWithStyle:UITableViewStylePlain]))
 	{
 		self.navigationItem.rightBarButtonItem = self.editButtonItem;
+        self.tableView.allowsSelectionDuringEditing = YES;
         
 		UIBarButtonItem *deleteButton = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Delete", @"Delete") style: UIBarButtonItemStyleBordered target: self action:@selector(bulkDelete)] autorelease];
 		deleteButton.tintColor = [UIColor redColor];
@@ -109,6 +110,7 @@
 - (void)viewDidLoad
 {
 	UISegmentedControl *segmentedControl = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:NSLocalizedString(@"SMS", @"SMS"), NSLocalizedString(@"Call", @"Call"), nil]];
+    segmentedControl.selectedSegmentIndex = 0;
 	segmentedControl.segmentedControlStyle = UISegmentedControlStyleBar;
 	segmentedControl.frame = CGRectMake(0.0f, 0.0f, 100.0f, 30.0f);
 	[segmentedControl addTarget:self action:@selector(segmentAction:) forControlEvents:UIControlEventValueChanged];
@@ -159,13 +161,14 @@
 {
     if ([sender selectedSegmentIndex] == 1)
     {
+        [self setEditing:NO animated:NO];
+        
         SNPrivateCallHistoryViewController *privateCallHistoryViewController = [[SNPrivateCallHistoryViewController alloc] init];
         UINavigationController *navigationController = self.navigationController;
         [navigationController popViewControllerAnimated:NO];
         [navigationController pushViewController:privateCallHistoryViewController animated:NO];
         [privateCallHistoryViewController release];
 	}
-    sender.selectedSegmentIndex = -1;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -189,8 +192,8 @@
     cell.accessoryType = UITableViewCellAccessoryNone;
     
 	cell.accessoryType = [[picturesArray objectAtIndex:indexPath.row] intValue] == 0 ? UITableViewCellAccessoryDisclosureIndicator : UITableViewCellAccessoryDetailDisclosureButton;
-    if (kCFCoreFoundationVersionNumber > kCFCoreFoundationVersionNumber_iOS_6_1 && cell.accessoryType == UITableViewCellAccessoryDetailDisclosureButton) cell.accessoryType = UITableViewCellAccessoryDetailButton;
-
+    if ([[[UIDevice currentDevice] systemVersion] hasPrefix:@"7"] && cell.accessoryType == UITableViewCellAccessoryDetailDisclosureButton) cell.accessoryType = UITableViewCellAccessoryDetailButton;
+    
     UITableViewCell *defaultCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"default-cell"];
     int defaultCellHeight = defaultCell.bounds.size.height;
     int defaultCellWidth = defaultCell.bounds.size.width;
@@ -198,9 +201,6 @@
     
 	UILabel *nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 2.0f, (defaultCellWidth  - 50.0f) / 2.0f, (defaultCellHeight - 4.0f) / 2.0f)];
 	nameLabel.tag = 1;
-	nameLabel.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
-	if (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_5_0 && kCFCoreFoundationVersionNumber <= kCFCoreFoundationVersionNumber_iOS_5_1) nameLabel.minimumFontSize = 6.0f;
-	else if (kCFCoreFoundationVersionNumber > kCFCoreFoundationVersionNumber_iOS_5_1) nameLabel.minimumScaleFactor = 6.0f;
 	nameLabel.adjustsFontSizeToFitWidth = YES;
 	nameLabel.text = [[nameArray objectAtIndex:indexPath.row] length] != 0 ? [nameArray objectAtIndex:indexPath.row] : [numberArray objectAtIndex:indexPath.row];
 	[cell.contentView addSubview:nameLabel];
@@ -209,16 +209,8 @@
 	UILabel *timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(nameLabel.frame.origin.x + nameLabel.bounds.size.width, nameLabel.frame.origin.y, nameLabel.bounds.size.width, nameLabel.bounds.size.height)];
 	timeLabel.tag = 2;
 	timeLabel.font = nameLabel.font;
-	if (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_5_0 && kCFCoreFoundationVersionNumber <= kCFCoreFoundationVersionNumber_iOS_5_1)
-    {
-        timeLabel.minimumFontSize = nameLabel.minimumFontSize;
-        timeLabel.textAlignment = UITextAlignmentRight;
-    }
-	else if (kCFCoreFoundationVersionNumber > kCFCoreFoundationVersionNumber_iOS_5_1)
-    {
-        timeLabel.minimumScaleFactor = nameLabel.minimumScaleFactor;
-        timeLabel.textAlignment = NSTextAlignmentRight;
-    }
+	if ([[[UIDevice currentDevice] systemVersion] hasPrefix:@"5"]) timeLabel.textAlignment = UITextAlignmentRight;
+	else if ([[[UIDevice currentDevice] systemVersion] intValue] > 5) timeLabel.textAlignment = NSTextAlignmentRight;
 	timeLabel.adjustsFontSizeToFitWidth = nameLabel.adjustsFontSizeToFitWidth;
 	timeLabel.text = [timeArray objectAtIndex:indexPath.row];
 	timeLabel.textColor = nameLabel.textColor;
@@ -227,7 +219,6 @@
     
 	UILabel *contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(nameLabel.frame.origin.x, nameLabel.frame.origin.y + nameLabel.bounds.size.height, nameLabel.bounds.size.width + timeLabel.bounds.size.width, nameLabel.bounds.size.height)];
 	contentLabel.tag = 3;
-	contentLabel.lineBreakMode = NSLineBreakByWordWrapping;
 	contentLabel.numberOfLines = 0;
 	contentLabel.font = nameLabel.font;
 	contentLabel.text = [contentArray objectAtIndex:indexPath.row];
@@ -274,15 +265,15 @@
             }
             else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
             
-            for (NSIndexPath *chosenRowIndexPath in bulkSet)
-            {
-                [idArray removeObjectAtIndex:chosenRowIndexPath.row];
-                [nameArray removeObjectAtIndex:chosenRowIndexPath.row];
-                [contentArray removeObjectAtIndex:chosenRowIndexPath.row];
-                [timeArray removeObjectAtIndex:chosenRowIndexPath.row];
-                [numberArray removeObjectAtIndex:chosenRowIndexPath.row];
-                [picturesArray removeObjectAtIndex:chosenRowIndexPath.row];
-            }
+            NSMutableIndexSet *discardedItems = [NSMutableIndexSet indexSet];
+            for (NSIndexPath *chosenRowIndexPath in bulkSet) [discardedItems addIndex:chosenRowIndexPath.row];
+            
+            [idArray removeObjectsAtIndexes:discardedItems];
+            [nameArray removeObjectsAtIndexes:discardedItems];
+            [contentArray removeObjectsAtIndexes:discardedItems];
+            [timeArray removeObjectsAtIndexes:discardedItems];
+            [numberArray removeObjectsAtIndexes:discardedItems];
+            [picturesArray removeObjectsAtIndexes:discardedItems];
             
 			[self.tableView beginUpdates];
 			[self.tableView deleteRowsAtIndexPaths:[bulkSet allObjects] withRowAnimation:UITableViewRowAnimationFade];
@@ -339,7 +330,10 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"default-cell"] autorelease];
-    return (cell.contentView.bounds.size.height - 4.0f) / 2.0f + [[contentArray objectAtIndex:indexPath.row] sizeWithFont:[UIFont systemFontOfSize:[UIFont systemFontSize]] constrainedToSize:CGSizeMake((cell.contentView.bounds.size.width  - 50.0f), (cell.contentView.bounds.size.height - 4.0f) / 2.0f * 60.0f) lineBreakMode:NSLineBreakByWordWrapping].height + 4.0f;
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
+    UIFont *font = label.font;
+    [label release];
+    return (cell.contentView.bounds.size.height - 4.0f) / 2.0f + [[contentArray objectAtIndex:indexPath.row] sizeWithFont:font constrainedToSize:CGSizeMake((cell.contentView.bounds.size.width  - 50.0f), (cell.contentView.bounds.size.height - 4.0f) / 2.0f * 60.0f) lineBreakMode:NSLineBreakByWordWrapping].height + 4.0f;
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
@@ -354,12 +348,13 @@
 
 - (void)selectAll:(UIBarButtonItem *)buttonItem
 {
+    [bulkSet removeAllObjects];
+    
     if ([buttonItem.title isEqualToString:NSLocalizedString(@"All", @"All")])
     {
         buttonItem.title = NSLocalizedString(@"None", @"None");
         for (int i = 0; i < [idArray count]; i++)
-            [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]].selected = YES;
-        [bulkSet removeAllObjects];
+            [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
         for (int i = 0; i < [idArray count]; i++)
             [bulkSet addObject:[NSIndexPath indexPathForRow:i inSection:0]];
     }
@@ -367,13 +362,14 @@
     {
         buttonItem.title = NSLocalizedString(@"All", @"All");
         for (int i = 0; i < [idArray count]; i++)
-            [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]].selected = NO;
-        [bulkSet removeAllObjects];
+            [self.tableView deselectRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0] animated:NO];
     }
 }
 
 - (void)setEditing:(BOOL)editing animated:(BOOL)animate
 {
+    for (int i = 0; i < [idArray count]; i++)
+        [self.tableView deselectRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0] animated:NO];
     [bulkSet removeAllObjects];
     [self.navigationController setToolbarHidden:!editing animated:animate];
     if (editing)

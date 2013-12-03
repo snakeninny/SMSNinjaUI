@@ -12,8 +12,8 @@
 #define SETTINGS @"/var/mobile/Library/SMSNinja/smsninja.plist"
 #define DATABASE @"/var/mobile/Library/SMSNinja/smsninja.db"
 #else
-#define SETTINGS @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/9E87534C-FD0A-450A-8863-0BAF0D62C9F0/Documents/var/mobile/Library/SMSNinja/smsninja.plist"
-#define DATABASE @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/9E87534C-FD0A-450A-8863-0BAF0D62C9F0/Documents/var/mobile/Library/SMSNinja/smsninja.db"
+#define SETTINGS @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/Documents/var/mobile/Library/SMSNinja/smsninja.plist"
+#define DATABASE @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/Documents/var/mobile/Library/SMSNinja/smsninja.db"
 #endif
 
 @implementation SNBlacklistViewController
@@ -147,12 +147,12 @@
         [navigationController pushViewController:whitelistViewController animated:NO];
         [whitelistViewController release];
 	}
-    sender.selectedSegmentIndex = -1;
 }
 
 - (void)viewDidLoad
 {
 	UISegmentedControl *segmentedControl = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:NSLocalizedString(@"White", @"White"), NSLocalizedString(@"Black", @"Black"), nil]];
+    segmentedControl.selectedSegmentIndex = 1;
 	segmentedControl.segmentedControlStyle = UISegmentedControlStyleBar;
 	segmentedControl.frame = CGRectMake(0.0f, 0.0f, 100.0f, 30.0f);
 	[segmentedControl addTarget:self action:@selector(segmentAction:) forControlEvents:UIControlEventValueChanged];
@@ -216,19 +216,19 @@
     }
     else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
     
-    for (NSIndexPath *chosenRowIndexPath in deleteSet)
-    {
-        [keywordArray removeObjectAtIndex:chosenRowIndexPath.row];
-        [typeArray removeObjectAtIndex:chosenRowIndexPath.row];
-        [nameArray removeObjectAtIndex:chosenRowIndexPath.row];
-        [phoneArray removeObjectAtIndex:chosenRowIndexPath.row];
-        [smsArray removeObjectAtIndex:chosenRowIndexPath.row];
-        [replyArray removeObjectAtIndex:chosenRowIndexPath.row];
-        [messageArray removeObjectAtIndex:chosenRowIndexPath.row];
-        [forwardArray removeObjectAtIndex:chosenRowIndexPath.row];
-        [numberArray removeObjectAtIndex:chosenRowIndexPath.row];
-        [soundArray removeObjectAtIndex:chosenRowIndexPath.row];
-    }
+    NSMutableIndexSet *discardedItems = [NSMutableIndexSet indexSet];
+    for (NSIndexPath *chosenRowIndexPath in deleteSet) [discardedItems addIndex:chosenRowIndexPath.row];
+    
+    [keywordArray removeObjectsAtIndexes:discardedItems];
+    [typeArray removeObjectsAtIndexes:discardedItems];
+    [nameArray removeObjectsAtIndexes:discardedItems];
+    [phoneArray removeObjectsAtIndexes:discardedItems];
+    [smsArray removeObjectsAtIndexes:discardedItems];
+    [replyArray removeObjectsAtIndexes:discardedItems];
+    [messageArray removeObjectsAtIndexes:discardedItems];
+    [forwardArray removeObjectsAtIndexes:discardedItems];
+    [numberArray removeObjectsAtIndexes:discardedItems];
+    [soundArray removeObjectsAtIndexes:discardedItems];
     
 	[tableView beginUpdates];
 	[tableView deleteRowsAtIndexPaths:[deleteSet allObjects] withRowAnimation:UITableViewRowAnimationFade];
@@ -241,6 +241,7 @@
 	numberViewController.flag = @"black";
 	numberViewController.nameString = @"";
 	numberViewController.keywordString = @"";
+    numberViewController.originalKeyword = numberViewController.keywordString;
 	numberViewController.phoneAction= @"1";
 	numberViewController.messageAction = @"1";
 	numberViewController.replyString = @"0";
@@ -258,6 +259,7 @@
 	contentViewController.flag = @"black";
 	contentViewController.nameString = @"";
 	contentViewController.keywordString = @"";
+    contentViewController.originalKeyword = contentViewController.keywordString;
 	contentViewController.replyString = @"0";
 	contentViewController.messageString = @"";
 	contentViewController.forwardString = @"0";
@@ -272,6 +274,7 @@
 	SNTimeViewController *timeViewController = [[SNTimeViewController alloc] init];
 	timeViewController.nameString = @"";
 	timeViewController.keywordString = @"06:06~06:06";
+    timeViewController.originalKeyword = timeViewController.keywordString;
 	timeViewController.phoneAction = @"1";
 	timeViewController.messageAction = @"1";
 	timeViewController.replyString = @"0";
@@ -343,19 +346,19 @@
                                else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
                            });
             
-            [keywordArray insertObject:self.chosenKeyword atIndex:0];
-            [typeArray insertObject:@"0" atIndex:0];
-            [nameArray insertObject:self.chosenName atIndex:0];
-            [phoneArray insertObject:@"1" atIndex:0];
-            [smsArray insertObject:@"1" atIndex:0];
-            [replyArray insertObject:@"0" atIndex:0];
-            [messageArray insertObject:@"" atIndex:0];
-            [forwardArray insertObject:@"0" atIndex:0];
-            [numberArray insertObject:@"" atIndex:0];
-            [soundArray insertObject:[NSString stringWithFormat:@"%d", buttonIndex] atIndex:0];
+            [keywordArray addObject:self.chosenKeyword];
+            [typeArray addObject:@"0"];
+            [nameArray addObject:self.chosenName];
+            [phoneArray addObject:@"1"];
+            [smsArray addObject:@"1"];
+            [replyArray addObject:@"0"];
+            [messageArray addObject:@""];
+            [forwardArray addObject:@"0"];
+            [numberArray addObject:@""];
+            [soundArray addObject:[NSString stringWithFormat:@"%d", buttonIndex]];
             
             [self.tableView beginUpdates];
-            [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:YES];
+            [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:([keywordArray count] - 1) inSection:0]] withRowAnimation:YES];
             [self.tableView endUpdates];
             
             [self dismissModalViewControllerAnimated:YES];
@@ -386,7 +389,8 @@
 		numberViewController.flag = @"black";
 		numberViewController.nameString = [nameArray objectAtIndex:indexPath.row];
 		numberViewController.keywordString = [keywordArray objectAtIndex:indexPath.row];
-		numberViewController.phoneAction = [phoneArray objectAtIndex:indexPath.row];
+	    numberViewController.originalKeyword = numberViewController.keywordString;
+        numberViewController.phoneAction = [phoneArray objectAtIndex:indexPath.row];
 		numberViewController.messageAction = [smsArray objectAtIndex:indexPath.row];
 		numberViewController.replyString = [replyArray objectAtIndex:indexPath.row];
 		numberViewController.messageString = [messageArray objectAtIndex:indexPath.row];
@@ -402,6 +406,7 @@
 		contentViewController.flag = @"black";
 		contentViewController.nameString = [nameArray objectAtIndex:indexPath.row];
 		contentViewController.keywordString = [keywordArray objectAtIndex:indexPath.row];
+        contentViewController.originalKeyword = contentViewController.keywordString;
 		contentViewController.replyString = [replyArray objectAtIndex:indexPath.row];
 		contentViewController.messageString = [messageArray objectAtIndex:indexPath.row];
 		contentViewController.forwardString = [forwardArray objectAtIndex:indexPath.row];
@@ -415,6 +420,7 @@
 		SNTimeViewController *timeViewController = [[SNTimeViewController alloc] init];
 		timeViewController.nameString = [nameArray objectAtIndex:indexPath.row];
 		timeViewController.keywordString = [keywordArray objectAtIndex:indexPath.row];
+        timeViewController.originalKeyword = timeViewController.keywordString;
 		timeViewController.phoneAction = [phoneArray objectAtIndex:indexPath.row];
 		timeViewController.messageAction = [smsArray objectAtIndex:indexPath.row];
 		timeViewController.replyString = [replyArray objectAtIndex:indexPath.row];
@@ -438,6 +444,7 @@
 	{
 		CFMutableStringRef firstName = (CFMutableStringRef)ABRecordCopyValue(person, kABPersonFirstNameProperty);
 		CFMutableStringRef lastName =  (CFMutableStringRef)ABRecordCopyValue(person, kABPersonLastNameProperty);
+        self.chosenName = nil;
 		self.chosenName = [firstName ? (NSString *)firstName : @"" stringByAppendingString:lastName ? (NSString *)lastName : @""];
 		if (firstName) CFRelease(firstName);
 		if (lastName) CFRelease(lastName);
@@ -450,7 +457,16 @@
 			CFRelease(keywords);
 			return NO;
 		}
-		self.chosenKeyword = (NSString *)keyword;
+        
+        NSString *tempString = (NSString *)keyword;
+        tempString = [tempString stringByReplacingOccurrencesOfString:@" " withString:@""];
+        tempString = [tempString stringByReplacingOccurrencesOfString:@"-" withString:@""];
+        tempString = [tempString stringByReplacingOccurrencesOfString:@"(" withString:@""];
+        tempString = [tempString stringByReplacingOccurrencesOfString:@")" withString:@""];
+        
+        self.chosenKeyword = nil;
+        self.chosenKeyword = tempString;
+        
 		CFRelease(keyword);
 		CFRelease(keywords);
         

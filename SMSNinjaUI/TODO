@@ -1,5 +1,8 @@
 0C9D35FB-B626-42B7-AAE9--45F6F537890B
 9E87534C-FD0A-450A-8863--0BAF0D62C9F0
 
-各种小细节修正
-调整UILabel的font
+SNMainViewController
+SNSettingsViewController
+SNReadMeViewController
+SNBlacklistViewController
+SNWhitelistViewController

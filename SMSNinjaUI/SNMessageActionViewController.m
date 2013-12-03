@@ -163,4 +163,9 @@
     if (gestureRecognizer == tapRecognizer && [touch.view isKindOfClass:NSClassFromString(@"UITableViewCellContentView")]) return NO;
     return YES;
 }
+
+- (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
+{
+    return NSLocalizedString(@"Uncheck to disable", @"Uncheck to disable");
+}
 @end

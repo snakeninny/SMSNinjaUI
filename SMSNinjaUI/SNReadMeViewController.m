@@ -45,7 +45,13 @@
     
 	UITextView *textView = [[UITextView alloc] init];
 	textView.editable = NO;
-    textView.text = readMe;
+	if ([[[UIDevice currentDevice] systemVersion] hasPrefix:@"7"])
+    {
+        NSAttributedString *attributedReadMe = [[NSAttributedString alloc] initWithData:[readMe dataUsingEncoding:NSUTF8StringEncoding] options:[NSDictionary dictionaryWithObjectsAndKeys:NSDocumentTypeDocumentAttribute, NSHTMLTextDocumentType, nil] documentAttributes:nil error:nil];
+        textView.attributedText = attributedReadMe;
+        [attributedReadMe release];
+    }
+    else [textView setContentToHTMLString:readMe];
 	textView.font = [UIFont systemFontOfSize:16.0f];
 	textView.textAlignment = NSTextAlignmentLeft;
 	self.view = textView;

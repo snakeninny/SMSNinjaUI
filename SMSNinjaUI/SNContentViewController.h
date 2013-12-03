@@ -21,5 +21,8 @@
 @property (nonatomic, retain) NSString *messageString;
 @property (nonatomic, retain) NSString *soundString;
 @property (nonatomic, retain) NSString *flag;
+@property (nonatomic, retain) NSString *originalKeyword;
 - (void)dismissKeyboardWithTap:(UITapGestureRecognizer *)tap;
+- (void)saveTextFieldValues;
+- (void)saveSwitchValues;
 @end

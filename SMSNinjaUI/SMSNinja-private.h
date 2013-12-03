@@ -2,12 +2,12 @@
 
 #import <UIKit/UIKit.h>
 
-@interface UISwitch (private)
+@interface UISwitch (private_5_6)
 - (void)setAlternateColors:(BOOL)colors;
 @end
 
-@interface UITextView (private)
-- (void)setContentToHTMLString:(id)htmlstring;
+@interface UITextView (private_5_6)
+- (void)setContentToHTMLString:(NSString *)htmlstring;
 @end
 
 @interface CPDistributedMessagingCenter : NSObject
