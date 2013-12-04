@@ -37,8 +37,7 @@
     {
         pictureScrollView = [[UIScrollView alloc] init];
         pictureScrollView.delegate = self;
-        pictureScrollView.frame = CGRectMake([UIScreen mainScreen].applicationFrame.origin.x, [UIScreen mainScreen].applicationFrame.origin.y, [UIScreen mainScreen].applicationFrame.size.width, [UIScreen mainScreen].applicationFrame.size.height);
-        pictureScrollView.contentSize = CGSizeMake([UIScreen mainScreen].applicationFrame.size.width * picturesCount, pictureScrollView.bounds.size.height);
+        pictureScrollView.frame = CGRectMake(0.0f, 0.0f, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
         pictureScrollView.showsVerticalScrollIndicator = NO;
         pictureScrollView.showsHorizontalScrollIndicator = NO;
         pictureScrollView.pagingEnabled = YES;
@@ -47,12 +46,16 @@
         self.wantsFullScreenLayout = YES;
         if ([self respondsToSelector:@selector(setAutomaticallyAdjustsScrollViewInsets:)])
             self.automaticallyAdjustsScrollViewInsets = NO;
+        
+        [self.navigationItem setRightBarButtonItem:[[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Save", @"Save") style:UIBarButtonItemStyleBordered target:self action:@selector(saveToAlbum)] autorelease]];
     }
     return self;
 }
 
 - (void)viewDidLoad
 {
+    pictureScrollView.contentSize = CGSizeMake([UIScreen mainScreen].bounds.size.width * picturesCount, pictureScrollView.bounds.size.height);
+
     if ([[[UIDevice currentDevice] systemVersion] intValue] < 7)
     {
         [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackTranslucent animated:NO];
@@ -70,7 +73,7 @@
         else if ([self.flag isEqualToString:@"private"]) fileName = [NSString stringWithFormat:@"%@%@-%d.%@", PRIVATEPICTURES, self.idString, i, @"png"];
         
         UIImage *image = [[UIImage alloc] initWithContentsOfFile:fileName];
-        UIImageView *imageView= [[UIImageView alloc] initWithFrame:CGRectMake([UIScreen mainScreen].applicationFrame.size.width * i, 0.0f, [UIScreen mainScreen].applicationFrame.size.width, [UIScreen mainScreen].applicationFrame.size.height)];
+        UIImageView *imageView= [[UIImageView alloc] initWithFrame:CGRectMake([UIScreen mainScreen].bounds.size.width * i, 0.0f, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)];
         imageView.contentMode = UIViewContentModeScaleAspectFit;
         imageView.image = image;
         imageView.tag = i + 1;
@@ -91,10 +94,9 @@
 - (void)saveToAlbum
 {
     int currentViewIndex = ceil(pictureScrollView.contentOffset.x / [UIScreen mainScreen].applicationFrame.size.width);
-    int currentViewTag = currentViewIndex + 1;
     NSString *fileName = nil;
-    if ([self.flag isEqualToString:@"black"]) fileName = [NSString stringWithFormat:@"%@%@-%d.%@", PICTURES, self.idString, currentViewTag, @"png"];
-    else if ([self.flag isEqualToString:@"private"]) fileName = [NSString stringWithFormat:@"%@%@-%d.%@", PRIVATEPICTURES, self.idString, currentViewTag, @"png"];
+    if ([self.flag isEqualToString:@"black"]) fileName = [NSString stringWithFormat:@"%@%@-%d.%@", PICTURES, self.idString, currentViewIndex, @"png"];
+    else if ([self.flag isEqualToString:@"private"]) fileName = [NSString stringWithFormat:@"%@%@-%d.%@", PRIVATEPICTURES, self.idString, currentViewIndex, @"png"];
     UIImage *image = [[UIImage alloc] initWithContentsOfFile:fileName];
     UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil);
     [image release];
@@ -126,8 +128,7 @@
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)view
 {
     int currentViewIndex = ceil(view.contentOffset.x / [UIScreen mainScreen].applicationFrame.size.width);
-    int currentViewTag = currentViewIndex + 1;
-    self.title = [NSString stringWithFormat:NSLocalizedString(@"Picture %d/%d", @"Picture %d/%d"), currentViewTag];
+    self.title = [NSString stringWithFormat:NSLocalizedString(@"Picture %d/%d", @"Picture %d/%d"), currentViewIndex];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)view
@@ -142,7 +143,7 @@
         else if ([self.flag isEqualToString:@"private"]) fileName = [NSString stringWithFormat:@"%@%@-%d.%@", PRIVATEPICTURES, self.idString, currentViewTag + 1, @"png"];
         
         UIImage *image = [[UIImage alloc] initWithContentsOfFile:fileName];
-        UIImageView *imageView= [[UIImageView alloc] initWithFrame:CGRectMake([UIScreen mainScreen].applicationFrame.size.width * (currentViewIndex + 1), 0.0f, [UIScreen mainScreen].applicationFrame.size.width, [UIScreen mainScreen].applicationFrame.size.height)];
+        UIImageView *imageView= [[UIImageView alloc] initWithFrame:CGRectMake([UIScreen mainScreen].bounds.size.width * (currentViewIndex + 1), 0.0f, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)];
         imageView.contentMode = UIViewContentModeScaleAspectFit;
         imageView.image = image;
         imageView.tag = currentViewTag + 1;
@@ -157,7 +158,7 @@
         else if ([self.flag isEqualToString:@"private"]) fileName = [NSString stringWithFormat:@"%@%@-%d.%@", PRIVATEPICTURES, self.idString, currentViewTag - 1, @"png"];
         
         UIImage *image = [[UIImage alloc] initWithContentsOfFile:fileName];
-        UIImageView *imageView= [[UIImageView alloc] initWithFrame:CGRectMake([UIScreen mainScreen].applicationFrame.size.width * (currentViewIndex - 1), 0.0f, [UIScreen mainScreen].applicationFrame.size.width, [UIScreen mainScreen].applicationFrame.size.height)];
+        UIImageView *imageView= [[UIImageView alloc] initWithFrame:CGRectMake([UIScreen mainScreen].bounds.size.width * (currentViewIndex - 1), 0.0f, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)];
         imageView.contentMode = UIViewContentModeScaleAspectFit;
         imageView.image = image;
         imageView.tag = currentViewTag - 1;
