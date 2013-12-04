@@ -5,6 +5,7 @@
     UITextField *fakePasswordField;
 	UISwitch *purpleSwitch;
 	UISwitch *semicolonSwitch;
+    UISwitch *revealSwitch;
     UITapGestureRecognizer *tapRecognizer;
 }
 - (void)saveSettings;

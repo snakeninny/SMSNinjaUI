@@ -9,7 +9,7 @@
 #ifndef SMSNinjaDebug
 #define DOCUMENT @"/var/mobile/Library/SMSNinja"
 #else
-#define DOCUMENT @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/9E87534C-FD0A-450A-8863-0BAF0D62C9F0/Documents/var/mobile/Library/SMSNinja"
+#define DOCUMENT @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/Documents/var/mobile/Library/SMSNinja"
 #endif
 
 #define SETTINGS [DOCUMENT stringByAppendingString:@"/smsninja.plist"]
@@ -79,13 +79,13 @@ static void (^CreateDatabase)(void) = ^(void)
 #ifndef SMSNinjaDebug
 		[fileManager copyItemAtPath:@"/Applications/SMSNinja.app/smsninja.plist" toPath:SETTINGS error:nil];
 #else
-    [fileManager copyItemAtPath:@"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/9E87534C-FD0A-450A-8863-0BAF0D62C9F0/SMSNinjaUI.app/smsninja.plist" toPath:SETTINGS error:nil];
+    [fileManager copyItemAtPath:@"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/SMSNinjaUI.app/smsninja.plist" toPath:SETTINGS error:nil];
 #endif
 	if (![fileManager fileExistsAtPath:DATABASE])
 #ifndef SMSNinjaDebug
 		[fileManager copyItemAtPath:@"/Applications/SMSNinja.app/smsninja.db" toPath:DATABASE error:nil];
 #else
-    [fileManager copyItemAtPath:@"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/9E87534C-FD0A-450A-8863-0BAF0D62C9F0/SMSNinjaUI.app/smsninja.db" toPath:DATABASE error:nil];
+    [fileManager copyItemAtPath:@"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/SMSNinjaUI.app/smsninja.db" toPath:DATABASE error:nil];
 #endif
 	NSString *filePath = [DOCUMENT stringByAppendingString:@"/blocked.caf"];
 #ifndef SMSNinjaDebug
@@ -101,7 +101,7 @@ static void (^CreateDatabase)(void) = ^(void)
 
 - (void)updateDatabase
 {
-	if ([[NSFileManager defaultManager] fileExistsAtPath:SETTINGS] && [[NSDictionary dictionaryWithContentsOfFile:SETTINGS] count] != 15)
+	if ([[NSFileManager defaultManager] fileExistsAtPath:SETTINGS] && [[NSDictionary dictionaryWithContentsOfFile:SETTINGS] count] != 16)
 	{
 		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Notice", @"Notice") message:NSLocalizedString(@"It seems that you have installed SMSNinja before. To activate version 1.5, SMSNinja have to convert settings files to the latest suitable format. Settings files are stored in \"/var/mobile/Library/SMSNinja\", it's highly recommended that you make a backup of the files first. Are you sure to convert now?", @"It seems that you have installed SMSNinja before. To activate version 1.5, SMSNinja have to convert settings files to the latest suitable format. Settings files are stored in \"/var/mobile/Library/SMSNinja\", it's highly recommended that you make a backup of the files first. Are you sure to convert now?") delegate:self cancelButtonTitle:NSLocalizedString(@"Yes", @"Yes") otherButtonTitles:NSLocalizedString(@"One second!", @"One second!"), nil];
 		[alertView show];
@@ -119,7 +119,7 @@ static void (^CreateDatabase)(void) = ^(void)
 #ifndef SMSNinjaDebug
 		[fileManager copyItemAtPath:@"/Applications/SMSNinja.app/smsninja.plist" toPath:SETTINGS error:nil];
 #else
-        [fileManager copyItemAtPath:@"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/9E87534C-FD0A-450A-8863-0BAF0D62C9F0/SMSNinjaUI.app/smsninja.plist" toPath:SETTINGS error:nil];
+        [fileManager copyItemAtPath:@"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/SMSNinjaUI.app/smsninja.plist" toPath:SETTINGS error:nil];
 #endif
         [self.tableView reloadData];
     }

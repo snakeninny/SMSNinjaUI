@@ -8,8 +8,8 @@
 #define SETTINGS @"/var/mobile/Library/SMSNinja/smsninja.plist"
 #define DATABASE @"/var/mobile/Library/SMSNinja/smsninja.db"
 #else
-#define SETTINGS @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/9E87534C-FD0A-450A-8863-0BAF0D62C9F0/Documents/var/mobile/Library/SMSNinja/smsninja.plist"
-#define DATABASE @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/9E87534C-FD0A-450A-8863-0BAF0D62C9F0/Documents/var/mobile/Library/SMSNinja/smsninja.db"
+#define SETTINGS @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/Documents/var/mobile/Library/SMSNinja/smsninja.plist"
+#define DATABASE @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/Documents/var/mobile/Library/SMSNinja/smsninja.db"
 #endif
 
 @implementation SNPrivateViewController
@@ -24,6 +24,9 @@
     
 	[semicolonSwitch release];
 	semicolonSwitch = nil;
+    
+    [revealSwitch release];
+    revealSwitch = nil;
     
     [tapRecognizer release];
     tapRecognizer = nil;
@@ -40,6 +43,7 @@
         fakePasswordField = [[UITextField alloc] initWithFrame:CGRectZero];
         purpleSwitch = [[UISwitch alloc] initWithFrame:CGRectZero];
         semicolonSwitch = [[UISwitch alloc] initWithFrame:CGRectZero];
+        revealSwitch = [[UISwitch alloc] initWithFrame:CGRectZero];
         
         tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissKeyboardWithTap:)];
         tapRecognizer.delegate = self;
@@ -54,9 +58,16 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-	if (section == 1)
-		return 1;
-	return 2;
+    switch (section)
+    {
+        case 0:
+            return 2;
+        case 1:
+            return 1;
+        case 2:
+            return 3;
+    }
+    return 0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -116,6 +127,14 @@
                 [semicolonSwitch addTarget:self action:@selector(saveSettings) forControlEvents:UIControlEventValueChanged];
                 
                 break;
+            case 2:
+                cell.textLabel.text = NSLocalizedString(@"Reveal Privatelist", @"Reveal Privatelist");
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
+                cell.accessoryView = revealSwitch;
+                revealSwitch.on = [[dictionary objectForKey:@"shouldRevealPrivatelistOutsideSMSNinja"] boolValue];
+                [revealSwitch addTarget:self action:@selector(saveSettings) forControlEvents:UIControlEventValueChanged];
+                
+                break;
         }
             break;
     }
@@ -154,11 +173,13 @@
 	NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithContentsOfFile:SETTINGS];
 	[dictionary setObject:[NSNumber numberWithBool:purpleSwitch.on] forKey:@"shouldShowPurpleSquare"];
 	[dictionary setObject:[NSNumber numberWithBool:semicolonSwitch.on] forKey:@"shouldShowSemicolon"];
+	[dictionary setObject:[NSNumber numberWithBool:revealSwitch.on] forKey:@"shouldRevealPrivatelistOutsideSMSNinja"];
 	[dictionary writeToFile:SETTINGS atomically:YES];
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
+	[textField resignFirstResponder];
 	NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithContentsOfFile:SETTINGS];
 	[dictionary setObject:textField.text ? textField.text : @"" forKey:@"fakePassword"];
 	[dictionary writeToFile:SETTINGS atomically:YES];
@@ -173,7 +194,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
     [self.view addGestureRecognizer:tapRecognizer];
 }
 
@@ -186,5 +206,12 @@
 {
     if (gestureRecognizer == tapRecognizer && [touch.view isKindOfClass:NSClassFromString(@"UITableViewCellContentView")]) return NO;
     return YES;
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
+{
+    if (section == 2)
+        return NSLocalizedString(@"If \"Reveal Privatelist\" is on, you can add numbers to Privatelist inside stock MobilePhone and MobileSMS", @"If \"Reveal Privatelist\" is on, you can add numbers to Privatelist inside stock MobilePhone and MobileSMS");
+    return nil;
 }
 @end
