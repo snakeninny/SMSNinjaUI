@@ -6,10 +6,10 @@
 #define PICTURES @"/var/mobile/Library/SMSNinja/Pictures/"
 #define PRIVATEPICTURES @"/var/mobile/Library/SMSNinja/PrivatePictures/"
 #else
-#define SETTINGS @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/Documents/var/mobile/Library/SMSNinja/smsninja.plist"
-#define DATABASE @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/Documents/var/mobile/Library/SMSNinja/smsninja.db"
-#define PICTURES @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/Documents/var/mobile/Library/SMSNinja/Pictures/"
-#define PRIVATEPICTURES @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/Documents/var/mobile/Library/SMSNinja/PrivatePictures/"
+#define SETTINGS @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/9E87534C-FD0A-450A-8863-0BAF0D62C9F0/Documents/var/mobile/Library/SMSNinja/smsninja.plist"
+#define DATABASE @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/9E87534C-FD0A-450A-8863-0BAF0D62C9F0/Documents/var/mobile/Library/SMSNinja/smsninja.db"
+#define PICTURES @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/9E87534C-FD0A-450A-8863-0BAF0D62C9F0/Documents/var/mobile/Library/SMSNinja/Pictures/"
+#define PRIVATEPICTURES @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/9E87534C-FD0A-450A-8863-0BAF0D62C9F0/Documents/var/mobile/Library/SMSNinja/PrivatePictures/"
 #endif
 
 @implementation SNPictureViewController
@@ -38,6 +38,7 @@
         pictureScrollView = [[UIScrollView alloc] init];
         pictureScrollView.delegate = self;
         pictureScrollView.frame = CGRectMake(0.0f, 0.0f, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
+        pictureScrollView.contentSize = CGSizeZero;
         pictureScrollView.showsVerticalScrollIndicator = NO;
         pictureScrollView.showsHorizontalScrollIndicator = NO;
         pictureScrollView.pagingEnabled = YES;
@@ -82,7 +83,7 @@
         [imageView release];
     }
     
-    self.title = [NSString stringWithFormat:NSLocalizedString(@"Picture %d/%d", @"Picture %d/%d"), 1, self->picturesCount];
+    self.title = [NSString stringWithFormat:NSLocalizedString(@"Picture %d/%d", @"Picture %d/%d"), 1, picturesCount];
     [self.view addSubview:pictureScrollView];
 }
 
@@ -93,7 +94,7 @@
 
 - (void)saveToAlbum
 {
-    int currentViewIndex = ceil(pictureScrollView.contentOffset.x / [UIScreen mainScreen].applicationFrame.size.width);
+    int currentViewIndex = ceil(pictureScrollView.contentOffset.x / [UIScreen mainScreen].bounds.size.width);
     NSString *fileName = nil;
     if ([self.flag isEqualToString:@"black"]) fileName = [NSString stringWithFormat:@"%@%@-%d.%@", PICTURES, self.idString, currentViewIndex, @"png"];
     else if ([self.flag isEqualToString:@"private"]) fileName = [NSString stringWithFormat:@"%@%@-%d.%@", PRIVATEPICTURES, self.idString, currentViewIndex, @"png"];
@@ -107,7 +108,8 @@
 
 - (void)tap:(UITapGestureRecognizer *)gesture
 {
-    BOOL shouldHide = !self.navigationController.navigationBarHidden;
+    __block BOOL shouldHide = !self.navigationController.navigationBarHidden;
+    SNPictureViewController *weakSelf = self;
     
     if (!shouldHide)
     {
@@ -120,27 +122,27 @@
                        options:UIViewAnimationOptionTransitionCrossDissolve
                     animations:^{
                         [[UIApplication sharedApplication] setStatusBarHidden:shouldHide withAnimation:UIStatusBarAnimationFade];
-                        [self.navigationController setNavigationBarHidden:shouldHide animated:NO];
+                        [weakSelf.navigationController setNavigationBarHidden:shouldHide animated:NO];
                     }
                     completion:nil];
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)view
 {
-    int currentViewIndex = ceil(view.contentOffset.x / [UIScreen mainScreen].applicationFrame.size.width);
-    self.title = [NSString stringWithFormat:NSLocalizedString(@"Picture %d/%d", @"Picture %d/%d"), currentViewIndex];
+    int currentViewIndex = ceil(view.contentOffset.x / [UIScreen mainScreen].bounds.size.width);
+    self.title = [NSString stringWithFormat:NSLocalizedString(@"Picture %d/%d", @"Picture %d/%d"), currentViewIndex + 1, picturesCount];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)view
 {
-    int currentViewIndex = ceil(view.contentOffset.x / [UIScreen mainScreen].applicationFrame.size.width);
+    int currentViewIndex = ceil(view.contentOffset.x / [UIScreen mainScreen].bounds.size.width);
     int currentViewTag = currentViewIndex + 1;
     
     if ([view viewWithTag:currentViewTag + 1] == nil && currentViewTag != picturesCount) // next
     {
         NSString *fileName = nil;
-        if ([self.flag isEqualToString:@"black"]) fileName = [NSString stringWithFormat:@"%@%@-%d.%@", PICTURES, self.idString, currentViewTag + 1, @"png"];
-        else if ([self.flag isEqualToString:@"private"]) fileName = [NSString stringWithFormat:@"%@%@-%d.%@", PRIVATEPICTURES, self.idString, currentViewTag + 1, @"png"];
+        if ([self.flag isEqualToString:@"black"]) fileName = [NSString stringWithFormat:@"%@%@-%d.%@", PICTURES, self.idString, currentViewIndex + 1, @"png"];
+        else if ([self.flag isEqualToString:@"private"]) fileName = [NSString stringWithFormat:@"%@%@-%d.%@", PRIVATEPICTURES, self.idString, currentViewIndex + 1, @"png"];
         
         UIImage *image = [[UIImage alloc] initWithContentsOfFile:fileName];
         UIImageView *imageView= [[UIImageView alloc] initWithFrame:CGRectMake([UIScreen mainScreen].bounds.size.width * (currentViewIndex + 1), 0.0f, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)];
@@ -154,8 +156,8 @@
     if ([view viewWithTag:currentViewTag - 1] == nil && currentViewTag != 0) // previous
     {
         NSString *fileName = nil;
-        if ([self.flag isEqualToString:@"black"]) fileName = [NSString stringWithFormat:@"%@%@-%d.%@", PICTURES, self.idString, currentViewTag - 1, @"png"];
-        else if ([self.flag isEqualToString:@"private"]) fileName = [NSString stringWithFormat:@"%@%@-%d.%@", PRIVATEPICTURES, self.idString, currentViewTag - 1, @"png"];
+        if ([self.flag isEqualToString:@"black"]) fileName = [NSString stringWithFormat:@"%@%@-%d.%@", PICTURES, self.idString, currentViewIndex - 1, @"png"];
+        else if ([self.flag isEqualToString:@"private"]) fileName = [NSString stringWithFormat:@"%@%@-%d.%@", PRIVATEPICTURES, self.idString, currentViewIndex - 1, @"png"];
         
         UIImage *image = [[UIImage alloc] initWithContentsOfFile:fileName];
         UIImageView *imageView= [[UIImageView alloc] initWithFrame:CGRectMake([UIScreen mainScreen].bounds.size.width * (currentViewIndex - 1), 0.0f, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)];
