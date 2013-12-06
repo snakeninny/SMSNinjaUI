@@ -4,14 +4,15 @@
 #import "SNTimeViewController.h"
 #import "SNSystemMessageHistoryViewController.h"
 #import "SNSystemCallHistoryViewController.h"
+#import <notify.h>
 #import <sqlite3.h>
 
 #ifndef SMSNinjaDebug
 #define SETTINGS @"/var/mobile/Library/SMSNinja/smsninja.plist"
 #define DATABASE @"/var/mobile/Library/SMSNinja/smsninja.db"
 #else
-#define SETTINGS @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/9E87534C-FD0A-450A-8863-0BAF0D62C9F0/Documents/var/mobile/Library/SMSNinja/smsninja.plist"
-#define DATABASE @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/9E87534C-FD0A-450A-8863-0BAF0D62C9F0/Documents/var/mobile/Library/SMSNinja/smsninja.db"
+#define SETTINGS @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/Documents/var/mobile/Library/SMSNinja/smsninja.plist"
+#define DATABASE @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/Documents/var/mobile/Library/SMSNinja/smsninja.db"
 #endif
 
 @implementation SNPrivatelistViewController
@@ -184,6 +185,8 @@
             if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
         }
         sqlite3_close(database);
+        
+        notify_post("com.naken.smsninja.privatelistchanged");
     }
     else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
     
@@ -283,19 +286,20 @@
         {
             __block SNPrivatelistViewController *weakSelf = self;
             __block NSInteger weakButtonIndex = buttonIndex;
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
-                           {
-                               sqlite3 *database;
-                               int openResult = sqlite3_open([DATABASE UTF8String], &database);
-                               if (openResult == SQLITE_OK)
-                               {
-                                   NSString *sql = [NSString stringWithFormat:@"insert or replace into privatelist (keyword, type, name, phone, sms, reply, message, forward, number, sound) values ('%@', '0', '%@', '1', '1', '0', '', '0', '', '%d')", weakSelf.chosenKeyword, [weakSelf.chosenName stringByReplacingOccurrencesOfString:@"'" withString:@"''"], weakButtonIndex];
-                                   int execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
-                                   if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
-                                   sqlite3_close(database);
-                               }
-                               else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
-                           });
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                sqlite3 *database;
+                int openResult = sqlite3_open([DATABASE UTF8String], &database);
+                if (openResult == SQLITE_OK)
+                {
+                    NSString *sql = [NSString stringWithFormat:@"insert or replace into privatelist (keyword, type, name, phone, sms, reply, message, forward, number, sound) values ('%@', '0', '%@', '1', '1', '0', '', '0', '', '%d')", weakSelf.chosenKeyword, [weakSelf.chosenName stringByReplacingOccurrencesOfString:@"'" withString:@"''"], weakButtonIndex];
+                    int execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
+                    if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
+                    sqlite3_close(database);
+                    
+                    notify_post("com.naken.smsninja.privatelistchanged");
+                }
+                else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
+            });
             
             [keywordArray addObject:self.chosenKeyword];
             [typeArray addObject:@"0"];
@@ -393,7 +397,7 @@
 			CFRelease(keywords);
 			return NO;
 		}
-
+        
         NSString *tempString = (NSString *)keyword;
         tempString = [tempString stringByReplacingOccurrencesOfString:@" " withString:@""];
         tempString = [tempString stringByReplacingOccurrencesOfString:@"-" withString:@""];

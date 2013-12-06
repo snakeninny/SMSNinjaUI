@@ -10,9 +10,9 @@
 #define DATABASE @"/var/mobile/Library/SMSNinja/smsninja.db"
 #define PICTURES @"/var/mobile/Library/SMSNinja/Pictures/"
 #else
-#define SETTINGS @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/9E87534C-FD0A-450A-8863-0BAF0D62C9F0/Documents/var/mobile/Library/SMSNinja/smsninja.plist"
-#define DATABASE @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/9E87534C-FD0A-450A-8863-0BAF0D62C9F0/Documents/var/mobile/Library/SMSNinja/smsninja.db"
-#define PICTURES @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/9E87534C-FD0A-450A-8863-0BAF0D62C9F0/Documents/var/mobile/Library/SMSNinja/Pictures/"
+#define SETTINGS @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/Documents/var/mobile/Library/SMSNinja/smsninja.plist"
+#define DATABASE @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/Documents/var/mobile/Library/SMSNinja/smsninja.db"
+#define PICTURES @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/Documents/var/mobile/Library/SMSNinja/Pictures/"
 #endif
 
 @implementation SNBlockedMessageHistoryViewController
@@ -88,24 +88,23 @@
 - (void)bulkUnread
 {
     __block SNBlockedMessageHistoryViewController *weakSelf = self;
-	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
-                   {
-                       sqlite3 *database;
-                       int openResult = sqlite3_open([DATABASE UTF8String], &database);
-                       if (openResult == SQLITE_OK)
-                       {
-                           for (NSIndexPath *chosenRowIndexPath in weakSelf->bulkSet)
-                           {
-                               NSString *sql = [NSString stringWithFormat:@"update blockedsms set read = '0' where id = '%@'", [weakSelf->idArray objectAtIndex:chosenRowIndexPath.row]];
-                               int execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
-                               if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
-                               
-                               [weakSelf->readArray replaceObjectAtIndex:chosenRowIndexPath.row withObject:@"0"];
-                           }
-                           sqlite3_close(database);
-                       }
-                       else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
-                   });
+	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        sqlite3 *database;
+        int openResult = sqlite3_open([DATABASE UTF8String], &database);
+        if (openResult == SQLITE_OK)
+        {
+            for (NSIndexPath *chosenRowIndexPath in weakSelf->bulkSet)
+            {
+                NSString *sql = [NSString stringWithFormat:@"update blockedsms set read = '0' where id = '%@'", [weakSelf->idArray objectAtIndex:chosenRowIndexPath.row]];
+                int execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
+                if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
+                
+                [weakSelf->readArray replaceObjectAtIndex:chosenRowIndexPath.row withObject:@"0"];
+            }
+            sqlite3_close(database);
+        }
+        else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
+    });
 	for (NSIndexPath *indexPath in bulkSet)
 		for (UIView *view in [self.tableView cellForRowAtIndexPath:indexPath].contentView.subviews)
 			if ([view isKindOfClass:[UILabel class]]) ((UILabel *)view).textColor = [UIColor blueColor];
@@ -114,24 +113,23 @@
 - (void)bulkRead
 {
     __block SNBlockedMessageHistoryViewController *weakSelf = self;
-	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
-                   {
-                       sqlite3 *database;
-                       int openResult = sqlite3_open([DATABASE UTF8String], &database);
-                       if (openResult == SQLITE_OK)
-                       {
-                           for (NSIndexPath *chosenRowIndexPath in weakSelf->bulkSet)
-                           {
-                               NSString *sql = [NSString stringWithFormat:@"update blockedsms set read = '1' where id = '%@'", [weakSelf->idArray objectAtIndex:chosenRowIndexPath.row]];
-                               int execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
-                               if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
-                               
-                               [weakSelf->readArray replaceObjectAtIndex:chosenRowIndexPath.row withObject:@"1"];
-                           }
-                           sqlite3_close(database);
-                       }
-                       else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
-                   });
+	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        sqlite3 *database;
+        int openResult = sqlite3_open([DATABASE UTF8String], &database);
+        if (openResult == SQLITE_OK)
+        {
+            for (NSIndexPath *chosenRowIndexPath in weakSelf->bulkSet)
+            {
+                NSString *sql = [NSString stringWithFormat:@"update blockedsms set read = '1' where id = '%@'", [weakSelf->idArray objectAtIndex:chosenRowIndexPath.row]];
+                int execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
+                if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
+                
+                [weakSelf->readArray replaceObjectAtIndex:chosenRowIndexPath.row withObject:@"1"];
+            }
+            sqlite3_close(database);
+        }
+        else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
+    });
 	for (NSIndexPath *indexPath in bulkSet)
 		for (UIView *view in [self.tableView cellForRowAtIndexPath:indexPath].contentView.subviews)
 			if ([view isKindOfClass:[UILabel class]]) ((UILabel *)view).textColor = [UIColor blackColor];
@@ -143,7 +141,7 @@
 	{
 		self.navigationItem.rightBarButtonItem = self.editButtonItem;
         self.tableView.allowsSelectionDuringEditing = YES;
-  
+        
 		UIBarButtonItem *deleteButton = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Delete", @"Delete") style: UIBarButtonItemStyleBordered target: self action:@selector(bulkDelete)] autorelease];
 		deleteButton.tintColor = [UIColor redColor];
 		UIBarButtonItem *unreadButton = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Mark as unread", @"Mark as unread") style:UIBarButtonItemStyleBordered target:self action:@selector(bulkUnread)] autorelease];
@@ -223,7 +221,7 @@
     if ([sender selectedSegmentIndex] == 1)
     {
         [self setEditing:NO animated:NO];
-
+        
         SNBlockedCallHistoryViewController *blockedCallHistoryViewController = [[SNBlockedCallHistoryViewController alloc] init];
         UINavigationController *navigationController = self.navigationController;
         [navigationController popViewControllerAnimated:NO];
@@ -345,24 +343,23 @@
 		case 1: // unread
             [bulkSet removeAllObjects];
             [bulkSet addObject:[NSIndexPath indexPathForRow:chosenRow inSection:0]];
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
-                           {
-                               sqlite3 *database;
-                               int openResult = sqlite3_open([DATABASE UTF8String], &database);
-                               if (openResult == SQLITE_OK)
-                               {
-                                   for (NSIndexPath *chosenRowIndexPath in weakSelf->bulkSet)
-                                   {
-                                       NSString *sql = [NSString stringWithFormat:@"update blockedsms set read = '0' where id = '%@'", [weakSelf->idArray objectAtIndex:chosenRowIndexPath.row]];
-                                       int execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
-                                       if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
-                                       
-                                       [weakSelf->readArray replaceObjectAtIndex:chosenRowIndexPath.row withObject:@"0"];
-                                   }
-                                   sqlite3_close(database);
-                               }
-                               else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
-                           });
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                sqlite3 *database;
+                int openResult = sqlite3_open([DATABASE UTF8String], &database);
+                if (openResult == SQLITE_OK)
+                {
+                    for (NSIndexPath *chosenRowIndexPath in weakSelf->bulkSet)
+                    {
+                        NSString *sql = [NSString stringWithFormat:@"update blockedsms set read = '0' where id = '%@'", [weakSelf->idArray objectAtIndex:chosenRowIndexPath.row]];
+                        int execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
+                        if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
+                        
+                        [weakSelf->readArray replaceObjectAtIndex:chosenRowIndexPath.row withObject:@"0"];
+                    }
+                    sqlite3_close(database);
+                }
+                else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
+            });
             for (NSIndexPath *indexPath in bulkSet)
                 for (UIView *view in [self.tableView cellForRowAtIndexPath:indexPath].contentView.subviews)
                     if ([view isKindOfClass:[UILabel class]]) ((UILabel *)view).textColor = [UIColor blueColor];
@@ -370,24 +367,23 @@
 		case 2: // read
             [bulkSet removeAllObjects];
             [bulkSet addObject:[NSIndexPath indexPathForRow:chosenRow inSection:0]];
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
-                           {
-                               sqlite3 *database;
-                               int openResult = sqlite3_open([DATABASE UTF8String], &database);
-                               if (openResult == SQLITE_OK)
-                               {
-                                   for (NSIndexPath *chosenRowIndexPath in weakSelf->bulkSet)
-                                   {
-                                       NSString *sql = [NSString stringWithFormat:@"update blockedsms set read = '1' where id = '%@'", [weakSelf->idArray objectAtIndex:chosenRowIndexPath.row]];
-                                       int execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
-                                       if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
-                                       
-                                       [weakSelf->readArray replaceObjectAtIndex:chosenRowIndexPath.row withObject:@"1"];
-                                   }
-                                   sqlite3_close(database);
-                               }
-                               else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
-                           });
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                sqlite3 *database;
+                int openResult = sqlite3_open([DATABASE UTF8String], &database);
+                if (openResult == SQLITE_OK)
+                {
+                    for (NSIndexPath *chosenRowIndexPath in weakSelf->bulkSet)
+                    {
+                        NSString *sql = [NSString stringWithFormat:@"update blockedsms set read = '1' where id = '%@'", [weakSelf->idArray objectAtIndex:chosenRowIndexPath.row]];
+                        int execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
+                        if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
+                        
+                        [weakSelf->readArray replaceObjectAtIndex:chosenRowIndexPath.row withObject:@"1"];
+                    }
+                    sqlite3_close(database);
+                }
+                else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
+            });
             for (NSIndexPath *indexPath in bulkSet)
                 for (UIView *view in [self.tableView cellForRowAtIndexPath:indexPath].contentView.subviews)
                     if ([view isKindOfClass:[UILabel class]]) ((UILabel *)view).textColor = [UIColor blackColor];
@@ -398,7 +394,7 @@
         case 4:
             [[UIPasteboard generalPasteboard] setValue:[contentArray objectAtIndex:chosenRow] forPasteboardType:@"public.utf8-plain-text"];
             break;
-        case 5: // 改直接发
+        case 5:
             [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"sms:%@", [numberArray objectAtIndex:chosenRow]]]];
             break;
         case 6:
