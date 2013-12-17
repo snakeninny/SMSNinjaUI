@@ -120,9 +120,6 @@
 		bulkSet = [[NSMutableSet alloc] initWithCapacity:600];
         
 		[self loadDatabaseSegment];
-		
-		CPDistributedMessagingCenter *messagingCenter = [objc_getClass("CPDistributedMessagingCenter") centerNamed:@"com.naken.smsninja.springboard"];
-		[messagingCenter sendMessageName:@"HidePurpleSquare" userInfo:nil];
 	}
 	return self;
 }
@@ -150,6 +147,9 @@
 	[segmentedControl addTarget:self action:@selector(segmentAction:) forControlEvents:UIControlEventValueChanged];
 	self.navigationItem.titleView = segmentedControl;
 	[segmentedControl release];
+	
+	CPDistributedMessagingCenter *messagingCenter = [objc_getClass("CPDistributedMessagingCenter") centerNamed:@"com.naken.smsninja.springboard"];
+	[messagingCenter sendMessageName:@"HidePurpleSquare" userInfo:nil];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
