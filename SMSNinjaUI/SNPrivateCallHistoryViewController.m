@@ -120,6 +120,9 @@
 		bulkSet = [[NSMutableSet alloc] initWithCapacity:600];
         
 		[self loadDatabaseSegment];
+		
+		CPDistributedMessagingCenter *messagingCenter = [objc_getClass("CPDistributedMessagingCenter") centerNamed:@"com.naken.smsninja.springboard"];
+		[messagingCenter sendMessageName:@"HidePurpleSquare" userInfo:nil];
 	}
 	return self;
 }
