@@ -13,6 +13,33 @@
 #define PICTURES [DOCUMENT stringByAppendingString:@"/Pictures/"]
 #define PRIVATEPICTURES [DOCUMENT stringByAppendingString:@"/PrivatePictures/"]
 
+static void HideIcon(BOOL hide)
+{
+	void* libHandle = dlopen("/usr/lib/hide.dylib", RTLD_LAZY);
+
+	if (libHandle != NULL)
+	{
+		BOOL (*IsIconHiddenDisplayId)(NSString* Plist) = (BOOL (*)(NSString *))dlsym(libHandle, "IsIconHiddenDisplayId");
+		BOOL (*HideIconViaDisplayId)(NSString* Plist) = (BOOL (*)(NSString *))dlsym(libHandle, "HideIconViaDisplayId");
+		BOOL (*UnHideIconViaDisplayId)(NSString* Plist) = (BOOL (*)(NSString *))dlsym(libHandle, "UnHideIconViaDisplayId");
+
+		if (IsIconHiddenDisplayId != NULL)
+		{
+			NSString *identifier = @"com.naken.smsninja";
+			if (!hide && IsIconHiddenDisplayId(identifier) && UnHideIconViaDisplayId != NULL)
+			{
+				UnHideIconViaDisplayId(identifier);
+			}
+			else if (hide && HideIconViaDisplayId != NULL)
+			{
+				HideIconViaDisplayId(identifier);
+			}
+		}
+	}
+
+	if (libHandle != NULL) dlclose(libHandle);	
+}
+
 @implementation SNSettingsViewController
 
 @synthesize fake;
@@ -301,6 +328,14 @@
 	[dictionary setObject:[NSNumber numberWithBool:clearSwitch.on] forKey:@"shouldClearSpam"];
 	[dictionary setObject:[NSNumber numberWithBool:addressbookSwitch.on] forKey:@"shouldIncludeContactsInWhitelist"];
 	[dictionary writeToFile:SETTINGS atomically:YES];
+	
+	if (iconBadgeSwitch.on || statusBarBadgeSwitch.on)
+	{
+		CPDistributedMessagingCenter *messagingCenter = [objc_getClass("CPDistributedMessagingCenter") centerNamed:@"com.naken.smsninja.springboard"];
+		[messagingCenter sendMessageName:@"UpdateBadge" userInfo:nil];
+	}
+	
+	HideIcon(hideIconSwitch.on);
 }
 
 - (void)resetSettings
