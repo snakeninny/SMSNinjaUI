@@ -175,6 +175,9 @@
 	[dictionary setObject:[NSNumber numberWithBool:semicolonSwitch.on] forKey:@"shouldShowSemicolon"];
 	[dictionary setObject:[NSNumber numberWithBool:revealSwitch.on] forKey:@"shouldRevealPrivatelistOutsideSMSNinja"];
 	[dictionary writeToFile:SETTINGS atomically:YES];
+	
+	CPDistributedMessagingCenter *messagingCenter = [objc_getClass("CPDistributedMessagingCenter") centerNamed:@"com.naken.smsninja.springboard"];
+        [messagingCenter sendMessageName:purpleSwitch.on ? @"ShowPurpleSquare" : @"HidePurpleSquare" userInfo:nil];
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
