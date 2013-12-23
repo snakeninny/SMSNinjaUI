@@ -1,6 +1,7 @@
 #import "SNSettingsViewController.h"
 #import "SNMainViewController.h"
 #import "SNTextTableViewCell.h"
+#import <objc/runtime.h>
 
 #ifndef SMSNinjaDebug
 #define DOCUMENT @"/var/mobile/Library/SMSNinja"

@@ -4,6 +4,7 @@
 #import "SNSettingsViewController.h"
 #import "SNReadMeViewController.h"
 #import "SNPrivateViewController.h"
+#import <objc/runtime.h>
 #import <sqlite3.h>
 
 #ifndef SMSNinjaDebug
@@ -228,6 +229,20 @@ static void (^CreateDatabase)(void) = ^(void)
 	NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithContentsOfFile:SETTINGS];
 	[dictionary setObject:[NSNumber numberWithBool:appSwitch.on] forKey:@"appIsOn"];
 	[dictionary writeToFile:SETTINGS atomically:YES];
+    
+    CPDistributedMessagingCenter *messagingCenter = [objc_getClass("CPDistributedMessagingCenter") centerNamed:@"com.naken.smsninja.springboard"];
+	[messagingCenter sendMessageName:@"UpdateBadge" userInfo:nil];
+    
+    if (!appSwitch.on)
+    {
+        [messagingCenter sendMessageName:@"HideSquare" userInfo:nil];
+        [messagingCenter sendMessageName:@"ShowIcon" userInfo:nil];
+    }
+    else
+    {
+        if ([dictionary objectForKey:@"shouldHideIcon"]) [messagingCenter sendMessageName:@"HideIcon" userInfo:nil];
+        if (![dictionary objectForKey:@"shouldHideIcon"]) [messagingCenter sendMessageName:@"ShowIcon" userInfo:nil];
+    }
 }
 
 - (void)gotoReadMeView
