@@ -305,7 +305,7 @@
 	
 	CPDistributedMessagingCenter *messagingCenter = [objc_getClass("CPDistributedMessagingCenter") centerNamed:@"com.naken.smsninja.springboard"];
 	[messagingCenter sendMessageName:hideIconSwitch.on ? @"HideIcon" : @"ShowIcon" userInfo:nil];
-	if (iconBadgeSwitch.on || statusBarBadgeSwitch.on) [messagingCenter sendMessageName:@"UpdateBadge" userInfo:nil];
+	[messagingCenter sendMessageName:@"UpdateBadge" userInfo:nil];
 }
 
 - (void)resetSettings

@@ -241,7 +241,7 @@ static void (^CreateDatabase)(void) = ^(void)
     else
     {
         if ([dictionary objectForKey:@"shouldHideIcon"]) [messagingCenter sendMessageName:@"HideIcon" userInfo:nil];
-        if (![dictionary objectForKey:@"shouldHideIcon"]) [messagingCenter sendMessageName:@"ShowIcon" userInfo:nil];
+        else [messagingCenter sendMessageName:@"ShowIcon" userInfo:nil];
     }
 }
 

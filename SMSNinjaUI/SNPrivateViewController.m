@@ -2,6 +2,7 @@
 #import "SNPrivatelistViewController.h"
 #import "SNPrivateMessageHistoryViewController.h"
 #import "SNTextTableViewCell.h"
+#import <objc/runtime.h>
 #import <sqlite3.h>
 
 #ifndef SMSNinjaDebug
@@ -176,8 +177,11 @@
 	[dictionary setObject:[NSNumber numberWithBool:revealSwitch.on] forKey:@"shouldRevealPrivatelistOutsideSMSNinja"];
 	[dictionary writeToFile:SETTINGS atomically:YES];
 	
-	CPDistributedMessagingCenter *messagingCenter = [objc_getClass("CPDistributedMessagingCenter") centerNamed:@"com.naken.smsninja.springboard"];
-        [messagingCenter sendMessageName:purpleSwitch.on ? @"ShowPurpleSquare" : @"HidePurpleSquare" userInfo:nil];
+    if (!purpleSwitch.on)
+    {
+        CPDistributedMessagingCenter *messagingCenter = [objc_getClass("CPDistributedMessagingCenter") centerNamed:@"com.naken.smsninja.springboard"];
+        [messagingCenter sendMessageName:@"HidePurpleSquare" userInfo:nil];
+    }
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
