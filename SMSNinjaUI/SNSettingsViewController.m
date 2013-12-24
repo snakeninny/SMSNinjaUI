@@ -303,9 +303,12 @@
 	[dictionary setObject:[NSNumber numberWithBool:addressbookSwitch.on] forKey:@"shouldIncludeContactsInWhitelist"];
 	[dictionary writeToFile:SETTINGS atomically:YES];
 	
-	CPDistributedMessagingCenter *messagingCenter = [objc_getClass("CPDistributedMessagingCenter") centerNamed:@"com.naken.smsninja.springboard"];
-	[messagingCenter sendMessageName:hideIconSwitch.on ? @"HideIcon" : @"ShowIcon" userInfo:nil];
-	[messagingCenter sendMessageName:@"UpdateBadge" userInfo:nil];
+    if ([[dictionary objectForKey:@"appIsOn"] boolValue])
+    {
+        CPDistributedMessagingCenter *messagingCenter = [objc_getClass("CPDistributedMessagingCenter") centerNamed:@"com.naken.smsninja.springboard"];
+        [messagingCenter sendMessageName:hideIconSwitch.on ? @"HideIcon" : @"ShowIcon" userInfo:nil];
+        [messagingCenter sendMessageName:@"UpdateBadge" userInfo:nil];
+    }
 }
 
 - (void)resetSettings

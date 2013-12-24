@@ -177,14 +177,12 @@
 	[dictionary setObject:[NSNumber numberWithBool:revealSwitch.on] forKey:@"shouldRevealPrivatelistOutsideSMSNinja"];
 	[dictionary writeToFile:SETTINGS atomically:YES];
 	
-    	if (!purpleSwitch.on)
-    	{
-        	CPDistributedMessagingCenter *messagingCenter = [objc_getClass("CPDistributedMessagingCenter") centerNamed:@"com.naken.smsninja.springboard"];
-        	[messagingCenter sendMessageName:@"HidePurpleSquare" userInfo:nil];
-    	}
-
-	if (semicolonSwitch.on && [fileManager fileExistsAtPath:@"/var/mobile/Library/SMSNinja/Semicolon"]) UpdateBadge(0);
-	else UpdateBadge(1);
+    if ([[dictionary objectForKey:@"appIsOn"] boolValue])
+    {
+        CPDistributedMessagingCenter *messagingCenter = [objc_getClass("CPDistributedMessagingCenter") centerNamed:@"com.naken.smsninja.springboard"];
+        if (!purpleSwitch.on) [messagingCenter sendMessageName:@"HidePurpleSquare" userInfo:nil];
+        if (semicolonSwitch.on) [messagingCenter sendMessageName:@"UpdateBadge" userInfo:nil];
+    }
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField

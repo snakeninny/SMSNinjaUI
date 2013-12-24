@@ -235,13 +235,14 @@ static void (^CreateDatabase)(void) = ^(void)
     
     if (!appSwitch.on)
     {
-        [messagingCenter sendMessageName:@"HideSquare" userInfo:nil];
+        [messagingCenter sendMessageName:@"HidePurpleSquare" userInfo:nil];
         [messagingCenter sendMessageName:@"ShowIcon" userInfo:nil];
     }
     else
     {
-        if ([dictionary objectForKey:@"shouldHideIcon"]) [messagingCenter sendMessageName:@"HideIcon" userInfo:nil];
+        if ([[dictionary objectForKey:@"shouldHideIcon"] boolValue]) [messagingCenter sendMessageName:@"HideIcon" userInfo:nil];
         else [messagingCenter sendMessageName:@"ShowIcon" userInfo:nil];
+        if ([[NSFileManager defaultManager] fileExistsAtPath:@"/var/mobile/Library/SMSNinja/PurpleSquare"] && [[dictionary objectForKey:@"appIsOn"] boolValue] && [[dictionary objectForKey:@"ShouldShowPurpleSquare"] boolValue]) [messagingCenter sendMessageName:@"ShowPurpleSquare" userInfo:nil];
     }
 }
 
