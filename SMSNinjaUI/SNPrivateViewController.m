@@ -181,7 +181,10 @@
     {
         CPDistributedMessagingCenter *messagingCenter = [objc_getClass("CPDistributedMessagingCenter") centerNamed:@"com.naken.smsninja.springboard"];
         if (!purpleSwitch.on) [messagingCenter sendMessageName:@"HidePurpleSquare" userInfo:nil];
-        if (semicolonSwitch.on) [messagingCenter sendMessageName:@"UpdateBadge" userInfo:nil];
+        else if (purpleSwitch.on && [[NSFileManager defaultManager] fileExistsAtPath:@"/var/mobile/Library/SMSNinja/PurpleSquare"]) [messagingCenter sendMessageName:@"ShowPurpleSquare" userInfo:nil];
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        if (!semicolonSwitch.on && [fileManager fileExistsAtPath:@"/var/mobile/Library/SMSNinja/Semicolon"]) [fileManager removeItemAtPath:@"/var/mobile/Library/SMSNinja/Semicolon" error:nil];
+        [messagingCenter sendMessageName:@"UpdateBadge" userInfo:nil];
     }
 }
 
