@@ -4,6 +4,7 @@
 #import "SNSystemMessageHistoryViewController.h"
 #import "SNSystemCallHistoryViewController.h"
 #import "SNMainViewController.h"
+#import <objc/runtime.h>
 #import <notify.h>
 #import <sqlite3.h>
 
@@ -252,18 +253,26 @@
 
 - (void)gotoSystemCallHistoryView
 {
+    CPDistributedMessagingCenter *messagingCenter = [objc_getClass("CPDistributedMessagingCenter") centerNamed:@"com.naken.smsninja.springboard"];
+    [messagingCenter sendMessageName:@"LaunchMobilePhone" userInfo:nil];
+    /*
 	SNSystemCallHistoryViewController *systemCallHistoryViewController = [[SNSystemCallHistoryViewController alloc] init];
 	systemCallHistoryViewController.flag = @"white";
 	[self.navigationController pushViewController:systemCallHistoryViewController animated:YES];
 	[systemCallHistoryViewController release];
+     */
 }
 
 - (void)gotoSystemMessageHistoryView
 {
+    CPDistributedMessagingCenter *messagingCenter = [objc_getClass("CPDistributedMessagingCenter") centerNamed:@"com.naken.smsninja.springboard"];
+    [messagingCenter sendMessageName:@"LaunchMobileSMS" userInfo:nil];
+    /*
 	SNSystemMessageHistoryViewController *systemMessageHistoryViewController = [[SNSystemMessageHistoryViewController alloc] init];
 	systemMessageHistoryViewController.flag = @"white";
 	[self.navigationController pushViewController:systemMessageHistoryViewController animated:YES];
 	[systemMessageHistoryViewController release];
+     */
 }
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex

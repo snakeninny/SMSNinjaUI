@@ -229,21 +229,6 @@ static void (^CreateDatabase)(void) = ^(void)
 	NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithContentsOfFile:SETTINGS];
 	[dictionary setObject:[NSNumber numberWithBool:appSwitch.on] forKey:@"appIsOn"];
 	[dictionary writeToFile:SETTINGS atomically:YES];
-    
-    CPDistributedMessagingCenter *messagingCenter = [objc_getClass("CPDistributedMessagingCenter") centerNamed:@"com.naken.smsninja.springboard"];
-	[messagingCenter sendMessageName:@"UpdateBadge" userInfo:nil];
-    
-    if (!appSwitch.on)
-    {
-        [messagingCenter sendMessageName:@"HidePurpleSquare" userInfo:nil];
-        [messagingCenter sendMessageName:@"ShowIcon" userInfo:nil];
-    }
-    else
-    {
-        if ([[dictionary objectForKey:@"shouldHideIcon"] boolValue]) [messagingCenter sendMessageName:@"HideIcon" userInfo:nil];
-        else [messagingCenter sendMessageName:@"ShowIcon" userInfo:nil];
-        if ([[NSFileManager defaultManager] fileExistsAtPath:@"/var/mobile/Library/SMSNinja/PurpleSquare"] && [[dictionary objectForKey:@"appIsOn"] boolValue] && [[dictionary objectForKey:@"ShouldShowPurpleSquare"] boolValue]) [messagingCenter sendMessageName:@"ShowPurpleSquare" userInfo:nil];
-    }
 }
 
 - (void)gotoReadMeView

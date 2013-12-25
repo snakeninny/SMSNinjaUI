@@ -45,7 +45,7 @@ With a keyword "pear", messages containing "p*ear", "(pear]" and words like this
 If you fill in both "FakePW" and "Password" (in "Settings" page), a fake SMSNinja is presented when you enter "FakePW" at launch. And "Password" in "Settings" page is redirected to "FakePW" implicitly.<br><br>
 
 5.2<br>
-If you toggle on "PurpleSquare", a purple square will be added to the statusbar when there's unread private info. Once you go the "Private Info" page, the purple square disappears.<br><br>
+If you toggle on "Thunder", a thunder logo will be added to the statusbar when there's unread private info. Once you go the "Private Info" page, the thunder disappears.<br><br>
 
 5.3<br>
 If you toggle on "Show Semicolon", the badge of SMSNinja will use semicolon instead of comma, i.e. "6;6" not "6,6", when there's unread private info. Once you go the "Private Info" page, semicolon will be replace by comma again.<br><br>

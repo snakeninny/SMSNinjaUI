@@ -36,7 +36,7 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
-    [self updateBadge];
+    [self updateBadgeAndSquareAndIcon];
 }
 
 - (void)showPasswordAlert
@@ -57,10 +57,24 @@
     }
 }
 
-- (void)updateBadge
+- (void)updateBadgeAndSquareAndIcon
 {
+    NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithContentsOfFile:SETTINGS];
     CPDistributedMessagingCenter *messagingCenter = [objc_getClass("CPDistributedMessagingCenter") centerNamed:@"com.naken.smsninjaspringboard"];
-	[messagingCenter sendMessageName:@"UpdateBadge" userInfo:nil];
+    [messagingCenter sendMessageName:@"UpdateBadge" userInfo:nil];
+    if ([[dictionary objectForKey:@"appIsOn"] boolValue])
+    {
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        if ([[dictionary objectForKey:@"shouldShowPurpleSquare"] boolValue] && [fileManager fileExistsAtPath:@"/var/mobile/Library/SMSNinja/UnreadPrivateInfo"]) [messagingCenter sendMessageName:@"ShowPurpleSquare" userInfo:nil];
+        else [messagingCenter sendMessageName:@"HidePurpleSquare" userInfo:nil];
+        if ([[dictionary objectForKey:@"shouldHideIcon"] boolValue]) [messagingCenter sendMessageName:@"HideIcon" userInfo:nil];
+        else [messagingCenter sendMessageName:@"ShowIcon" userInfo:nil];
+    }
+    else
+    {
+        [messagingCenter sendMessageName:@"HidePurpleSquare" userInfo:nil];
+        [messagingCenter sendMessageName:@"ShowIcon" userInfo:nil];
+    }
 }
 
 - (void)willPresentAlertView:(UIAlertView *)alertView

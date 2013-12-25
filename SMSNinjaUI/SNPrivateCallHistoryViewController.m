@@ -148,8 +148,8 @@
 	self.navigationItem.titleView = segmentedControl;
 	[segmentedControl release];
 	
-	CPDistributedMessagingCenter *messagingCenter = [objc_getClass("CPDistributedMessagingCenter") centerNamed:@"com.naken.smsninja.springboard"];
-	[messagingCenter sendMessageName:@"HidePurpleSquare" userInfo:nil];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    if ([fileManager fileExistsAtPath:@"/var/mobile/Library/SMSNinja/UnreadPrivateInfo"]) [fileManager removeItemAtPath:@"/var/mobile/Library/SMSNinja/UnreadPrivateInfo" error:nil];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView

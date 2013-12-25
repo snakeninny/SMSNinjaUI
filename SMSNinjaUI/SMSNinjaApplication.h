@@ -9,5 +9,5 @@
 }
 @property (nonatomic, retain) UIWindow *window;
 - (void)showPasswordAlert;
-- (void)updateBadge;
+- (void)updateBadgeAndSquareAndIcon;
 @end
