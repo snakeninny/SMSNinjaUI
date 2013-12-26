@@ -12,8 +12,8 @@
 #define SETTINGS @"/var/mobile/Library/SMSNinja/smsninja.plist"
 #define DATABASE @"/var/mobile/Library/SMSNinja/smsninja.db"
 #else
-#define SETTINGS @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/9E87534C-FD0A-450A-8863-0BAF0D62C9F0/Documents/var/mobile/Library/SMSNinja/smsninja.plist"
-#define DATABASE @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/9E87534C-FD0A-450A-8863-0BAF0D62C9F0/Documents/var/mobile/Library/SMSNinja/smsninja.db"
+#define SETTINGS @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/Documents/var/mobile/Library/SMSNinja/smsninja.plist"
+#define DATABASE @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/Documents/var/mobile/Library/SMSNinja/smsninja.db"
 #endif
 
 @implementation SNWhitelistViewController
@@ -280,26 +280,26 @@
 	switch (buttonIndex)
 	{
 		case 0:
-			[self gotoAddressbook];
+            [self gotoNumberView];
 			break;
 		case 1:
-			[self gotoSystemCallHistoryView];
+            [self gotoContentView];
 			break;
 		case 2:
-			[self gotoSystemMessageHistoryView];
+            [self gotoAddressbook];
 			break;
 		case 3:
-			[self gotoNumberView];
-			break;
+			[self gotoSystemCallHistoryView];
+            break;
 		case 4:
-			[self gotoContentView];
-			break;
+			[self gotoSystemMessageHistoryView];
+            break;
 	}
 }
 
 - (void)addRecord
 {
-	UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"From addressbook", @"From addressbook"), NSLocalizedString(@"From call history", @"From call history"), NSLocalizedString(@"From message history", @"From message history"), NSLocalizedString(@"Enter numbers", @"Enter numbers"), NSLocalizedString(@"Enter keywords", @"Enter keywords"), nil];
+	UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"Enter numbers", @"Enter numbers"), NSLocalizedString(@"Enter keywords", @"Enter keywords"), NSLocalizedString(@"From addressbook", @"From addressbook"), NSLocalizedString(@"From call history", @"From call history"), NSLocalizedString(@"From message history", @"From message history"), nil];
 	[actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
 	[actionSheet release];
 }
@@ -401,7 +401,7 @@
 		for (int i = count; i < [keywordArray count]; i++)
 		{
 			NSIndexPath *newPath =  [NSIndexPath indexPathForRow:i inSection:0];
-			[insertIndexPaths insertObject:newPath atIndex:i];
+			[insertIndexPaths insertObject:newPath atIndex:(i - count)];
 		}
 		[self.tableView insertRowsAtIndexPaths:insertIndexPaths withRowAnimation:UITableViewRowAnimationFade];
 		[self.tableView endUpdates];

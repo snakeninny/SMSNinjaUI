@@ -7,8 +7,8 @@
 #define SETTINGS @"/var/mobile/Library/SMSNinja/smsninja.plist"
 #define DATABASE @"/var/mobile/Library/SMSNinja/smsninja.db"
 #else
-#define SETTINGS @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/9E87534C-FD0A-450A-8863-0BAF0D62C9F0/Documents/var/mobile/Library/SMSNinja/smsninja.plist"
-#define DATABASE @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/9E87534C-FD0A-450A-8863-0BAF0D62C9F0/Documents/var/mobile/Library/SMSNinja/smsninja.db"
+#define SETTINGS @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/Documents/var/mobile/Library/SMSNinja/smsninja.plist"
+#define DATABASE @"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/Documents/var/mobile/Library/SMSNinja/smsninja.db"
 #endif
 
 @implementation SNBlockedCallHistoryViewController
@@ -66,13 +66,24 @@
     
     [self.tableView beginUpdates];
     [self.tableView deleteRowsAtIndexPaths:[bulkSet allObjects] withRowAnimation:UITableViewRowAnimationFade];
+    int count = [idArray count];
+    [self loadDatabaseSegment];
+    NSMutableArray *insertIndexPaths = [NSMutableArray arrayWithCapacity:50];
+    for (int i = count; i < [idArray count]; i++)
+    {
+        NSIndexPath *newPath =  [NSIndexPath indexPathForRow:i inSection:0];
+        [insertIndexPaths insertObject:newPath atIndex:(i - count)];
+    }
+    [self.tableView insertRowsAtIndexPaths:insertIndexPaths withRowAnimation:UITableViewRowAnimationFade];
+    [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+    self.navigationItem.leftBarButtonItem.title = NSLocalizedString(@"All", @"All");
     [self.tableView endUpdates];
 }
 
 - (void)bulkUnread
 {
     __block SNBlockedCallHistoryViewController *weakSelf = self;
-	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+	dispatch_sync(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         sqlite3 *database;
         int openResult = sqlite3_open([DATABASE UTF8String], &database);
         if (openResult == SQLITE_OK)
@@ -97,7 +108,7 @@
 - (void)bulkRead
 {
     __block SNBlockedCallHistoryViewController *weakSelf = self;
-	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+	dispatch_sync(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         sqlite3 *database;
         int openResult = sqlite3_open([DATABASE UTF8String], &database);
         if (openResult == SQLITE_OK)
@@ -461,7 +472,7 @@
 		for (int i = count; i < [idArray count]; i++)
 		{
 			NSIndexPath *newPath =  [NSIndexPath indexPathForRow:i inSection:0];
-			[insertIndexPaths insertObject:newPath atIndex:i];
+			[insertIndexPaths insertObject:newPath atIndex:(i - count)];
 		}
 		[self.tableView insertRowsAtIndexPaths:insertIndexPaths withRowAnimation:UITableViewRowAnimationFade];
 		[self.tableView endUpdates];
