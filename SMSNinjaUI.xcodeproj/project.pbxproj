@@ -12,13 +12,8 @@
 		8804857E1843347C00746698 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8804857C1843347C00746698 /* Localizable.strings */; };
 		880485811844365500746698 /* SNPrivatelistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8804857F1844365500746698 /* SNPrivatelistViewController.m */; };
 		8804DC30184C12B40082CDFF /* smsninja.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8804DC2F184C12B40082CDFF /* smsninja.plist */; };
-		8804DC3D184C16B00082CDFF /* zh-Hans_fake.txt in Resources */ = {isa = PBXBuildFile; fileRef = 8804DC39184C16B00082CDFF /* zh-Hans_fake.txt */; };
-		8804DC3E184C16B00082CDFF /* en.txt in Resources */ = {isa = PBXBuildFile; fileRef = 8804DC3A184C16B00082CDFF /* en.txt */; };
-		8804DC3F184C16B00082CDFF /* zh-Hans.txt in Resources */ = {isa = PBXBuildFile; fileRef = 8804DC3B184C16B00082CDFF /* zh-Hans.txt */; };
-		8804DC40184C16B00082CDFF /* en_fake.txt in Resources */ = {isa = PBXBuildFile; fileRef = 8804DC3C184C16B00082CDFF /* en_fake.txt */; };
 		8878B45C186B2BCC0006D9AF /* smsninja.db in Resources */ = {isa = PBXBuildFile; fileRef = 8878B45B186B2BCC0006D9AF /* smsninja.db */; };
 		888C8F5C183B278F00698D52 /* SNWhitelistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 888C8F5B183B278F00698D52 /* SNWhitelistViewController.m */; };
-		888C8F5F183B2DFA00698D52 /* SNSystemCallHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 888C8F5E183B2DFA00698D52 /* SNSystemCallHistoryViewController.m */; };
 		88A3052E18289E72006A69D8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88A3052D18289E72006A69D8 /* Foundation.framework */; };
 		88A3053018289E72006A69D8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88A3052F18289E72006A69D8 /* CoreGraphics.framework */; };
 		88A3053218289E72006A69D8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88A3053118289E72006A69D8 /* UIKit.framework */; };
@@ -33,7 +28,6 @@
 		88C0E1DB1839BC6200E0A343 /* SNBlockedMessageHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88C0E1DA1839BC6200E0A343 /* SNBlockedMessageHistoryViewController.m */; };
 		88C0E1E1183AF55200E0A343 /* SNBlockedCallHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88C0E1E0183AF55200E0A343 /* SNBlockedCallHistoryViewController.m */; };
 		88C0E1E4183B092F00E0A343 /* SNBlacklistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88C0E1E3183B092F00E0A343 /* SNBlacklistViewController.m */; };
-		88C0E1EA183C9BBE00E0A343 /* SNSystemMessageHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88C0E1E8183C9BBE00E0A343 /* SNSystemMessageHistoryViewController.m */; };
 		88C0E1ED183CAE4A00E0A343 /* SNTimeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88C0E1EB183CAE4A00E0A343 /* SNTimeViewController.m */; };
 		88C0E1F0183DB94100E0A343 /* SNContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88C0E1EE183DB94100E0A343 /* SNContentViewController.m */; };
 		88C0E1F3183EEEB100E0A343 /* SNPrivateCallHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88C0E1F1183EEEB100E0A343 /* SNPrivateCallHistoryViewController.m */; };
@@ -41,6 +35,15 @@
 		88C0E1F9183EFA8700E0A343 /* SNMessageActionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88C0E1F8183EFA8700E0A343 /* SNMessageActionViewController.m */; };
 		88C0E1FC183F077100E0A343 /* SNPictureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88C0E1FA183F077100E0A343 /* SNPictureViewController.m */; };
 		88D1DADB183D13F6003CE84F /* SNNumberViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88D1DADA183D13F6003CE84F /* SNNumberViewController.m */; };
+		88D7E487187577C200F2203A /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 88D7E47E187577C200F2203A /* Default-568h@2x.png */; };
+		88D7E488187577C200F2203A /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 88D7E47F187577C200F2203A /* Default.png */; };
+		88D7E489187577C200F2203A /* en_fake.html in Resources */ = {isa = PBXBuildFile; fileRef = 88D7E480187577C200F2203A /* en_fake.html */; };
+		88D7E48A187577C200F2203A /* en.html in Resources */ = {isa = PBXBuildFile; fileRef = 88D7E481187577C200F2203A /* en.html */; };
+		88D7E48B187577C200F2203A /* Icon-60.png in Resources */ = {isa = PBXBuildFile; fileRef = 88D7E482187577C200F2203A /* Icon-60.png */; };
+		88D7E48C187577C200F2203A /* Icon-Small.png in Resources */ = {isa = PBXBuildFile; fileRef = 88D7E483187577C200F2203A /* Icon-Small.png */; };
+		88D7E48D187577C200F2203A /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 88D7E484187577C200F2203A /* Icon.png */; };
+		88D7E48E187577C200F2203A /* zh-Hans_fake.html in Resources */ = {isa = PBXBuildFile; fileRef = 88D7E485187577C200F2203A /* zh-Hans_fake.html */; };
+		88D7E48F187577C200F2203A /* zh-Hans.html in Resources */ = {isa = PBXBuildFile; fileRef = 88D7E486187577C200F2203A /* zh-Hans.html */; };
 		88DBD951183E5B3B00DE60DD /* SNPrivateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88DBD950183E5B3B00DE60DD /* SNPrivateViewController.m */; };
 		88DBD956183E5E7D00DE60DD /* TODO in Resources */ = {isa = PBXBuildFile; fileRef = 88DBD955183E5E7D00DE60DD /* TODO */; };
 		88DBD959183E650400DE60DD /* SNPrivateMessageHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 88DBD958183E650400DE60DD /* SNPrivateMessageHistoryViewController.m */; };
@@ -63,15 +66,9 @@
 		8804857F1844365500746698 /* SNPrivatelistViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNPrivatelistViewController.m; sourceTree = "<group>"; };
 		880485801844365500746698 /* SNPrivatelistViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNPrivatelistViewController.h; sourceTree = "<group>"; };
 		8804DC2F184C12B40082CDFF /* smsninja.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = smsninja.plist; sourceTree = "<group>"; };
-		8804DC39184C16B00082CDFF /* zh-Hans_fake.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "zh-Hans_fake.txt"; sourceTree = "<group>"; };
-		8804DC3A184C16B00082CDFF /* en.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = en.txt; sourceTree = "<group>"; };
-		8804DC3B184C16B00082CDFF /* zh-Hans.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "zh-Hans.txt"; sourceTree = "<group>"; };
-		8804DC3C184C16B00082CDFF /* en_fake.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = en_fake.txt; sourceTree = "<group>"; };
 		8878B45B186B2BCC0006D9AF /* smsninja.db */ = {isa = PBXFileReference; lastKnownFileType = file; path = smsninja.db; sourceTree = "<group>"; };
 		888C8F5A183B278F00698D52 /* SNWhitelistViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNWhitelistViewController.h; sourceTree = "<group>"; };
 		888C8F5B183B278F00698D52 /* SNWhitelistViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNWhitelistViewController.m; sourceTree = "<group>"; };
-		888C8F5D183B2DFA00698D52 /* SNSystemCallHistoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNSystemCallHistoryViewController.h; sourceTree = "<group>"; };
-		888C8F5E183B2DFA00698D52 /* SNSystemCallHistoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNSystemCallHistoryViewController.m; sourceTree = "<group>"; };
 		88A3052A18289E72006A69D8 /* SMSNinjaUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SMSNinjaUI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		88A3052D18289E72006A69D8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		88A3052F18289E72006A69D8 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -96,8 +93,6 @@
 		88C0E1E0183AF55200E0A343 /* SNBlockedCallHistoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNBlockedCallHistoryViewController.m; sourceTree = "<group>"; };
 		88C0E1E2183B092F00E0A343 /* SNBlacklistViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNBlacklistViewController.h; sourceTree = "<group>"; };
 		88C0E1E3183B092F00E0A343 /* SNBlacklistViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNBlacklistViewController.m; sourceTree = "<group>"; };
-		88C0E1E8183C9BBE00E0A343 /* SNSystemMessageHistoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNSystemMessageHistoryViewController.m; sourceTree = "<group>"; };
-		88C0E1E9183C9BBE00E0A343 /* SNSystemMessageHistoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNSystemMessageHistoryViewController.h; sourceTree = "<group>"; };
 		88C0E1EB183CAE4A00E0A343 /* SNTimeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNTimeViewController.m; sourceTree = "<group>"; };
 		88C0E1EC183CAE4A00E0A343 /* SNTimeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNTimeViewController.h; sourceTree = "<group>"; };
 		88C0E1EE183DB94100E0A343 /* SNContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNContentViewController.m; sourceTree = "<group>"; };
@@ -112,6 +107,15 @@
 		88C0E1FB183F077100E0A343 /* SNPictureViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNPictureViewController.h; sourceTree = "<group>"; };
 		88D1DAD9183D13F6003CE84F /* SNNumberViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNNumberViewController.h; sourceTree = "<group>"; };
 		88D1DADA183D13F6003CE84F /* SNNumberViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNNumberViewController.m; sourceTree = "<group>"; };
+		88D7E47E187577C200F2203A /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		88D7E47F187577C200F2203A /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		88D7E480187577C200F2203A /* en_fake.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = en_fake.html; sourceTree = "<group>"; };
+		88D7E481187577C200F2203A /* en.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = en.html; sourceTree = "<group>"; };
+		88D7E482187577C200F2203A /* Icon-60.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-60.png"; sourceTree = "<group>"; };
+		88D7E483187577C200F2203A /* Icon-Small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Small.png"; sourceTree = "<group>"; };
+		88D7E484187577C200F2203A /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
+		88D7E485187577C200F2203A /* zh-Hans_fake.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "zh-Hans_fake.html"; sourceTree = "<group>"; };
+		88D7E486187577C200F2203A /* zh-Hans.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "zh-Hans.html"; sourceTree = "<group>"; };
 		88DBD94F183E5B3B00DE60DD /* SNPrivateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNPrivateViewController.h; sourceTree = "<group>"; };
 		88DBD950183E5B3B00DE60DD /* SNPrivateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNPrivateViewController.m; sourceTree = "<group>"; };
 		88DBD955183E5E7D00DE60DD /* TODO */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TODO; sourceTree = "<group>"; };
@@ -195,11 +199,16 @@
 		88A3053318289E72006A69D8 /* SMSNinjaUI */ = {
 			isa = PBXGroup;
 			children = (
+				88D7E47E187577C200F2203A /* Default-568h@2x.png */,
+				88D7E47F187577C200F2203A /* Default.png */,
+				88D7E480187577C200F2203A /* en_fake.html */,
+				88D7E481187577C200F2203A /* en.html */,
+				88D7E482187577C200F2203A /* Icon-60.png */,
+				88D7E483187577C200F2203A /* Icon-Small.png */,
+				88D7E484187577C200F2203A /* Icon.png */,
+				88D7E485187577C200F2203A /* zh-Hans_fake.html */,
+				88D7E486187577C200F2203A /* zh-Hans.html */,
 				8878B45B186B2BCC0006D9AF /* smsninja.db */,
-				8804DC3B184C16B00082CDFF /* zh-Hans.txt */,
-				8804DC39184C16B00082CDFF /* zh-Hans_fake.txt */,
-				8804DC3A184C16B00082CDFF /* en.txt */,
-				8804DC3C184C16B00082CDFF /* en_fake.txt */,
 				8804DC2F184C12B40082CDFF /* smsninja.plist */,
 				880485801844365500746698 /* SNPrivatelistViewController.h */,
 				8804857F1844365500746698 /* SNPrivatelistViewController.m */,
@@ -225,10 +234,6 @@
 				88D1DADA183D13F6003CE84F /* SNNumberViewController.m */,
 				88C0E1EC183CAE4A00E0A343 /* SNTimeViewController.h */,
 				88C0E1EB183CAE4A00E0A343 /* SNTimeViewController.m */,
-				88C0E1E9183C9BBE00E0A343 /* SNSystemMessageHistoryViewController.h */,
-				88C0E1E8183C9BBE00E0A343 /* SNSystemMessageHistoryViewController.m */,
-				888C8F5D183B2DFA00698D52 /* SNSystemCallHistoryViewController.h */,
-				888C8F5E183B2DFA00698D52 /* SNSystemCallHistoryViewController.m */,
 				88C0E1DF183AF55200E0A343 /* SNBlockedCallHistoryViewController.h */,
 				88C0E1E0183AF55200E0A343 /* SNBlockedCallHistoryViewController.m */,
 				88C0E1D91839BC6200E0A343 /* SNBlockedMessageHistoryViewController.h */,
@@ -336,15 +341,20 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8804DC3F184C16B00082CDFF /* zh-Hans.txt in Resources */,
+				88D7E48D187577C200F2203A /* Icon.png in Resources */,
+				88D7E48B187577C200F2203A /* Icon-60.png in Resources */,
+				88D7E48C187577C200F2203A /* Icon-Small.png in Resources */,
+				88D7E48A187577C200F2203A /* en.html in Resources */,
+				88D7E489187577C200F2203A /* en_fake.html in Resources */,
+				88D7E48E187577C200F2203A /* zh-Hans_fake.html in Resources */,
 				88DBD956183E5E7D00DE60DD /* TODO in Resources */,
 				8878B45C186B2BCC0006D9AF /* smsninja.db in Resources */,
-				8804DC40184C16B00082CDFF /* en_fake.txt in Resources */,
 				8804857E1843347C00746698 /* Localizable.strings in Resources */,
 				8804857A1843339100746698 /* Localizable.strings in Resources */,
-				8804DC3E184C16B00082CDFF /* en.txt in Resources */,
+				88D7E488187577C200F2203A /* Default.png in Resources */,
 				8804DC30184C12B40082CDFF /* smsninja.plist in Resources */,
-				8804DC3D184C16B00082CDFF /* zh-Hans_fake.txt in Resources */,
+				88D7E48F187577C200F2203A /* zh-Hans.html in Resources */,
+				88D7E487187577C200F2203A /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -365,7 +375,6 @@
 				88C0E1D21839957300E0A343 /* SNReadMeViewController.m in Sources */,
 				88C0E1ED183CAE4A00E0A343 /* SNTimeViewController.m in Sources */,
 				88C0E1F6183EF77B00E0A343 /* SNCallActionViewController.m in Sources */,
-				888C8F5F183B2DFA00698D52 /* SNSystemCallHistoryViewController.m in Sources */,
 				88C0E1E1183AF55200E0A343 /* SNBlockedCallHistoryViewController.m in Sources */,
 				88A3053E18289E72006A69D8 /* SMSNinjaApplication.m in Sources */,
 				88C0E1D11839957300E0A343 /* SNSettingsViewController.m in Sources */,
@@ -378,7 +387,6 @@
 				880485811844365500746698 /* SNPrivatelistViewController.m in Sources */,
 				88C0E1D01839957300E0A343 /* SNMainViewController.m in Sources */,
 				88C0E1F0183DB94100E0A343 /* SNContentViewController.m in Sources */,
-				88C0E1EA183C9BBE00E0A343 /* SNSystemMessageHistoryViewController.m in Sources */,
 				88DBD959183E650400DE60DD /* SNPrivateMessageHistoryViewController.m in Sources */,
 				88A3053A18289E72006A69D8 /* main.m in Sources */,
 				88C0E1F9183EFA8700E0A343 /* SNMessageActionViewController.m in Sources */,

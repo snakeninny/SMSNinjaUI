@@ -2,13 +2,17 @@
 
 @implementation SNReadMeViewController
 
+@synthesize myWebView;
 @synthesize fake;
 
 - (void)dealloc
 {
+	[myWebView release];
+	myWebView = nil;
+
 	[fake release];
 	fake = nil;
-    
+
 	[super dealloc];
 }
 
@@ -18,44 +22,27 @@
 	{
 		self.navigationItem.title = NSLocalizedString(@"Readme", @"Readme");
 		self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Huh?", @"Huh?") style:UIBarButtonItemStylePlain target:self action:@selector(kidding)] autorelease];
+
+		myWebView = [[UIWebView alloc] init];
 	}
 	return self;
+}
+
+- (void)webViewDidFinishLoad:(UIWebView *)webView
+{
+	[myWebView.scrollView setContentSize:CGSizeMake(myWebView.frame.size.width, myWebView.scrollView.contentSize.height)];
 }
 
 - (void)viewDidLoad
 {
 	NSString *language = [[NSLocale preferredLanguages] objectAtIndex:0];
-    
-	NSString *filePath;
-	NSString *readMe;
-	NSError *error = nil;
-    
-	NSFileManager *fileManager = [NSFileManager defaultManager];
-	filePath = [self.fake boolValue] ? [[NSBundle mainBundle] pathForResource:[language stringByAppendingString:@"_fake"] ofType:@"txt"] : [[NSBundle mainBundle] pathForResource:language ofType:@"txt"];
-	if (![fileManager fileExistsAtPath:filePath]) filePath = [self.fake boolValue] ? [[NSBundle mainBundle] pathForResource:@"en_fake" ofType:@"txt"] : [[NSBundle mainBundle] pathForResource:@"en" ofType:@"txt"];
-	readMe = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:&error];
-    
-	if (error)
-	{
-		NSLog(@"SMSNinja: Failed to decode %@ to UTF8, error: %@", filePath, [error localizedDescription]);
-		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(@"Failed to show readme. Please try reinstalling SMSNinja.", @"Failed to show readme. Please try reinstalling SMSNinja.") delegate:self cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil];
-		[alertView show];
-		[alertView release];
-	}
-    
-	UITextView *textView = [[UITextView alloc] init];
-	textView.editable = NO;
-	if ([[[UIDevice currentDevice] systemVersion] hasPrefix:@"7"])
-    {
-        NSAttributedString *attributedReadMe = [[NSAttributedString alloc] initWithData:[readMe dataUsingEncoding:NSUTF8StringEncoding] options:[NSDictionary dictionaryWithObjectsAndKeys:NSDocumentTypeDocumentAttribute, NSHTMLTextDocumentType, nil] documentAttributes:nil error:nil];
-        textView.attributedText = attributedReadMe;
-        [attributedReadMe release];
-    }
-    else [textView setContentToHTMLString:readMe];
-	textView.font = [UIFont systemFontOfSize:16.0f];
-	textView.textAlignment = NSTextAlignmentLeft;
-	self.view = textView;
-	[textView release];
+	NSString *filePath = nil;
+	filePath = [self.fake boolValue] ? [[NSBundle mainBundle] pathForResource:[language stringByAppendingString:@"_fake"] ofType:@"html"] : [[NSBundle mainBundle] pathForResource:language ofType:@"html"];
+	if (![[NSFileManager defaultManager] fileExistsAtPath:filePath]) filePath = [self.fake boolValue] ? [[NSBundle mainBundle] pathForResource:@"en_fake" ofType:@"html"] : [[NSBundle mainBundle] pathForResource:@"en" ofType:@"html"];
+
+	myWebView.delegate = self;
+	self.view = myWebView;
+	[myWebView loadRequest:[NSURLRequest requestWithURL:[NSURL fileURLWithPath:filePath]]];
 }
 
 - (void)kidding

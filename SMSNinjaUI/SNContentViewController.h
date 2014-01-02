@@ -2,16 +2,16 @@
 
 @interface SNContentViewController : UITableViewController <UITextFieldDelegate, UIGestureRecognizerDelegate>
 {
-    UITextField *nameField;
-    UITextField *keywordField;
-    UISwitch *forwardSwitch;
-    UITextField *numberField;
-    UISwitch *replySwitch;
-    UITextField *messageField;
-    UISwitch *soundSwitch;
-    
+	UITextField *nameField;
+	UITextField *keywordField;
+	UISwitch *forwardSwitch;
+	UITextField *numberField;
+	UISwitch *replySwitch;
+	UITextField *messageField;
+	UISwitch *soundSwitch;
+
 	NSMutableArray *keywordArray;
-    UITapGestureRecognizer *tapRecognizer;
+	UITapGestureRecognizer *tapRecognizer;
 }
 @property (nonatomic, retain) NSString *nameString;
 @property (nonatomic, retain) NSString *keywordString;

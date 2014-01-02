@@ -2,14 +2,14 @@
 
 @interface SNNumberViewController : UITableViewController <UITextFieldDelegate, UIGestureRecognizerDelegate>
 {
-    UITextField *nameField;
-    UITextField *keywordField;
-    UISwitch *replySwitch;
-    UITextField *messageField;
-    UISwitch *soundSwitch;
-    
+	UITextField *nameField;
+	UITextField *keywordField;
+	UISwitch *replySwitch;
+	UITextField *messageField;
+	UISwitch *soundSwitch;
+
 	NSMutableArray *keywordArray;
-    UITapGestureRecognizer *tapRecognizer;
+	UITapGestureRecognizer *tapRecognizer;
 }
 @property (nonatomic, retain) NSString *nameString;
 @property (nonatomic, retain) NSString *keywordString;

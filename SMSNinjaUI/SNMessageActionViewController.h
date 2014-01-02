@@ -4,7 +4,7 @@
 {
 	UISwitch *forwardSwitch;
 	UITextField *numberField;
-    UITapGestureRecognizer *tapRecognizer;
+	UITapGestureRecognizer *tapRecognizer;
 }
 @property (nonatomic, retain) NSString *messageAction;
 @property (nonatomic, retain) NSString *forwardString;
