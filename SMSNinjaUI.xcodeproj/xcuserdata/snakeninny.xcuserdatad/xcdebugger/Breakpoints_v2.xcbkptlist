@@ -9,6 +9,7 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
+<<<<<<< HEAD
             filePath = "SMSNinjaUI/SNContentViewController.m"
             timestampString = "410008195.957523"
             startingColumnNumber = "9223372036854775807"
@@ -33,6 +34,46 @@
             endingLineNumber = "245"
             landmarkName = "-viewWillDisappear:"
             landmarkType = "5">
+=======
+            filePath = "SMSNinjaUI/SNNumberViewController.m"
+            timestampString = "409722146.857472"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "282"
+            endingLineNumber = "282"
+            landmarkName = "-viewWillDisappear:"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[SNNumberViewController viewWillDisappear:]"
+                  moduleName = "SMSNinjaUI"
+                  urlString = "file:///Users/snakeninny/Code/SMSNinjaUI/SMSNinjaUI/SNNumberViewController.m"
+                  timestampString = "409722726.113655"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "282"
+                  endingLineNumber = "282"
+                  offsetFromSymbolStart = "725">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[SNNumberViewController viewWillDisappear:]"
+                  moduleName = "SMSNinjaUI"
+                  urlString = "file:///Users/snakeninny/Code/SMSNinjaUI/SMSNinjaUI/SNNumberViewController.m"
+                  timestampString = "409722726.113882"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "282"
+                  endingLineNumber = "282"
+                  offsetFromSymbolStart = "2366">
+               </Location>
+            </Locations>
+>>>>>>> e3c68d61debe9c140f09203371eb6bd7fdb0776d
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

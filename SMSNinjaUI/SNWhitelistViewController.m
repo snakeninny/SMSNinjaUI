@@ -298,6 +298,7 @@ static int amount;
 	switch (buttonIndex)
 	{
 		case 0:
+<<<<<<< HEAD
 			[self gotoNumberView];
 			break;
 		case 1:
@@ -312,6 +313,22 @@ static int amount;
 		case 4:
 			[self gotoSystemMessageHistoryView];
 			break;
+=======
+            [self gotoNumberView];
+			break;
+		case 1:
+            [self gotoContentView];
+			break;
+		case 2:
+            [self gotoAddressbook];
+			break;
+		case 3:
+			[self gotoSystemCallHistoryView];
+            break;
+		case 4:
+			[self gotoSystemMessageHistoryView];
+            break;
+>>>>>>> e3c68d61debe9c140f09203371eb6bd7fdb0776d
 	}
 }
 

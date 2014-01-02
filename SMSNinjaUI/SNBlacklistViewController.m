@@ -336,6 +336,7 @@ static int amount;
 {
 	if (actionSheet.tag == 1)
 		switch (buttonIndex)
+<<<<<<< HEAD
 		{
 			case 0:
 				[self gotoNumberView];
@@ -356,6 +357,28 @@ static int amount;
 				[self gotoSystemMessageHistoryView];
 				break;
 		}
+=======
+    {
+        case 0:
+            [self gotoNumberView];
+            break;
+        case 1:
+            [self gotoContentView];
+            break;
+        case 2:
+            [self gotoTimeView];
+            break;
+        case 3:
+            [self gotoAddressbook];
+            break;
+        case 4:
+            [self gotoSystemCallHistoryView];
+            break;
+        case 5:
+            [self gotoSystemMessageHistoryView];
+            break;
+    }
+>>>>>>> e3c68d61debe9c140f09203371eb6bd7fdb0776d
 	else if (actionSheet.tag == 2)
 	{
 		if (buttonIndex != 2)

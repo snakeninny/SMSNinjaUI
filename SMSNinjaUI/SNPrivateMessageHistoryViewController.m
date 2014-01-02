@@ -80,6 +80,7 @@ static int amount;
 
 	[self.tableView beginUpdates];
 	[self.tableView deleteRowsAtIndexPaths:[bulkSet allObjects] withRowAnimation:UITableViewRowAnimationFade];
+<<<<<<< HEAD
 	int count = [idArray count];
 	[self loadDatabaseSegment];
 	NSMutableArray *insertIndexPaths = [NSMutableArray arrayWithCapacity:50];
@@ -91,6 +92,19 @@ static int amount;
 	[self.tableView insertRowsAtIndexPaths:insertIndexPaths withRowAnimation:UITableViewRowAnimationFade];
 	[self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
 	self.navigationItem.leftBarButtonItem.title = NSLocalizedString(@"All", @"All");
+=======
+    int count = [idArray count];
+    [self loadDatabaseSegment];
+    NSMutableArray *insertIndexPaths = [NSMutableArray arrayWithCapacity:50];
+    for (int i = count; i < [idArray count]; i++)
+    {
+        NSIndexPath *newPath =  [NSIndexPath indexPathForRow:i inSection:0];
+        [insertIndexPaths insertObject:newPath atIndex:(i - count)];
+    }
+    [self.tableView insertRowsAtIndexPaths:insertIndexPaths withRowAnimation:UITableViewRowAnimationFade];
+    [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+    self.navigationItem.leftBarButtonItem.title = NSLocalizedString(@"All", @"All");
+>>>>>>> e3c68d61debe9c140f09203371eb6bd7fdb0776d
 	[self.tableView endUpdates];
 }
 
@@ -415,6 +429,7 @@ static int amount;
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
+<<<<<<< HEAD
 	if (amount != [idArray count] && scrollView.contentOffset.y + 1000.0f > scrollView.contentSize.height - scrollView.frame.size.height && scrollView.contentOffset.y != -64.0f && scrollView.contentOffset.y != 0.0f)
 	{
 		[self.tableView beginUpdates];
@@ -429,5 +444,21 @@ static int amount;
 		[self.tableView insertRowsAtIndexPaths:insertIndexPaths withRowAnimation:UITableViewRowAnimationFade];
 		[self.tableView endUpdates];
 	}
+=======
+    if (scrollView.contentOffset.y > scrollView.contentSize.height - scrollView.frame.size.height && scrollView.contentOffset.y != -64.0f && scrollView.contentOffset.y != 0.0f)
+    {
+        [self.tableView beginUpdates];
+        int count = [idArray count];
+        [self loadDatabaseSegment];
+        NSMutableArray *insertIndexPaths = [NSMutableArray arrayWithCapacity:50];
+        for (int i = count; i < [idArray count]; i++)
+        {
+            NSIndexPath *newPath =  [NSIndexPath indexPathForRow:i inSection:0];
+            [insertIndexPaths insertObject:newPath atIndex:(i - count)];
+        }
+        [self.tableView insertRowsAtIndexPaths:insertIndexPaths withRowAnimation:UITableViewRowAnimationFade];
+        [self.tableView endUpdates];
+    }
+>>>>>>> e3c68d61debe9c140f09203371eb6bd7fdb0776d
 }
 @end

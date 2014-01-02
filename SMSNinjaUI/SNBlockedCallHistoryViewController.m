@@ -42,6 +42,7 @@ static int amount;
 
 - (void)bulkDelete
 {
+<<<<<<< HEAD
 	sqlite3 *database;
 	int openResult = sqlite3_open([DATABASE UTF8String], &database);
 	if (openResult == SQLITE_OK)
@@ -80,10 +81,51 @@ static int amount;
 	[self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
 	self.navigationItem.leftBarButtonItem.title = NSLocalizedString(@"All", @"All");
 	[self.tableView endUpdates];
+=======
+    sqlite3 *database;
+    int openResult = sqlite3_open([DATABASE UTF8String], &database);
+    if (openResult == SQLITE_OK)
+    {
+        for (NSIndexPath *chosenRowIndexPath in bulkSet)
+        {
+            NSString *sql = [NSString stringWithFormat:@"delete from blockedcall where number = '%@' and name = '%@' and time = '%@' and content = '%@' and read = '%@' and id = '%@'", [numberArray objectAtIndex:chosenRowIndexPath.row], [[nameArray objectAtIndex:chosenRowIndexPath.row] stringByReplacingOccurrencesOfString:@"'" withString:@"''"], [timeArray objectAtIndex:chosenRowIndexPath.row], [[contentArray objectAtIndex:chosenRowIndexPath.row] stringByReplacingOccurrencesOfString:@"'" withString:@"''"], [readArray objectAtIndex:chosenRowIndexPath.row], [idArray objectAtIndex:chosenRowIndexPath.row]];
+            int execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
+            if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
+        }
+        sqlite3_close(database);
+    }
+    else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
+    
+    NSMutableIndexSet *discardedItems = [NSMutableIndexSet indexSet];
+    for (NSIndexPath *chosenRowIndexPath in bulkSet) [discardedItems addIndex:chosenRowIndexPath.row];
+    
+    [idArray removeObjectsAtIndexes:discardedItems];
+    [nameArray removeObjectsAtIndexes:discardedItems];
+    [contentArray removeObjectsAtIndexes:discardedItems];
+    [timeArray removeObjectsAtIndexes:discardedItems];
+    [numberArray removeObjectsAtIndexes:discardedItems];
+    [readArray removeObjectsAtIndexes:discardedItems];
+    
+    [self.tableView beginUpdates];
+    [self.tableView deleteRowsAtIndexPaths:[bulkSet allObjects] withRowAnimation:UITableViewRowAnimationFade];
+    int count = [idArray count];
+    [self loadDatabaseSegment];
+    NSMutableArray *insertIndexPaths = [NSMutableArray arrayWithCapacity:50];
+    for (int i = count; i < [idArray count]; i++)
+    {
+        NSIndexPath *newPath =  [NSIndexPath indexPathForRow:i inSection:0];
+        [insertIndexPaths insertObject:newPath atIndex:(i - count)];
+    }
+    [self.tableView insertRowsAtIndexPaths:insertIndexPaths withRowAnimation:UITableViewRowAnimationFade];
+    [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+    self.navigationItem.leftBarButtonItem.title = NSLocalizedString(@"All", @"All");
+    [self.tableView endUpdates];
+>>>>>>> e3c68d61debe9c140f09203371eb6bd7fdb0776d
 }
 
 - (void)bulkUnread
 {
+<<<<<<< HEAD
 	__block SNBlockedCallHistoryViewController *weakSelf = self;
 	dispatch_sync(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 		sqlite3 *database;
@@ -95,6 +137,19 @@ static int amount;
 				NSString *sql = [NSString stringWithFormat:@"update blockedcall set read = '0' where id = '%@'", [weakSelf->idArray objectAtIndex:chosenRowIndexPath.row]];
 				int execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
 				if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
+=======
+    __block SNBlockedCallHistoryViewController *weakSelf = self;
+	dispatch_sync(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        sqlite3 *database;
+        int openResult = sqlite3_open([DATABASE UTF8String], &database);
+        if (openResult == SQLITE_OK)
+        {
+            for (NSIndexPath *chosenRowIndexPath in weakSelf->bulkSet)
+            {
+                NSString *sql = [NSString stringWithFormat:@"update blockedcall set read = '0' where id = '%@'", [weakSelf->idArray objectAtIndex:chosenRowIndexPath.row]];
+                int execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
+                if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
+>>>>>>> e3c68d61debe9c140f09203371eb6bd7fdb0776d
                 
 				[weakSelf->readArray replaceObjectAtIndex:chosenRowIndexPath.row withObject:@"0"];
 			}
@@ -109,6 +164,7 @@ static int amount;
 
 - (void)bulkRead
 {
+<<<<<<< HEAD
 	__block SNBlockedCallHistoryViewController *weakSelf = self;
 	dispatch_sync(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 		sqlite3 *database;
@@ -130,6 +186,29 @@ static int amount;
 	for (NSIndexPath *indexPath in bulkSet)
 		for (UIView *view in [self.tableView cellForRowAtIndexPath:indexPath].contentView.subviews)
 			if ([view isKindOfClass:[UILabel class]]) ((UILabel *)view).textColor = [UIColor blackColor];
+=======
+    __block SNBlockedCallHistoryViewController *weakSelf = self;
+	dispatch_sync(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        sqlite3 *database;
+        int openResult = sqlite3_open([DATABASE UTF8String], &database);
+        if (openResult == SQLITE_OK)
+        {
+            for (NSIndexPath *chosenRowIndexPath in weakSelf->bulkSet)
+            {
+                NSString *sql = [NSString stringWithFormat:@"update blockedcall set read = '1' where id = '%@'", [weakSelf->idArray objectAtIndex:chosenRowIndexPath.row]];
+                int execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
+                if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
+                
+                [weakSelf->readArray replaceObjectAtIndex:chosenRowIndexPath.row withObject:@"1"];
+            }
+            sqlite3_close(database);
+        }
+        else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
+    });
+  	for (NSIndexPath *indexPath in bulkSet)
+        for (UIView *view in [self.tableView cellForRowAtIndexPath:indexPath].contentView.subviews)
+            if ([view isKindOfClass:[UILabel class]]) ((UILabel *)view).textColor = [UIColor blackColor];
+>>>>>>> e3c68d61debe9c140f09203371eb6bd7fdb0776d
 }
 
 - (void)loadDatabaseSegment

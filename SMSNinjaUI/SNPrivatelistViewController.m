@@ -290,6 +290,7 @@ static int amount;
 {
 	if (actionSheet.tag == 1)
 		switch (buttonIndex)
+<<<<<<< HEAD
 		{
 			case 0:
 				[self gotoNumberView];
@@ -307,6 +308,25 @@ static int amount;
 				[self gotoSystemMessageHistoryView];
 				break;
 		}
+=======
+    {
+        case 0:
+            [self gotoNumberView];
+            break;
+        case 1:
+            [self gotoContentView];
+            break;
+        case 2:
+            [self gotoAddressbook];
+            break;
+        case 3:
+            [self gotoSystemCallHistoryView];
+            break;
+        case 4:
+            [self gotoSystemMessageHistoryView];
+            break;
+    }
+>>>>>>> e3c68d61debe9c140f09203371eb6bd7fdb0776d
 	else if (actionSheet.tag == 2)
 	{
 		if (buttonIndex != 2)
@@ -351,6 +371,7 @@ static int amount;
 - (void)addRecord
 {
 	UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"Enter numbers", @"Enter numbers"), NSLocalizedString(@"Enter keywords", @"Enter keywords"), NSLocalizedString(@"From addressbook", @"From addressbook"), nil];
+<<<<<<< HEAD
 	if ([[[NSDictionary dictionaryWithContentsOfFile:SETTINGS] objectForKey:@"shouldRevealPrivatelistOutsideSMSNinja"] boolValue])
 	{
 		[actionSheet addButtonWithTitle:NSLocalizedString(@"From call history", @"From call history")];
@@ -358,6 +379,15 @@ static int amount;
 	}
 	[actionSheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel")];
 	actionSheet.cancelButtonIndex = actionSheet.numberOfButtons - 1;
+=======
+    if ([[[NSDictionary dictionaryWithContentsOfFile:SETTINGS] objectForKey:@"shouldRevealPrivatelistOutsideSMSNinja"] boolValue])
+    {
+        [actionSheet addButtonWithTitle:NSLocalizedString(@"From call history", @"From call history")];
+        [actionSheet addButtonWithTitle:NSLocalizedString(@"From message history", @"From message history")];
+    }
+    [actionSheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel")];
+    actionSheet.cancelButtonIndex = actionSheet.numberOfButtons - 1;
+>>>>>>> e3c68d61debe9c140f09203371eb6bd7fdb0776d
 	actionSheet.tag = 1;
 	[actionSheet showInView:[[UIApplication sharedApplication] keyWindow]];
 	[actionSheet release];

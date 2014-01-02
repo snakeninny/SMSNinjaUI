@@ -283,6 +283,7 @@
 
 - (void)viewWillDisappear:(BOOL)animated
 {
+<<<<<<< HEAD
 	[super viewWillDisappear:animated];
 	[self saveTextFieldValues];
 
@@ -290,6 +291,14 @@
 	NSString *two = [NSString stringWithFormat:([timePickerView selectedRowInComponent:1] % 60 < 10 ? @"0%ld" : @"%ld"), (long)([timePickerView selectedRowInComponent:1] % 60)];
 	NSString *three = [NSString stringWithFormat:([timePickerView selectedRowInComponent:3] % 24 < 10 ? @"0%ld" : @"%ld"), (long)([timePickerView selectedRowInComponent:3] % 24)];
 	NSString *four = [NSString stringWithFormat:([timePickerView selectedRowInComponent:4] % 60 < 10 ? @"0%ld" : @"%ld"), (long)([timePickerView selectedRowInComponent:4] % 60)];
+=======
+    [super viewWillDisappear:animated];
+
+	NSString *one = [NSString stringWithFormat:([timePickerView selectedRowInComponent:0] % 24 < 10 ? @"0%d" : @"%d"), [timePickerView selectedRowInComponent:0] % 24];
+	NSString *two = [NSString stringWithFormat:([timePickerView selectedRowInComponent:1] % 60 < 10 ? @"0%d" : @"%d"), [timePickerView selectedRowInComponent:1] % 60];
+	NSString *three = [NSString stringWithFormat:([timePickerView selectedRowInComponent:3] % 24 < 10 ? @"0%d" : @"%d"), [timePickerView selectedRowInComponent:3] % 24];
+	NSString *four = [NSString stringWithFormat:([timePickerView selectedRowInComponent:4] % 60 < 10 ? @"0%d" : @"%d"), [timePickerView selectedRowInComponent:4] % 60];
+>>>>>>> e3c68d61debe9c140f09203371eb6bd7fdb0776d
 	NSString *keyword = [[[[[[one stringByAppendingString:@":"] stringByAppendingString:two] stringByAppendingString:@"~"] stringByAppendingString:three] stringByAppendingString:@":"] stringByAppendingString:four];
 
 	id viewController = self.navigationController.topViewController;

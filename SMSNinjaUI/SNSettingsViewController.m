@@ -332,13 +332,21 @@ static void (^CreateDatabase)(void) = ^(void)
 #ifndef SMSNinjaDebug
 		[fileManager copyItemAtPath:@"/Applications/SMSNinja.app/smsninja.plist" toPath:SETTINGS error:nil];
 #else
+<<<<<<< HEAD
 	[fileManager copyItemAtPath:@"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/SMSNinjaUI.app/smsninja.plist" toPath:SETTINGS error:nil];
+=======
+    [fileManager copyItemAtPath:@"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/SMSNinjaUI.app/smsninja.plist" toPath:SETTINGS error:nil];
+>>>>>>> e3c68d61debe9c140f09203371eb6bd7fdb0776d
 #endif
 	if (![fileManager fileExistsAtPath:DATABASE])
 #ifndef SMSNinjaDebug
 		[fileManager copyItemAtPath:@"/Applications/SMSNinja.app/smsninja.db" toPath:DATABASE error:nil];
 #else
+<<<<<<< HEAD
 	[fileManager copyItemAtPath:@"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/SMSNinjaUI.app/smsninja.db" toPath:DATABASE error:nil];
+=======
+    [fileManager copyItemAtPath:@"/Users/snakeninny/Library/Application Support/iPhone Simulator/7.0.3/Applications/0C9D35FB-B626-42B7-AAE9-45F6F537890B/SMSNinjaUI.app/smsninja.db" toPath:DATABASE error:nil];
+>>>>>>> e3c68d61debe9c140f09203371eb6bd7fdb0776d
 #endif
 	NSString *filePath = [DOCUMENT stringByAppendingString:@"/blocked.caf"];
 #ifndef SMSNinjaDebug
