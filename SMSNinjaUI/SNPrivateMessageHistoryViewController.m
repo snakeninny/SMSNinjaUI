@@ -80,9 +80,8 @@ static int amount;
 
 	[self.tableView beginUpdates];
 	[self.tableView deleteRowsAtIndexPaths:[bulkSet allObjects] withRowAnimation:UITableViewRowAnimationFade];
-<<<<<<< HEAD
-	int count = [idArray count];
 	[self loadDatabaseSegment];
+	int count = [idArray count];
 	NSMutableArray *insertIndexPaths = [NSMutableArray arrayWithCapacity:50];
 	for (int i = count; i < [idArray count]; i++)
 	{
@@ -90,21 +89,8 @@ static int amount;
 		[insertIndexPaths insertObject:newPath atIndex:(i - count)];
 	}
 	[self.tableView insertRowsAtIndexPaths:insertIndexPaths withRowAnimation:UITableViewRowAnimationFade];
-	[self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+	if (count != 0) [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
 	self.navigationItem.leftBarButtonItem.title = NSLocalizedString(@"All", @"All");
-=======
-    int count = [idArray count];
-    [self loadDatabaseSegment];
-    NSMutableArray *insertIndexPaths = [NSMutableArray arrayWithCapacity:50];
-    for (int i = count; i < [idArray count]; i++)
-    {
-        NSIndexPath *newPath =  [NSIndexPath indexPathForRow:i inSection:0];
-        [insertIndexPaths insertObject:newPath atIndex:(i - count)];
-    }
-    [self.tableView insertRowsAtIndexPaths:insertIndexPaths withRowAnimation:UITableViewRowAnimationFade];
-    [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
-    self.navigationItem.leftBarButtonItem.title = NSLocalizedString(@"All", @"All");
->>>>>>> e3c68d61debe9c140f09203371eb6bd7fdb0776d
 	[self.tableView endUpdates];
 }
 
@@ -242,6 +228,7 @@ static int amount;
 	[defaultCell release];
 
 	UILabel *nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 2.0f, (defaultCellWidth  - 50.0f) / 2.0f, (defaultCellHeight - 4.0f) / 2.0f)];
+	nameLabel.font = [UIFont boldSystemFontOfSize:[UIFont labelFontSize]];	
 	nameLabel.tag = 1;
 	nameLabel.adjustsFontSizeToFitWidth = YES;
 	nameLabel.text = [[nameArray objectAtIndex:indexPath.row] length] != 0 ? [nameArray objectAtIndex:indexPath.row] : [numberArray objectAtIndex:indexPath.row];
@@ -250,7 +237,6 @@ static int amount;
 
 	UILabel *timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(nameLabel.frame.origin.x + nameLabel.bounds.size.width, nameLabel.frame.origin.y, nameLabel.bounds.size.width, nameLabel.bounds.size.height)];
 	timeLabel.tag = 2;
-	timeLabel.font = nameLabel.font;
 	if (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_5_0 && kCFCoreFoundationVersionNumber <= kCFCoreFoundationVersionNumber_iOS_5_1) timeLabel.textAlignment = UITextAlignmentRight;
 	else timeLabel.textAlignment = NSTextAlignmentRight;
 	timeLabel.adjustsFontSizeToFitWidth = nameLabel.adjustsFontSizeToFitWidth;
@@ -262,7 +248,6 @@ static int amount;
 	UILabel *contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(nameLabel.frame.origin.x, nameLabel.frame.origin.y + nameLabel.bounds.size.height, nameLabel.bounds.size.width + timeLabel.bounds.size.width, nameLabel.bounds.size.height)];
 	contentLabel.tag = 3;
 	contentLabel.numberOfLines = 0;
-	contentLabel.font = nameLabel.font;
 	contentLabel.text = [contentArray objectAtIndex:indexPath.row];
 	CGSize expectedLabelSize = [contentLabel.text sizeWithFont:contentLabel.font constrainedToSize:CGSizeMake(contentLabel.bounds.size.width, contentLabel.bounds.size.height * 60.0f) lineBreakMode:contentLabel.lineBreakMode];
 	CGRect newFrame = contentLabel.frame;
@@ -429,7 +414,6 @@ static int amount;
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-<<<<<<< HEAD
 	if (amount != [idArray count] && scrollView.contentOffset.y + 1000.0f > scrollView.contentSize.height - scrollView.frame.size.height && scrollView.contentOffset.y != -64.0f && scrollView.contentOffset.y != 0.0f)
 	{
 		[self.tableView beginUpdates];
@@ -444,21 +428,5 @@ static int amount;
 		[self.tableView insertRowsAtIndexPaths:insertIndexPaths withRowAnimation:UITableViewRowAnimationFade];
 		[self.tableView endUpdates];
 	}
-=======
-    if (scrollView.contentOffset.y > scrollView.contentSize.height - scrollView.frame.size.height && scrollView.contentOffset.y != -64.0f && scrollView.contentOffset.y != 0.0f)
-    {
-        [self.tableView beginUpdates];
-        int count = [idArray count];
-        [self loadDatabaseSegment];
-        NSMutableArray *insertIndexPaths = [NSMutableArray arrayWithCapacity:50];
-        for (int i = count; i < [idArray count]; i++)
-        {
-            NSIndexPath *newPath =  [NSIndexPath indexPathForRow:i inSection:0];
-            [insertIndexPaths insertObject:newPath atIndex:(i - count)];
-        }
-        [self.tableView insertRowsAtIndexPaths:insertIndexPaths withRowAnimation:UITableViewRowAnimationFade];
-        [self.tableView endUpdates];
-    }
->>>>>>> e3c68d61debe9c140f09203371eb6bd7fdb0776d
 }
 @end

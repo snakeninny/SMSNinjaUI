@@ -49,7 +49,6 @@ static int amount;
 
 - (void)bulkDelete
 {
-<<<<<<< HEAD
 	sqlite3 *database;
 	int openResult = sqlite3_open([DATABASE UTF8String], &database);
 	if (openResult == SQLITE_OK)
@@ -85,8 +84,8 @@ static int amount;
 
 	[self.tableView beginUpdates];
 	[self.tableView deleteRowsAtIndexPaths:[bulkSet allObjects] withRowAnimation:UITableViewRowAnimationFade];
-	int count = [idArray count];
 	[self loadDatabaseSegment];
+	int count = [idArray count];
 	NSMutableArray *insertIndexPaths = [NSMutableArray arrayWithCapacity:50];
 	for (int i = count; i < [idArray count]; i++)
 	{
@@ -94,63 +93,13 @@ static int amount;
 		[insertIndexPaths insertObject:newPath atIndex:(i - count)];
 	}
 	[self.tableView insertRowsAtIndexPaths:insertIndexPaths withRowAnimation:UITableViewRowAnimationFade];
-	[self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+	if (count != 0)	[self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
 	self.navigationItem.leftBarButtonItem.title = NSLocalizedString(@"All", @"All");
 	[self.tableView endUpdates];
-=======
-    sqlite3 *database;
-    int openResult = sqlite3_open([DATABASE UTF8String], &database);
-    if (openResult == SQLITE_OK)
-    {
-        for (NSIndexPath *chosenRowIndexPath in bulkSet)
-        {
-            NSString *sql = [NSString stringWithFormat:@"delete from blockedsms where number = '%@' and name = '%@' and time = '%@' and content = '%@' and read = '%@' and id = '%@' and pictures = '%@'", [numberArray objectAtIndex:chosenRowIndexPath.row], [[nameArray objectAtIndex:chosenRowIndexPath.row] stringByReplacingOccurrencesOfString:@"'" withString:@"''"], [timeArray objectAtIndex:chosenRowIndexPath.row], [[contentArray objectAtIndex:chosenRowIndexPath.row] stringByReplacingOccurrencesOfString:@"'" withString:@"''"], [readArray objectAtIndex:chosenRowIndexPath.row], [idArray objectAtIndex:chosenRowIndexPath.row], [picturesArray objectAtIndex:chosenRowIndexPath.row]];
-            int execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
-            if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
-            
-            NSFileManager *fileManager = [NSFileManager defaultManager];
-            NSError *error = nil;
-            for (int i = 0; i < [[picturesArray objectAtIndex:chosenRowIndexPath.row] intValue]; i++)
-            {
-                [fileManager removeItemAtPath:[[PICTURES stringByAppendingString:[idArray objectAtIndex:chosenRowIndexPath.row]] stringByAppendingFormat:@"-%d.png", i] error:&error];
-                if (error) NSLog(@"SMSNinja: Failed to delete %@, error %@", [[PICTURES stringByAppendingString:[idArray objectAtIndex:chosenRowIndexPath.row]] stringByAppendingFormat:@"-%d.png", i], [error localizedDescription]);
-            }
-        }
-        sqlite3_close(database);
-    }
-    else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
-    
-    NSMutableIndexSet *discardedItems = [NSMutableIndexSet indexSet];
-    for (NSIndexPath *chosenRowIndexPath in bulkSet) [discardedItems addIndex:chosenRowIndexPath.row];
-    
-    [idArray removeObjectsAtIndexes:discardedItems];
-    [nameArray removeObjectsAtIndexes:discardedItems];
-    [contentArray removeObjectsAtIndexes:discardedItems];
-    [timeArray removeObjectsAtIndexes:discardedItems];
-    [numberArray removeObjectsAtIndexes:discardedItems];
-    [readArray removeObjectsAtIndexes:discardedItems];
-    [picturesArray removeObjectsAtIndexes:discardedItems];
-    
-    [self.tableView beginUpdates];
-    [self.tableView deleteRowsAtIndexPaths:[bulkSet allObjects] withRowAnimation:UITableViewRowAnimationFade];
-    int count = [idArray count];
-    [self loadDatabaseSegment];
-    NSMutableArray *insertIndexPaths = [NSMutableArray arrayWithCapacity:50];
-    for (int i = count; i < [idArray count]; i++)
-    {
-        NSIndexPath *newPath =  [NSIndexPath indexPathForRow:i inSection:0];
-        [insertIndexPaths insertObject:newPath atIndex:(i - count)];
-    }
-    [self.tableView insertRowsAtIndexPaths:insertIndexPaths withRowAnimation:UITableViewRowAnimationFade];
-    [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
-    self.navigationItem.leftBarButtonItem.title = NSLocalizedString(@"All", @"All");
-    [self.tableView endUpdates];
->>>>>>> e3c68d61debe9c140f09203371eb6bd7fdb0776d
 }
 
 - (void)bulkUnread
 {
-<<<<<<< HEAD
 	__block SNBlockedMessageHistoryViewController *weakSelf = self;
 	dispatch_sync(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 		sqlite3 *database;
@@ -169,26 +118,6 @@ static int amount;
 		}
 		else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
 	});
-=======
-    __block SNBlockedMessageHistoryViewController *weakSelf = self;
-	dispatch_sync(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        sqlite3 *database;
-        int openResult = sqlite3_open([DATABASE UTF8String], &database);
-        if (openResult == SQLITE_OK)
-        {
-            for (NSIndexPath *chosenRowIndexPath in weakSelf->bulkSet)
-            {
-                NSString *sql = [NSString stringWithFormat:@"update blockedsms set read = '0' where id = '%@'", [weakSelf->idArray objectAtIndex:chosenRowIndexPath.row]];
-                int execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
-                if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
-                
-                [weakSelf->readArray replaceObjectAtIndex:chosenRowIndexPath.row withObject:@"0"];
-            }
-            sqlite3_close(database);
-        }
-        else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
-    });
->>>>>>> e3c68d61debe9c140f09203371eb6bd7fdb0776d
 	for (NSIndexPath *indexPath in bulkSet)
 		for (UIView *view in [self.tableView cellForRowAtIndexPath:indexPath].contentView.subviews)
 			if ([view isKindOfClass:[UILabel class]]) ((UILabel *)view).textColor = [UIColor blueColor];
@@ -196,7 +125,6 @@ static int amount;
 
 - (void)bulkRead
 {
-<<<<<<< HEAD
 	__block SNBlockedMessageHistoryViewController *weakSelf = self;
 	dispatch_sync(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 		sqlite3 *database;
@@ -215,26 +143,6 @@ static int amount;
 		}
 		else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
 	});
-=======
-    __block SNBlockedMessageHistoryViewController *weakSelf = self;
-	dispatch_sync(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        sqlite3 *database;
-        int openResult = sqlite3_open([DATABASE UTF8String], &database);
-        if (openResult == SQLITE_OK)
-        {
-            for (NSIndexPath *chosenRowIndexPath in weakSelf->bulkSet)
-            {
-                NSString *sql = [NSString stringWithFormat:@"update blockedsms set read = '1' where id = '%@'", [weakSelf->idArray objectAtIndex:chosenRowIndexPath.row]];
-                int execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
-                if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
-                
-                [weakSelf->readArray replaceObjectAtIndex:chosenRowIndexPath.row withObject:@"1"];
-            }
-            sqlite3_close(database);
-        }
-        else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
-    });
->>>>>>> e3c68d61debe9c140f09203371eb6bd7fdb0776d
 	for (NSIndexPath *indexPath in bulkSet)
 		for (UIView *view in [self.tableView cellForRowAtIndexPath:indexPath].contentView.subviews)
 			if ([view isKindOfClass:[UILabel class]]) ((UILabel *)view).textColor = [UIColor blackColor];
@@ -378,6 +286,7 @@ static int amount;
 	if (kCFCoreFoundationVersionNumber > kCFCoreFoundationVersionNumber_iOS_6_1 && cell.accessoryType == UITableViewCellAccessoryDetailDisclosureButton) cell.accessoryType = UITableViewCellAccessoryDetailButton;
 
 	UILabel *nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 2.0f, (defaultCellWidth - 50.0f) / 2.0f, (defaultCellHeight - 4.0f) / 2.0f)];
+	nameLabel.font = [UIFont boldSystemFontOfSize:[UIFont labelFontSize]];
 	nameLabel.tag = 1;
 	nameLabel.adjustsFontSizeToFitWidth = YES;
 	nameLabel.text = [[nameArray objectAtIndex:indexPath.row] length] != 0 ? [nameArray objectAtIndex:indexPath.row] : [numberArray objectAtIndex:indexPath.row];
@@ -399,7 +308,6 @@ static int amount;
 	UILabel *contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(nameLabel.frame.origin.x, nameLabel.frame.origin.y + nameLabel.bounds.size.height, nameLabel.bounds.size.width + timeLabel.bounds.size.width, nameLabel.bounds.size.height)];
 	contentLabel.tag = 3;
 	contentLabel.numberOfLines = 0;
-	contentLabel.font = nameLabel.font;
 	contentLabel.text = [contentArray objectAtIndex:indexPath.row];
 	CGSize expectedLabelSize = [contentLabel.text sizeWithFont:contentLabel.font constrainedToSize:CGSizeMake(contentLabel.bounds.size.width, contentLabel.bounds.size.height * 60.0f) lineBreakMode:contentLabel.lineBreakMode];
 	CGRect newFrame = contentLabel.frame;
@@ -615,7 +523,6 @@ static int amount;
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-<<<<<<< HEAD
 	if (amount != [idArray count] && scrollView.contentOffset.y + 1000.0f > scrollView.contentSize.height - scrollView.frame.size.height && scrollView.contentOffset.y != -64.0f && scrollView.contentOffset.y != 0.0f)
 	{
 		[self.tableView beginUpdates];
@@ -630,21 +537,5 @@ static int amount;
 		[self.tableView insertRowsAtIndexPaths:insertIndexPaths withRowAnimation:UITableViewRowAnimationFade];
 		[self.tableView endUpdates];
 	}
-=======
-    if (scrollView.contentOffset.y > scrollView.contentSize.height - scrollView.frame.size.height && scrollView.contentOffset.y != -64.0f && scrollView.contentOffset.y != 0.0f)
-    {
-        [self.tableView beginUpdates];
-        int count = [idArray count];
-        [self loadDatabaseSegment];
-        NSMutableArray *insertIndexPaths = [NSMutableArray arrayWithCapacity:50];
-        for (int i = count; i < [idArray count]; i++)
-        {
-            NSIndexPath *newPath =  [NSIndexPath indexPathForRow:i inSection:0];
-            [insertIndexPaths insertObject:newPath atIndex:(i - count)];
-        }
-        [self.tableView insertRowsAtIndexPaths:insertIndexPaths withRowAnimation:UITableViewRowAnimationFade];
-        [self.tableView endUpdates];
-    }
->>>>>>> e3c68d61debe9c140f09203371eb6bd7fdb0776d
 }
 @end

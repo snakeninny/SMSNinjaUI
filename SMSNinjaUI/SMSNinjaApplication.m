@@ -30,12 +30,15 @@
 	_window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 	_viewController = [[SNMainViewController alloc] init];
 	navigationController = [[UINavigationController alloc] initWithRootViewController:_viewController];
+	[[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
 	[self showPasswordAlert];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
 	[self updateBadgeAndSquareAndIcon];
+	CPDistributedMessagingCenter *messagingCenter = [objc_getClass("CPDistributedMessagingCenter") centerNamed:@"com.naken.smsninja.springboard"];
+	[messagingCenter sendMessageName:@"RemoveIconFromSwitcher" userInfo:nil];
 }
 
 - (void)showPasswordAlert

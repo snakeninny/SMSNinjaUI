@@ -1,4 +1,4 @@
-#define SMSNinjaDebug
+// #define SMSNinjaDebug
 
 #import <UIKit/UIKit.h>
 

@@ -213,7 +213,6 @@
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-<<<<<<< HEAD
 	[super viewWillDisappear:animated];
 	[self saveTextFieldValues];
 	if ([self.keywordString length] == 0) return;
@@ -243,42 +242,12 @@
 	});
 
 	id viewController = self.navigationController.topViewController;
-=======
-    [super viewWillDisappear:animated];
-    if ([self.keywordString length] == 0) return;
-
-    [keywordArray removeAllObjects];
-    [keywordArray addObjectsFromArray:[self.keywordString componentsSeparatedByString:@" "]];
-    
-    __block SNContentViewController *weakSelf = self;
-	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        sqlite3 *database;
-        int openResult = sqlite3_open([DATABASE UTF8String], &database);
-        if (openResult == SQLITE_OK)
-        {
-            NSString *sql = @"";
-            for (NSString *keyword in weakSelf->keywordArray)
-            {
-                if ([keyword isEqualToString:weakSelf.originalKeyword]) sql = [NSString stringWithFormat:@"update %@list set keyword = '%@', type = '1', name = '%@', phone = '0', sms = '1', reply = '%@', message = '%@', forward = '%@', number = '%@', sound = '%@' where keyword = '%@'", weakSelf.flag, keyword, weakSelf.nameString, weakSelf.replyString, weakSelf.messageString, weakSelf.forwardString, weakSelf.numberString, weakSelf.soundString, weakSelf.keywordString];
-                else sql = [NSString stringWithFormat:@"insert or replace into %@list (keyword, type, name, phone, sms, reply, message, forward, number, sound) values ('%@', '1', '%@', '0', '1', '%@', '%@', '%@', '%@', '%@')", weakSelf.flag, keyword, weakSelf.nameString, weakSelf.replyString, weakSelf.messageString, weakSelf.forwardString, weakSelf.numberString, weakSelf.soundString];
-                int execResult = sqlite3_exec(database, [sql UTF8String], NULL, NULL, NULL);
-                if (execResult != SQLITE_OK) NSLog(@"SMSNinja: Failed to exec %@, error %d", sql, execResult);
-            }
-            sqlite3_close(database);
-            
-            notify_post([[NSString stringWithFormat:@"com.naken.smsninja.%@listchanged", weakSelf.flag] UTF8String]);
-        }
-        else NSLog(@"SMSNinja: Failed to open %@, error %d", DATABASE, openResult);
-    });
-    
-    id viewController = self.navigationController.topViewController;
->>>>>>> e3c68d61debe9c140f09203371eb6bd7fdb0776d
 	for (NSString *keyword in keywordArray)
 	{
 		if ([viewController isKindOfClass:[SNBlacklistViewController class]])
 		{
-			int index = [((SNBlacklistViewController *)viewController)->keywordArray indexOfObject:self.originalKeyword];
-			if ([keyword isEqualToString:self.originalKeyword])
+			NSUInteger index = [((SNBlacklistViewController *)viewController)->keywordArray indexOfObject:self.originalKeyword];
+			if ([keyword isEqualToString:self.originalKeyword] && index != NSNotFound)
 			{
 				[((SNBlacklistViewController *)viewController)->keywordArray replaceObjectAtIndex:index withObject:keyword];
 				[((SNBlacklistViewController *)viewController)->nameArray replaceObjectAtIndex:index withObject:self.nameString];
@@ -307,8 +276,8 @@
 		}
 		else if ([viewController isKindOfClass:[SNWhitelistViewController class]])
 		{
-			int index = [((SNWhitelistViewController *)viewController)->keywordArray indexOfObject:self.originalKeyword];
-			if ([keyword isEqualToString:self.originalKeyword])
+			NSUInteger index = [((SNWhitelistViewController *)viewController)->keywordArray indexOfObject:self.originalKeyword];
+			if ([keyword isEqualToString:self.originalKeyword] && index != NSNotFound)
 			{
 				[((SNWhitelistViewController *)viewController)->keywordArray replaceObjectAtIndex:index withObject:keyword];
 				[((SNWhitelistViewController *)viewController)->nameArray replaceObjectAtIndex:index withObject:self.nameString];
@@ -325,8 +294,8 @@
 		}
 		else if ([viewController isKindOfClass:[SNPrivatelistViewController class]])
 		{
-			int index = [((SNPrivatelistViewController *)viewController)->keywordArray indexOfObject:self.originalKeyword];
-			if ([keyword isEqualToString:self.originalKeyword])
+			NSUInteger index = [((SNPrivatelistViewController *)viewController)->keywordArray indexOfObject:self.originalKeyword];
+			if ([keyword isEqualToString:self.originalKeyword] && index != NSNotFound)
 			{
 				[((SNPrivatelistViewController *)viewController)->keywordArray replaceObjectAtIndex:index withObject:keyword];
 				[((SNPrivatelistViewController *)viewController)->nameArray replaceObjectAtIndex:index withObject:self.nameString];
